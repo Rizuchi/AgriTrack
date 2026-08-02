@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriTrack Dashboard</title>
+
+```
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../styles.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+```
+
+</head>
+<body class="dashboard-page">
+
+<!-- SIDEBAR -->
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <a href="userdashboard.html" class="menu-item active">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon sa Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="pests.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste</span>
+                    <span class="subtitle">Pest Prediction</span>
+                </div>
+            </a>
+
+            <a href="notifications.html" class="menu-item">
+                <i class="fa-solid fa-bell"></i>
+                <div>
+                    <span class="title">Mga Abiso</span>
+                    <span class="subtitle">Notifications</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Aking Profile</span>
+                    <span class="subtitle">My Profile</span>
+                </div>
+            </a>
+
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</aside>
+
+<!-- DASHBOARD -->
+<main class="dashboard-main">
+
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">AgriTrack Dashboard</h1>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-gear"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-layout">
+
+        <section class="dashboard-left">
+
+            <section class="hero-card">
+                <div class="hero-overlay"></div>
+
+                <div class="hero-content">
+                    <h2>
+                        Maligayang pagdating sa AgriTrack. Narito
+                        ang pangkalahatang impormasyon tungkol sa
+                        iyong sakahan at pananim.
+                    </h2>
+                </div>
+            </section>
+
+            <section class="section-title">
+                <h2>Pangkalahatang Kalagayan ng Sakahan</h2>
+            </section>
+
+            <section class="stats-grid">
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <h3>Kabuuang Pananim</h3>
+                        <p>Total Crops</p>
+                    </div>
+
+                    <div class="stat-number">21</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <h3>Mga Aktibong Pagsubaybay</h3>
+                        <p>Active Monitoring</p>
+                    </div>
+
+                    <div class="stat-number">03</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <h3>Mga Babala sa Peste</h3>
+                        <p>Pest Alerts</p>
+                    </div>
+
+                    <div class="stat-number">60</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">
+                        <h3>Mga Nakaiskedyul na Gawain</h3>
+                        <p>Scheduled Tasks</p>
+                    </div>
+
+                    <div class="stat-number">09</div>
+                </div>
+
+            </section>
+
+        </section>
+
+<aside class="dashboard-right">
+
+    <!-- CALENDAR -->
+    <div class="calendar-card">
+
+        <div class="calendar-header">
+            <h3>Schedule Calender &lt; &gt;</h3>
+
+            <div class="calendar-month">
+                <i class="fa-solid fa-calendar-days"></i>
+                <span>August</span>
+            </div>
+        </div>
+
+        <div class="calendar-grid">
+
+            <div class="day-card">
+                <span>Mon</span>
+                <strong>03</strong>
+            </div>
+
+            <div class="day-card">
+                <span>Tue</span>
+                <strong>04</strong>
+            </div>
+
+            <div class="day-card active">
+                <span>Wed</span>
+                <strong>05</strong>
+            </div>
+
+            <div class="day-card">
+                <span>Thu</span>
+                <strong>06</strong>
+            </div>
+
+            <div class="day-card">
+                <span>Fri</span>
+                <strong>07</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+<!-- WEATHER -->
+
+<div class="weather-card">
+
+    <div class="weather-title">
+        <h3>Panahon Ngayon</h3>
+        <p>Current Weather</p>
+    </div>
+
+    <div class="weather-content">
+
+        <!-- LEFT -->
+        <div class="weather-main">
+
+            <div class="temperature">29°C</div>
+
+            <h4>Bahagyang Maulap</h4>
+            <span>Partly Cloudy</span>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="weather-side">
+
+            <div class="weather-box">
+                <h4>Panahon ng Tag-ulan</h4>
+                <span>Wet Season</span>
+            </div>
+
+            <div class="weather-box">
+
+                <div class="rain-bottom">
+
+                    <strong>60%</strong>
+
+                    <div class="rain-text">
+                        <h4>Tsansa ng Ulan</h4>
+                        <span>Chance of Rain</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <!-- NOTES -->
+
+    <div class="notes-card">
+
+        <h2>Mga Kamakailang Tala</h2>
+
+        <span class="subtitle">
+            Recent Notes
+        </span>
+
+        <p class="notes-description">
+            Magdagdag ng tala tungkol sa kalagayan ng iyong
+            pananim o mga gawaing isinagawa sa iyong sakahan.
+        </p>
+
+        <hr>
+
+        <div class="note-item">
+
+            <div class="note-header">
+
+                <h3>Ngayon</h3>
+
+                <span>Today</span>
+
+            </div>
+
+            <p>
+                Nadilig ang taniman ng palay at napansin
+                ang maayos na paglaki ng mga halaman.
+            </p>
+
+        </div>
+
+        <button class="add-note-btn">
+
+            + Magdagdag ng Tala
+
+        </button>
+
+    </div>
+
+</aside>
+
+    </div>
+
+</main>
+
+</body>
+</html>

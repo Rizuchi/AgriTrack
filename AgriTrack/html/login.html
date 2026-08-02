@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body class="auth-page">
+
+<div class="container">
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="overlay"></div>
+
+        <div class="left-content">
+            <p class="tagline">YOUR SMART FARMING COMPANION</p>
+
+            <h1>
+                Gabay sa Malusog na<br>
+                Pananim at Masaganang Ani.
+            </h1>
+
+            <div class="bottom-text">
+                <p>Grow Smart with <strong>AGRITRACK</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+
+        <h2>Maligayang Pagbabalik sa AgriTrack!</h2>
+
+        <p class="subtitle">
+            Welcome Back to AgriTrack! Ilagay ang iyong kredensyal upang ma-access ang iyong account.
+        </p>
+
+        <form id="loginForm">
+
+            <div class="field">
+                <label>Pangalan ng Gumagamit</label>
+                <input type="text" name="userName" id="userName" placeholder="Username" required>
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+            </div>
+
+            <div class="remember">
+                <input type="checkbox" id="remember">
+                <label for="remember">Tandaan ang Password</label>
+            </div>
+
+            <p id="message"></p>
+
+            <button type="submit" class="login-btn">
+                MAG-LOG IN
+            </button>
+
+        </form>
+
+        <p class="register-link">
+            Wala ka pang account?
+            <a href="registration.html">Gumawa ng Account.</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script src="../js/login.js"></script>
+</body>
+</html>
