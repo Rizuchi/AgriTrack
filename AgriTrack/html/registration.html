@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="tl">
 <head>
-    <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="../styles.css">
 </head>
 <body class="auth-page">
@@ -45,12 +45,12 @@
 
                 <div class="field">
                     <label>Unang Pangalan</label>
-                    <input type="text" name="fname" placeholder="First Name" required>
+                    <input type="text" name="fname" placeholder="First Name" required pattern="[A-Za-z\\s]+" title="Only letters and spaces are allowed.">
                 </div>
 
                 <div class="field">
                     <label>Apelyido</label>
-                    <input type="text" name="lname" placeholder="Last Name" required>
+                    <input type="text" name="lname" placeholder="Last Name" required pattern="[A-Za-z\\s]+" title="Only letters and spaces are allowed.">
                 </div>
 
             </div>
@@ -67,12 +67,18 @@
 
             <div class="field">
                 <label>Password</label>
-                <input type="password" name="password" placeholder="Password" required>
+                <div class="password-wrapper" style="position: relative;">
+                    <input type="password" name="password" placeholder="Password" required style="width: 100%; padding-right: 48px; box-sizing: border-box;">
+                    <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #14532d; font-size: 1rem;" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
 
             <div class="field">
                 <label>Kumpirmahin ang Password</label>
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" required>
+                <div class="password-wrapper" style="position: relative;">
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required style="width: 100%; padding-right: 48px; box-sizing: border-box;">
+                    <button type="button" class="toggle-password" data-target="confirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #14532d; font-size: 1rem;" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+                </div>
             </div>
 
             <div id="message" class="form-message" role="status" aria-live="polite"></div>

@@ -1,4 +1,6 @@
 <?php
+require_once 'encryption.php';
+
 session_start();
 
 $servername = "localhost";
@@ -39,8 +41,10 @@ if ($conn->connect_error) {
     exit;
 }
 
+$encryptedUserName = encryptDeterministic($userName);
+
 $stmt = $conn->prepare("SELECT UserID, fname, lname, userName, password, role, accStatus, isActive FROM users WHERE userName = ?");
-$stmt->bind_param('s', $userName);
+$stmt->bind_param('s', $encryptedUserName);
 $stmt->execute();
 $result = $stmt->get_result();
 
@@ -69,7 +73,6 @@ if ($user['accStatus'] !== 'Active' || !$user['isActive']) {
     exit;
 }
 
-// Mark sessionStatus as no longer first-time login
 $updateStmt = $conn->prepare("UPDATE users SET sessionStatus = FALSE WHERE UserID = ?");
 $updateStmt->bind_param('i', $user['UserID']);
 $updateStmt->execute();
@@ -77,11 +80,23 @@ $updateStmt->close();
 
 $conn->close();
 
-// Store session data
 $_SESSION['UserID'] = $user['UserID'];
-$_SESSION['userName'] = $user['userName'];
-$_SESSION['fname'] = $user['fname'];
-$_SESSION['lname'] = $user['lname'];
+$_SESSION['userName'] = decryptData($user['userName']);
+$_SESSION['fname'] = decryptData($user['fname']);
+$_SESSION['lname'] = decryptData($user['lname']);
 $_SESSION['role'] = $user['role'];
 
-echo json_encode(['success' => true, 'message' => 'Login successful.']);
+$redirectMap = [
+    'SuperAdmin' => 'superadmin.html',
+    'Admin'      => 'admin.html',
+    'User'       => 'userdashboard.html',
+];
+
+$redirectTo = $redirectMap[$user['role']] ?? 'userdashboard.html'; 
+
+echo json_encode([
+    'success'  => true,
+    'message'  => 'Login successful.',
+    'redirect' => $redirectTo,
+    'debug_role' => $user['role']
+]);
