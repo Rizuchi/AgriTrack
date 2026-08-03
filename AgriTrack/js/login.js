@@ -1,3 +1,22 @@
+function togglePassword(button) {
+    const targetName = button.getAttribute('data-target');
+    const input = document.getElementById(targetName);
+
+    if (!input) {
+        return;
+    }
+
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    const icon = button.querySelector('i');
+    if (icon) {
+        icon.className = isPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye';
+    }
+
+    button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('loginForm');
     const messageBox = document.getElementById('message');
@@ -6,11 +25,19 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Fade in on page load
+    // TRANSITION
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s ease-in';
     requestAnimationFrame(() => {
         document.body.style.opacity = '1';
+    });
+
+    document.querySelectorAll('.toggle-password').forEach((button) => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            togglePassword(button);
+        });
     });
 
     form.addEventListener('submit', async (event) => {
@@ -42,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (response.ok && result.success) {
                 messageBox.textContent = result.message;
                 messageBox.style.color = '#14532d';
-                redirectToDashboard();
+                redirectToDashboard(result.redirect);
             } else {
                 messageBox.textContent = result.message || 'Login failed.';
                 messageBox.style.color = '#b91c1c';
@@ -53,12 +80,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function redirectToDashboard() {
-        document.body.style.transition = 'opacity 0.5s ease-out';
-        document.body.style.opacity = '0';
+    function redirectToDashboard(destination) {
+    document.body.style.transition = 'opacity 0.5s ease-out';
+    document.body.style.opacity = '0';
 
-        setTimeout(() => {
-            window.location.href = 'userdashboard.html';
-        }, 500);
-    }
+    setTimeout(() => {
+        window.location.href = destination || 'userdashboard.html';
+    }, 500);
+}
 });

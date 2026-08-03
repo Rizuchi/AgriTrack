@@ -1,4 +1,6 @@
 <?php
+require_once 'encryption.php';
+
 $servername = "localhost";
 $dbUsername = "root";
 $dbPassword = "";
@@ -33,6 +35,12 @@ if ($fname === '' || $lname === '' || $userName === '' || $password === '' || $c
     exit;
 }
 
+if (strlen($password) < 8) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Password must be at least 8 characters long.']);
+    exit;
+}
+
 if ($password !== $confirmPassword) {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Passwords do not match.']);
@@ -55,8 +63,10 @@ if ($conn->connect_error) {
     exit;
 }
 
-$stmt = $conn->prepare("SELECT UserID FROM users WHERE userName = ? OR email = ?");
-$stmt->bind_param('ss', $userName, $email);
+$encryptedUserName = encryptDeterministic($userName);
+
+$stmt = $conn->prepare("SELECT UserID FROM users WHERE userName = ?");
+$stmt->bind_param('s', $encryptedUserName);
 $stmt->execute();
 $stmt->store_result();
 
@@ -64,16 +74,19 @@ if ($stmt->num_rows > 0) {
     $stmt->close();
     $conn->close();
     http_response_code(409);
-    echo json_encode(['success' => false, 'message' => 'Username or email already exists.']);
+    echo json_encode(['success' => false, 'message' => 'Username already exists.']);
     exit;
 }
 
 $stmt->close();
 
 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+$encryptedLname = encryptData($lname);
+$encryptedFname = encryptData($fname);
+$encryptedEmail = encryptData($email);
 
 $insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, role, accStatus, sessionStatus, isActive) VALUES (?, ?, ?, ?, ?, 'User', 'Active', TRUE, TRUE)");
-$insertStmt->bind_param('sssss', $lname, $fname, $userName, $hashedPassword, $email);
+$insertStmt->bind_param('sssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail);
 
 if ($insertStmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Registration successful.']);
