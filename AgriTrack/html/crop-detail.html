@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AgriTrack Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/usersidebar.css">
+<link rel="stylesheet" href="../css/crop-detail.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <a href="userdashboard.html" class="menu-item active">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="notifications.html" class="menu-item">
+                <i class="fa-solid fa-bell"></i>
+                <div>
+                    <span class="title">Mga Abiso</span>
+                    <span class="subtitle">Notifications</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Aking Profile</span>
+                    <span class="subtitle">My Profile</span>
+                </div>
+            </a>
+
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</aside>
+<body>
+
+    <main class="dashboard-main">
+
+
+        <!-- HEADER -->
+
+        <header class="detail-header">
+
+            <div class="detail-title">
+
+        <h1>
+            <a href="recommendation.html" class="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>
+            </a>
+            Detalye ng Pananim: Kamoteng Kahoy
+        </h1>
+
+                <p>
+                    Alamin ang mga kondisyon, gabay sa pagtatanim, at rekomendasyon para sa kamoteng kahoy.
+                </p>
+
+            </div>
+
+
+            <div class="dashboard-icons">
+
+                <i class="fa-solid fa-gear"></i>
+
+                <i class="fa-solid fa-moon"></i>
+
+            </div>
+
+        </header>
+
+        <div class="crop-detail-card">
+
+
+            <div class="detail-image">
+
+                <img
+                    src="images/kamote.jpg"
+                    alt="Kamoteng Kahoy"
+                >
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="detail-content">
+
+                <h2>
+                    Pangunahing Impormasyon
+                </h2>
+
+
+                <!-- ONLY THIS PART SCROLLS -->
+
+                <div class="detail-scroll">
+
+
+                    <p>
+                        <strong>Pangalan ng Pananim:</strong>
+                        Kamoteng Kahoy
+                        <br>
+
+                        <strong>English Name:</strong>
+                        Cassava
+                        <br>
+
+                        <strong>Inirerekomendang Pagtatanim:</strong>
+                        Disyembre – Mayo
+                        <br>
+
+                        <strong>Uri ng Pananim:</strong>
+                        Root Crop
+                    </p>
+
+
+                    <p>
+
+                        <strong>Bakit Inirerekomenda?</strong>
+                        <br>
+
+                        Ang kamoteng kahoy ay isang pananim na
+                        matibay sa tagtuyot at maaaring lumago kahit
+                        limitado ang suplay ng tubig. Dahil dito,
+                        maaari itong maging angkop na pananim sa
+                        panahon ng tagtuyot, lalo na sa mga lugar
+                        na may mababang availability ng tubig.
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>Kondisyon sa Pagtatanim</strong>
+                        <br>
+
+                        <strong>Temperatura:</strong>
+                        Angkop sa mainit at tropikal na klima.
+                        <br>
+
+                        <strong>Sikat ng Araw:</strong>
+                        Mas mainam sa lugar na may sapat na sikat
+                        ng araw.
+                        <br>
+
+                        <strong>Tubig:</strong>
+                        Nangangailangan ng sapat na tubig habang
+                        nagsisimula ang paglaki, ngunit mas matibay
+                        sa tagtuyot kumpara sa maraming ibang pananim.
+                        <br>
+
+                        <strong>Lupa:</strong>
+                        Mas mainam ang maluwag at maayos na drainage
+                        na lupa upang magkaroon ng sapat na espasyo
+                        ang mga ugat na lumaki.
+
+                    </p>
+
+
+                    <p>
+                        <strong>Peste at Sakit</strong>
+                        <br>
+                        Regular na suriin ang:
+                    </p>
+
+                    <ul class="pest-list">
+                        <li>Mga butas o pinsala sa dahon</li>
+                        <li>Paninilaw o pagkalanta ng dahon</li>
+                        <li>Pagkabulok ng ugat</li>
+                        <li>Mga insekto sa dahon at tangkay</li>
+                        <li>Hindi normal na paglaki ng halaman</li>
+                    </ul>
+
+                    <p>
+
+                        <strong>Rekomendasyon sa Farmer</strong>
+                        <br>
+
+                       Subaybayan ang kondisyon ng lupa at halaman, lalo na sa matagal na panahon ng tagtuyot. 
+                       Mag-record ng rainfall at iba pang environmental data upang makatulong sa pagdedesisyon 
+                       kung kailan kailangang magdilig o magsagawa ng ibang farming activity.
+
+                    </p>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+</body>
+</html>
