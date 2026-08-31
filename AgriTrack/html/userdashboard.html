@@ -5,107 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgriTrack Dashboard</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/usersidebar.css">
-<link rel="stylesheet" href="../css/userdashboard.css">
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/userdashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
 <!-- SIDEBAR -->
+
 <aside class="user-sidebar">
     <div class="overlay"></div>
 
-    <div class="sidebar-content">
+<div class="sidebar-content">
 
-        <div class="logo">AGRITRACK</div>
+    <div class="logo">AGRITRACK</div>
 
-        <nav class="menu">
+    <nav class="menu">
 
-            <a href="userdashboard.html" class="menu-item active">
-                <i class="fa-solid fa-table-columns"></i>
-                <div>
-                    <span class="title">Dashboard</span>
-                    <span class="subtitle">Dashboard</span>
-                </div>
-            </a>
+        <!-- DASHBOARD -->
+        <a href="userdashboard.html" class="menu-item active">
+            <i class="fa-solid fa-table-columns"></i>
+            <div>
+                <span class="title">Dashboard</span>
+                <span class="subtitle">Dashboard</span>
+            </div>
+        </a>
 
-            <a href="crops.html" class="menu-item">
-                <i class="fa-solid fa-seedling"></i>
-                <div>
-                    <span class="title">Mga Pananim</span>
-                    <span class="subtitle">Crops</span>
-                </div>
-            </a>
+        <!-- MGA PANANIM -->
+        <a href="crops.html" class="menu-item">
+            <i class="fa-solid fa-seedling"></i>
+            <div>
+                <span class="title">Mga Pananim</span>
+                <span class="subtitle">Crops</span>
+            </div>
+        </a>
 
-            <a href="monitoring.html" class="menu-item">
-                <i class="fa-solid fa-leaf"></i>
-                <div>
-                    <span class="title">Subaybayan ang Pananim</span>
-                    <span class="subtitle">Crop Monitoring</span>
-                </div>
-            </a>
+        <!-- CROP MONITORING -->
+        <a href="monitoring.html" class="menu-item">
+            <i class="fa-solid fa-leaf"></i>
+            <div>
+                <span class="title">Subaybayan ang Pananim</span>
+                <span class="subtitle">Crop Monitoring</span>
+            </div>
+        </a>
 
-            <a href="recommendation.html" class="menu-item">
-                <i class="fa-solid fa-wand-magic-sparkles"></i>
-                <div>
-                    <span class="title">Rekomendasyon na Pananim</span>
-                    <span class="subtitle">Crop Recommendation</span>
-                </div>
-            </a>
+        <!-- CROP RECOMMENDATION -->
+        <a href="recommendation.html" class="menu-item">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <div>
+                <span class="title">Rekomendasyon na Pananim</span>
+                <span class="subtitle">Crop Recommendation</span>
+            </div>
+        </a>
 
-            <a href="notifications.html" class="menu-item">
-                <i class="fa-solid fa-bell"></i>
-                <div>
-                    <span class="title">Mga Abiso</span>
-                    <span class="subtitle">Notifications</span>
-                </div>
-            </a>
+        <!-- PEST AND DISEASE PREDICTION -->
+        <a href="prediction.html" class="menu-item">
+            <i class="fa-solid fa-bug"></i>
+            <div>
+                <span class="title">Prediksyon sa Peste at Sakit</span>
+                <span class="subtitle">Pest and Disease Prediction</span>
+            </div>
+        </a>
 
-            <a href="contact.html" class="menu-item">
-                <i class="fa-solid fa-phone"></i>
-                <div>
-                    <span class="title">Makipag-ugnayan</span>
-                    <span class="subtitle">Contact</span>
-                </div>
-            </a>
+        <!-- CONTACT -->
+        <a href="contact.html" class="menu-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+                <span class="title">Makipag-ugnayan</span>
+                <span class="subtitle">Contact</span>
+            </div>
+        </a>
 
-            <a href="profile.html" class="menu-item">
-                <i class="fa-solid fa-user"></i>
-                <div>
-                    <span class="title">Aking Profile</span>
-                    <span class="subtitle">My Profile</span>
-                </div>
-            </a>
+    </nav>
 
-        </nav>
-
-        <div class="logout-section">
-            <a href="login.html" class="menu-item logout">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <div>
-                    <span class="title">Mag-log Out</span>
-                    <span class="subtitle">Log Out</span>
-                </div>
-            </a>
-        </div>
-
+    <!-- LOG OUT -->
+    <div class="logout-section">
+        <a href="login.html" class="menu-item logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <div>
+                <span class="title">Mag-log Out</span>
+                <span class="subtitle">Log Out</span>
+            </div>
+        </a>
     </div>
+
+</div>
+
 </aside>
+
 
 <!-- DASHBOARD -->
 <main class="dashboard-main">
 
     <div class="dashboard-header">
 
-    <h1 class="dashboard-title" id="welcomeTitle">
-        Welcome!
+    <h1 class="dashboard-title">
+        Welcome, Dela Cruz!
     </h1>
 
     <div class="dashboard-icons">
-        <i class="fa-solid fa-gear"></i>
+        <i class="fa-solid fa-bell"></i>
         <i class="fa-solid fa-moon"></i>
     </div>
 
@@ -167,8 +167,8 @@
 
                 </div>
 
-                <div class="stat-number" id="statTotalCrops">
-                    &ndash;
+                <div class="stat-number">
+                    21
                 </div>
 
             </div>
@@ -189,8 +189,8 @@
 
                 </div>
 
-                <div class="stat-number" id="statActiveMonitoring">
-                    &ndash;
+                <div class="stat-number">
+                    03
                 </div>
 
             </div>
@@ -211,8 +211,8 @@
 
                 </div>
 
-                <div class="stat-number" id="statPestAlerts">
-                    &ndash;
+                <div class="stat-number">
+                    60
                 </div>
 
             </div>
@@ -233,8 +233,8 @@
 
                 </div>
 
-                <div class="stat-number" id="statScheduledTasks">
-                    &ndash;
+                <div class="stat-number">
+                    09
                 </div>
 
             </div>
@@ -254,18 +254,15 @@
             <div class="calendar-header">
 
                 <h3>
-                    <span id="calendarMonthYear">August 2026</span>
-                    <span>
-                        <i class="fa-solid fa-chevron-left" id="prevMonthBtn" role="button" aria-label="Previous month"></i>
-                        <i class="fa-solid fa-chevron-right" id="nextMonthBtn" role="button" aria-label="Next month"></i>
-                    </span>
+                    August 2026
+                    <span>&lt; &gt;</span>
                 </h3>
 
                 <div class="calendar-month">
 
                     <i class="fa-solid fa-calendar-days"></i>
 
-                    <span id="calendarMonthLabel">
+                    <span>
                         August
                     </span>
 
@@ -288,8 +285,53 @@
             </div>
 
 
-            <!-- CALENDAR DATES (rendered by userdashboard.js) -->
-            <div class="calendar-grid" id="calendarGrid">
+            <!-- CALENDAR DATES -->
+            <div class="calendar-grid">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+                <span class="date">01</span>
+
+                <span class="date">02</span>
+                <span class="date">03</span>
+                <span class="date">04</span>
+                <span class="date">05</span>
+                <span class="date">06</span>
+                <span class="date">07</span>
+                <span class="date">08</span>
+
+                <span class="date">09</span>
+                <span class="date">10</span>
+                <span class="date">11</span>
+                <span class="date">12</span>
+                <span class="date">13</span>
+                <span class="date">14</span>
+                <span class="date">15</span>
+
+                <span class="date">16</span>
+                <span class="date">17</span>
+                <span class="date">18</span>
+                <span class="date">19</span>
+                <span class="date">20</span>
+                <span class="date">21</span>
+                <span class="date">22</span>
+
+                <span class="date">23</span>
+                <span class="date">24</span>
+                <span class="date">25</span>
+                <span class="date">26</span>
+                <span class="date">27</span>
+                <span class="date">28</span>
+                <span class="date">29</span>
+
+                <span class="date">30</span>
+                <span class="date">31</span>
+
             </div>
 
 
@@ -410,12 +452,12 @@
             <div class="modal-calendar-header">
 
                 <div>
-                    <h2 id="modalMonthYear">August 2026</h2>
+                    <h2>August 2026</h2>
                 </div>
 
                 <div class="modal-month">
                     <i class="fa-solid fa-calendar-days"></i>
-                    <span id="modalMonthLabel">August</span>
+                    <span>August</span>
                 </div>
 
             </div>
@@ -432,14 +474,53 @@
             </div>
 
 
-            <div class="modal-calendar-grid" id="modalCalendarGrid">
+            <div class="modal-calendar-grid">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+                <span>01</span>
+
+                <span>02</span>
+                <span>03</span>
+                <span>04</span>
+                <span>05</span>
+                <span>06</span>
+                <span>07</span>
+                <span>08</span>
+
+                <span>09</span>
+                <span>10</span>
+                <span>11</span>
+                <span>12</span>
+                <span>13</span>
+                <span>14</span>
+                <span>15</span>
+
+                <span>16</span>
+                <span>17</span>
+                <span>18</span>
+                <span>19</span>
+                <span>20</span>
+                <span>21</span>
+                <span>22</span>
+
+                <span>23</span>
+                <span>24</span>
+                <span>25</span>
+                <span>26</span>
+                <span>27</span>
+                <span>28</span>
+                <span>29</span>
+
+                <span>30</span>
+                <span>31</span>
+
             </div>
-
-            <p class="modal-selected-date-label">
-                Napiling Petsa / Selected Date: <strong id="modalSelectedDateText">&ndash;</strong>
-            </p>
-
-            <div id="modalExistingNotes" class="modal-existing-notes"></div>
 
         </div>
 
@@ -451,16 +532,16 @@
 
                 <h2>Crop Activities</h2>
 
-                <div class="tag-list" data-group="activity">
+                <div class="tag-list">
 
-                    <button type="button">🌱 Nagtanim</button>
-                    <button type="button">💧 Nagdilig</button>
-                    <button type="button">🌾 Nagbunot ng Damo</button>
-                    <button type="button">🧴 Nag-spray ng Pesticide</button>
-                    <button type="button">🔧 Nag-pruning</button>
-                    <button type="button">🧺 Naglagay ng Pataba</button>
-                    <button type="button">🌿 Nag-ani</button>
-                    <button type="button">✋ Nagtanim ng Panibago</button>
+                    <button>🌱 Nagtanim</button>
+                    <button>💧 Nagdilig</button>
+                    <button>🌾 Nagbunot ng Damo</button>
+                    <button>🧴 Nag-spray ng Pesticide</button>
+                    <button>🔧 Nag-pruning</button>
+                    <button>🧺 Naglagay ng Pataba</button>
+                    <button>🌿 Nag-ani</button>
+                    <button>✋ Nagtanim ng Panibago</button>
 
                 </div>
 
@@ -472,17 +553,17 @@
 
                 <h2>Crop Condition</h2>
 
-                <div class="tag-list" data-group="condition">
+                <div class="tag-list">
 
-                    <button type="button">🌱 Malusog ang Pananim</button>
-                    <button type="button">🍃 Naninilaw ang Dahon</button>
-                    <button type="button">🐛 May Peste</button>
-                    <button type="button">💧 May Sakit</button>
-                    <button type="button">🌾 Kulang sa Tubig</button>
-                    <button type="button">🌱 Namumula</button>
-                    <button type="button">🌾 Handa nang Anihin</button>
-                    <button type="button">≋ Nabaha</button>
-                    <button type="button">☀ Natuyuan</button>
+                    <button>🌱 Malusog ang Pananim</button>
+                    <button>🍃 Naninilaw ang Dahon</button>
+                    <button>🐛 May Peste</button>
+                    <button>💧 May Sakit</button>
+                    <button>🌾 Kulang sa Tubig</button>
+                    <button>🌱 Namumula</button>
+                    <button>🌾 Handa nang Anihin</button>
+                    <button>≋ Nabaha</button>
+                    <button>☀ Natuyuan</button>
 
                 </div>
 
@@ -494,32 +575,59 @@
 
                 <h2>Weather</h2>
 
-                <div class="tag-list" data-group="weather">
+                <div class="tag-list">
 
-                    <button type="button">☀ Maaraw</button>
-                    <button type="button">☁ Maulap</button>
-                    <button type="button">🌧 Umuulan</button>
-                    <button type="button">🌬 Mahangin</button>
-                    <button type="button">🌧 Malakas na Ulan</button>
+                    <button>☀ Maaraw</button>
+                    <button>☁ Maulap</button>
+                    <button>🌧 Umuulan</button>
+                    <button>🌬 Mahangin</button>
+                    <button>🌧 Malakas na Ulan</button>
 
                 </div>
 
             </section>
+        
+    <script>
+        const openNoteModal = document.getElementById("openNoteModal");
+        const noteModal = document.getElementById("noteModal");
 
-            <!-- FREE TEXT -->
-            <section class="activity-section">
+        openNoteModal.addEventListener("click", function () {
+            noteModal.classList.add("show");
+        });
 
-                <h2>Karagdagang Tala / Additional Note</h2>
+        noteModal.addEventListener("click", function (event) {
 
-                <textarea id="modalFreeText" rows="3" placeholder="Opsyonal na sulat dito... (Optional)"></textarea>
+            if (event.target === noteModal) {
+                noteModal.classList.remove("show");
+            }
 
-            </section>
+        });
 
-            <div id="modalErrorText" class="modal-error-text"></div>
+        document.querySelectorAll(".tag-list button").forEach(button => {
 
-            <button type="button" class="add-note-btn" id="saveNoteBtn">
-                I-save / Save
-            </button>
+            button.addEventListener("click", function () {
+                this.classList.toggle("selected");
+            });
+
+        });
+
+        document.querySelectorAll(".modal-calendar-grid span").forEach(day => {
+
+            day.addEventListener("click", function () {
+
+                if (this.textContent.trim() !== "") {
+
+                    document
+                        .querySelectorAll(".modal-calendar-grid span")
+                        .forEach(item => item.classList.remove("selected"));
+
+                    this.classList.add("selected");
+                }
+
+            });
+
+        });
+    </script>
 
         </div>
 
@@ -527,7 +635,6 @@
 
 </div>
 
-<script src="../js/userdashboard.js"></script>
 
 </main>
 

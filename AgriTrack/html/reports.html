@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Mga Ulat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+    <link rel="stylesheet" href="../css/adminsidebar.css">
+    <link rel="stylesheet" href="../css/reports.css">
+</head>
+
+<body>
+
+<!-- ADMIN SIDEBAR -->
+
+<aside class="admin-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <a href="admindashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div class="menu-text">
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="manageusers.html" class="menu-item">
+                <i class="fa-solid fa-users"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahalaan ng Mga User</span>
+                    <span class="subtitle">Manage Users</span>
+                </div>
+            </a>
+
+            <a href="managecrops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahala ng Mga Pananim</span>
+                    <span class="subtitle">Manage Crops</span>
+                </div>
+            </a>
+
+            <a href="managepests.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahala ng Peste at Sakit</span>
+                    <span class="subtitle">Manage Pests and Diseases</span>
+                </div>
+            </a>
+
+            <a href="reports.html" class="menu-item">
+                <i class="fa-regular fa-clipboard"></i>
+                <div class="menu-text">
+                    <span class="title">Mga Ulat</span>
+                    <span class="subtitle">Reports</span>
+                </div>
+            </a>
+
+            <a href="admincontact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div class="menu-text">
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div class="menu-text">
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</aside>
+
+<!-- MAIN REPORTS -->
+
+<main class="reports-main">
+
+    <header class="reports-header">
+        <div class="header-text">
+            <h1>Mga Ulat</h1>
+            <p>Tingnan at subaybayan ang mga ulat tungkol sa mga gumagamit at mga pananim.</p>
+        </div>
+
+        <div class="header-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </header>
+
+    <div class="reports-line"></div>
+
+    <!-- SUMMARY CARDS -->
+
+    <section class="report-statistics">
+
+        <div class="report-stat-card">
+            <div class="stat-label">Kabuuang<br>Gumagamit</div>
+            <div class="stat-number">128</div>
+        </div>
+
+        <div class="report-stat-card">
+            <div class="stat-label">Aktibong<br>Gumagamit</div>
+            <div class="stat-number">32</div>
+        </div>
+
+        <div class="report-stat-card">
+            <div class="stat-label">Mga Pananim</div>
+            <div class="stat-number">321</div>
+        </div>
+
+        <div class="report-stat-card">
+            <div class="stat-label">Malapit sa Ani</div>
+            <div class="stat-number">75</div>
+        </div>
+
+    </section>
+
+    <!-- REPORT CHARTS -->
+
+    <section class="reports-grid">
+
+        <div class="report-panel">
+            <h2>Ulat ng mga Pananim</h2>
+
+            <div class="chart-area">
+                <canvas id="cropReportChart"></canvas>
+            </div>
+        </div>
+
+        <div class="report-panel">
+            <h2>Katayuan ng mga Gumagamit</h2>
+
+            <div class="chart-area doughnut-area">
+                <canvas id="userStatusChart"></canvas>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<!-- CHART SCRIPT -->
+
+<script>
+const cropCtx = document.getElementById('cropReportChart');
+
+new Chart(cropCtx, {
+    type: 'bar',
+    data: {
+        labels: [
+            'Palay',
+            'Mais',
+            'Talong',
+            'Kamatis',
+            'Sibuyas',
+            'Pechay',
+            'Sitaw',
+            'Ampalaya'
+        ],
+        datasets: [{
+            label: 'Bilang ng Pananim',
+            data: [24, 15, 18, 12, 10, 8, 14, 9],
+            backgroundColor: '#143f34',
+            borderRadius: 3,
+            borderWidth: 0
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 25,
+                ticks: {
+                    stepSize: 5,
+                    font: {
+                        family: 'Poppins',
+                        size: 8
+                    },
+                    color: '#0d241d'
+                },
+                grid: {
+                    color: '#e5e5e5'
+                },
+                border: {
+                    display: false
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        family: 'Poppins',
+                        size: 7
+                    },
+                    color: '#0d241d'
+                },
+                grid: {
+                    display: false
+                },
+                border: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+
+const userCtx = document.getElementById('userStatusChart');
+
+new Chart(userCtx, {
+    type: 'doughnut',
+    data: {
+        labels: [
+            'Aktibo',
+            'Hindi Aktibo'
+        ],
+        datasets: [{
+            data: [75, 25],
+            backgroundColor: [
+                '#c6f24a',
+                '#4b7ff0'
+            ],
+            borderWidth: 0
+        }]
+    },
+    plugins: [
+        ChartDataLabels
+    ],
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '58%',
+        plugins: {
+            legend: {
+                display: false
+            },
+            datalabels: {
+                color: '#0d241d',
+                font: {
+                    family: 'Poppins',
+                    size: 9,
+                    weight: '600'
+                },
+                formatter: function(value, context) {
+                    const label = context.chart.data.labels[context.dataIndex];
+                    return label + '\n' + value + '%';
+                },
+                anchor: 'end',
+                align: 'end',
+                offset: 8,
+                clamp: true
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>
