@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Makipag-ugnayan</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="../css/adminsidebar.css">
+    <link rel="stylesheet" href="../css/admincontact.css">
+</head>
+<body>
+
+<!-- ADMIN SIDEBAR -->
+
+<aside class="admin-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+            <!-- DASHBOARD -->
+            <a href="admindashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div class="menu-text">
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <!-- MANAGE USERS -->
+            <a href="manageusers.html" class="menu-item">
+                <i class="fa-solid fa-users"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahalaan ng Mga User</span>
+                    <span class="subtitle">Manage Users</span>
+                </div>
+            </a>
+
+            <!-- MANAGE CROPS -->
+            <a href="managecrops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahala ng Mga Pananim</span>
+                    <span class="subtitle">Manage Crops</span>
+                </div>
+            </a>
+
+            <!-- MANAGE PESTS AND DISEASES -->
+            <a href="managepests.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div class="menu-text">
+                    <span class="title">Pamamahala ng Peste at Sakit</span>
+                    <span class="subtitle">Manage Pests and Diseases</span>
+                </div>
+            </a>
+
+            <!-- REPORTS -->
+            <a href="reports.html" class="menu-item">
+                <i class="fa-regular fa-clipboard"></i>
+                <div class="menu-text">
+                    <span class="title">Mga Ulat</span>
+                    <span class="subtitle">Reports</span>
+                </div>
+            </a>
+
+            <!-- CONTACT -->
+            <a href="admincontact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div class="menu-text">
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+        </nav>
+
+        <!-- LOGOUT -->
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div class="menu-text">
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN CONTACT -->
+
+<main class="contact-main">
+    <!-- HEADER -->
+    <header class="contact-header">
+        <div class="header-text">
+            <h1>Makipag-ugnayan</h1>
+            <p>Sagutin ang mga feedback at katanungan ng mga magsasaka.</p>
+        </div>
+
+        <div class="header-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </header>
+
+    <!-- HEADER LINE -->
+    <div class="contact-line"></div>
+
+    <div class="contact-toolbar">
+        <div class="search-area">
+            <input type="text" id="searchMessage" placeholder="Maghanap ng pananim...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <button type="button" class="new-message-btn">
+            Pinakabago
+        </button>
+    </div>
+
+    <!-- MESSAGE SECTION -->
+    <section class="message-section">
+        <h2>Mga Mensahe</h2>
+
+        <!-- MESSAGE TABLE -->
+        <div class="message-table-wrapper">
+            <table class="message-table">
+                <thead>
+                    <tr>
+                        <th>Unang Pangalan</th>
+                        <th>Apelyido</th>
+                        <th>Email</th>
+                        <th>Petsa</th>
+                        <th>Katayuan</th>
+                        <th>Aksyon</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- JUAN -->
+                    <tr>
+                        <td>Juan</td>
+                        <td>Dela Cruz</td>
+                        <td>juandelacruz@gmail.com</td>
+                        <td>Agosto 27, 2026</td>
+                        <td>Bago</td>
+                        <td>
+                            <button type="button" class="message-action reply">
+                                Sagutin
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- MARIA -->
+                    <tr>
+                        <td>Maria</td>
+                        <td>Santos</td>
+                        <td>mariasantos@gmail.com</td>
+                        <td>Agosto 17, 2026</td>
+                        <td>Nasagot</td>
+                        <td>
+                            <button type="button" class="message-action">
+                                Tingnan
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- PEDRO -->
+                    <tr>
+                        <td>Pedro</td>
+                        <td>Reyes</td>
+                        <td>pedroreyes@gmail.com</td>
+                        <td>Agosto 15, 2026</td>
+                        <td>Nasagot</td>
+                        <td>
+                            <button type="button" class="message-action">
+                                Tingnan
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- ANA -->
+                    <tr>
+                        <td>Ana</td>
+                        <td>Garcia</td>
+                        <td>anagarcia@gmail.com</td>
+                        <td>Agosto 12, 2026</td>
+                        <td>Bago</td>
+                        <td>
+                            <button type="button" class="message-action reply">
+                                Sagutin
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- ROSA -->
+                    <tr>
+                        <td>Rosa</td>
+                        <td>Cruz</td>
+                        <td>rosacruz@gmail.com</td>
+                        <td>Agosto 09, 2026</td>
+                        <td>Bago</td>
+                        <td>
+                            <button type="button" class="message-action reply">
+                                Sagutin
+                            </button>
+                        </td>
+                    </tr>
+
+                    <!-- CARLO -->
+                    <tr>
+                        <td>Carlo</td>
+                        <td>Batumbakal</td>
+                        <td>carlobatumbakal@gmail.com</td>
+                        <td>Agosto 01, 2026</td>
+                        <td>Nasagot</td>
+                        <td>
+                            <button type="button" class="message-action">
+                                Tingnan
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

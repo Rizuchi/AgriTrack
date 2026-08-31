@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Crop Monitoring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/monitoring.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+            <a href="userdashboard.html" class="menu-item active">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<main class="dashboard-main">
+
+    <div class="monitoring-header">
+        <div>
+            <h1>Subaybayan ang Pananim</h1>
+            <p>Tingnan ang progreso ng iyong mga pananim.</p>
+        </div>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="monitoring-line"></div>
+
+    <div class="monitoring-tools">
+        <div class="search-box">
+            <input type="text" id="monitoringSearch" placeholder="Maghanap ng pananim...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <button class="category-btn" type="button">
+            Mga Kategorya
+        </button>
+    </div>
+
+    <section class="monitoring-section">
+        <h2>Mga Pananim</h2>
+        <p class="section-description">
+            Subaybayan ang kasalukuyang kalagayan ng iyong mga pananim.
+        </p>
+
+        <div class="table-container">
+            <table id="cropTable">
+                <thead>
+                    <tr>
+                        <th>Mga Pananim</th>
+                        <th>Yugto ng Paglago</th>
+                        <th>Kalagayan</th>
+                        <th>Peste/Sakit</th>
+                        <th>Progreso</th>
+                        <th>Aksyon</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>Palay</td>
+                        <td>Namumunga</td>
+                        <td>Mabuti</td>
+                        <td>Wala</td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 69%;"></div>
+                                </div>
+                                <span>69%</span>
+                            </div>
+                        </td>
+                        <td><button class="view-btn">Tingnan</button></td>
+                    </tr>
+
+                    <tr>
+                        <td>Mais</td>
+                        <td>Namumulaklak</td>
+                        <td>Mabuti</td>
+                        <td>Uod</td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 85%;"></div>
+                                </div>
+                                <span>85%</span>
+                            </div>
+                        </td>
+                        <td><button class="view-btn">Tingnan</button></td>
+                    </tr>
+
+                    <tr>
+                        <td>Kamatis</td>
+                        <td>Namumunga</td>
+                        <td>Mabuti</td>
+                        <td>Aphids</td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 30%;"></div>
+                                </div>
+                                <span>30%</span>
+                            </div>
+                        </td>
+                        <td><button class="view-btn">Tingnan</button></td>
+                    </tr>
+
+                    <tr>
+                        <td>Talong</td>
+                        <td>Namumulaklak</td>
+                        <td>Mabuti</td>
+                        <td>Wala</td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 50%;"></div>
+                                </div>
+                                <span>50%</span>
+                            </div>
+                        </td>
+                        <td><button class="view-btn">Tingnan</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="progress-section">
+        <h2>Progreso ng mga Pananim</h2>
+        <p class="section-description">
+            Subaybayan ang progreso ng bawat pananim bawat linggo.
+        </p>
+
+        <div class="chart-container">
+            <canvas id="cropProgressChart"></canvas>
+        </div>
+    </section>
+
+</main>
+
+<script>
+const monitoringSearch = document.getElementById("monitoringSearch");
+const cropTable = document.getElementById("cropTable");
+
+monitoringSearch.addEventListener("input", function () {
+    const searchValue = monitoringSearch.value.toLowerCase().trim();
+    const rows = cropTable.querySelectorAll("tbody tr");
+
+    rows.forEach(function (row) {
+        const cropName = row.cells[0].textContent.toLowerCase();
+        row.style.display = cropName.includes(searchValue) ? "" : "none";
+    });
+});
+
+const chartCanvas = document.getElementById("cropProgressChart");
+
+const cropProgressChart = new Chart(chartCanvas, {
+    type: "line",
+    data: {
+        labels: [
+            "Linggo 1",
+            "Linggo 2",
+            "Linggo 3",
+            "Linggo 4",
+            "Linggo 5",
+            "Linggo 6",
+            "Linggo 7",
+            "Linggo 8",
+            "Linggo 9",
+            "Linggo 10"
+        ],
+        datasets: [
+            {
+                label: "Palay (%)",
+                data: [15, 22, 30, 39, 47, 56, 66, 75, 85, 92],
+                tension: 0.2,
+                borderWidth: 2,
+                pointRadius: 3
+            },
+            {
+                label: "Mais (%)",
+                data: [10, 18, 27, 36, 45, 55, 64, 73, 82, 90],
+                tension: 0.2,
+                borderWidth: 2,
+                pointRadius: 3
+            },
+            {
+                label: "Kamatis (%)",
+                data: [20, 29, 38, 47, 55, 64, 72, 81, 88, 95],
+                tension: 0.2,
+                borderWidth: 2,
+                pointRadius: 3
+            },
+            {
+                label: "Talong (%)",
+                data: [13, 21, 29, 37, 46, 54, 63, 72, 81, 91],
+                tension: 0.2,
+                borderWidth: 2,
+                pointRadius: 3
+            }
+        ]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: "top",
+                labels: {
+                    font: {
+                        family: "Poppins",
+                        size: 10
+                    },
+                    usePointStyle: true,
+                    pointStyle: "circle"
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+                ticks: {
+                    stepSize: 20,
+                    font: {
+                        family: "Poppins",
+                        size: 9
+                    }
+                },
+                grid: {
+                    color: "#e5e5e5"
+                }
+            },
+            x: {
+                ticks: {
+                    font: {
+                        family: "Poppins",
+                        size: 9
+                    }
+                },
+                grid: {
+                    display: false
+                }
+            }
+        }
+    }
+});
+</script>
+
+</body>
+</html>

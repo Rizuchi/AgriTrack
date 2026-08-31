@@ -9,14 +9,13 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
-
-/* MAIN DASHBOARD */
-
+/* Main */
 .dashboard-main {
     margin-left: 300px;
-    padding: 20px 20px 20px;
+    padding: 20px;
 }
 
+/* Header */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -41,9 +40,7 @@ body {
     cursor: pointer;
 }
 
-
-/* MAIN LAYOUT */
-
+/* Main Layout */
 .dashboard-layout {
     display: grid;
     grid-template-columns: 1.45fr 0.85fr;
@@ -62,52 +59,40 @@ body {
     gap: 24px;
 }
 
-
-/* HERO CARD */
-
+/* Hero */
 .hero-card {
     position: relative;
     width: 100%;
     height: 250px;
-
     overflow: hidden;
-
     border-radius: 20px;
     border: 1px solid #163228;
-
     background: url("../images/rice-field-farmer.jpg") center / cover no-repeat;
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-
     background: rgba(17, 40, 23, 0.55);
 }
 
 .hero-content {
     position: absolute;
-
     left: 24px;
     right: 24px;
     bottom: 24px;
-
     z-index: 2;
 }
 
 .hero-content h2 {
     color: #ffffff;
-
     font-size: 19px;
     line-height: 1.3;
     font-weight: 700;
-
     max-width: 480px;
 }
 
-
-/* SECTION TITLE */
-
+/* Section Title */
 .section-title {
     margin: 22px 0 14px;
 }
@@ -125,9 +110,7 @@ body {
     line-height: 1.2;
 }
 
-
-/*  STATISTICS */
-
+/* Statistics */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -136,14 +119,10 @@ body {
 
 .stat-card {
     background: #ffffff;
-
     border: 1px solid #163228;
     border-radius: 16px;
-
     height: 130px;
-
     padding: 14px 20px;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -164,26 +143,18 @@ body {
 
 .stat-number {
     text-align: center;
-
     font-size: 52px;
     font-weight: 800;
-
     color: #0d241d;
-
     line-height: 1;
 }
 
-
-/* CALENDAR */
-
+/* Calendar */
 .calendar-card {
     background: #e7f5b7;
-
     border: 1.5px solid #173227;
     border-radius: 20px;
-
     padding: 18px;
-
     height: auto;
 }
 
@@ -191,7 +162,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 12px;
 }
 
@@ -209,21 +179,13 @@ body {
     cursor: pointer;
 }
 
-
-/* MONTH */
-
 .calendar-month {
     display: flex;
     align-items: center;
-
     gap: 6px;
-
     background: #c9f04c;
-
     padding: 6px 12px;
-
     border-radius: 8px;
-
     font-size: 12px;
     font-weight: 600;
 }
@@ -232,15 +194,10 @@ body {
     font-size: 13px;
 }
 
-
-/* WEEKDAYS */
-
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-
     text-align: center;
-
     margin-bottom: 4px;
 }
 
@@ -250,29 +207,20 @@ body {
     color: #0d241d;
 }
 
-
-/* DATES */
-
 .calendar-grid {
     display: grid;
-
     grid-template-columns: repeat(7, 1fr);
-
     gap: 4px 2px;
-
     text-align: center;
 }
 
 .calendar-grid span {
     min-height: 32px;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 14px;
     font-weight: 600;
-
     color: #0d241d;
 }
 
@@ -283,29 +231,18 @@ body {
 
 .calendar-grid .date:hover {
     background: rgba(201, 240, 76, 0.7);
-    border-radius: 6px;
 }
-
-
-/* ADD NOTE */
 
 .add-note-btn {
     margin-top: 10px;
-
     width: 100%;
-
     background: #c9f04c;
-
     border: none;
     border-radius: 8px;
-
     padding: 10px;
-
     font-size: 13px;
     font-weight: 700;
-
     cursor: pointer;
-
     font-family: 'Poppins', sans-serif;
 }
 
@@ -313,22 +250,14 @@ body {
     background: #b9e33d;
 }
 
-
-/* WEATHER CARD */
-
+/* Weather */
 .weather-card {
     background: #e7f5b7;
-
     border: 1.5px solid #173227;
     border-radius: 20px;
-
     padding: 18px;
-
     height: 215px;
 }
-
-
-/* WEATHER TITLE */
 
 .weather-title {
     margin-bottom: 12px;
@@ -337,44 +266,29 @@ body {
 .weather-title h3 {
     font-size: 20px;
     font-weight: 700;
-
     line-height: 1;
-
     color: #0d241d;
 }
 
 .weather-title p {
     font-size: 12px;
-
     color: #0d241d;
-
     line-height: 1;
-
     margin-top: 4px;
 }
 
 .weather-content {
     display: grid;
-
     grid-template-columns: repeat(3, 1fr);
-
     gap: 10px;
-
     height: auto;
 }
 
-
-/* MAIN WEATHER */
-
 .weather-main {
     background: #cde87c;
-
     border-radius: 16px;
-
     padding: 12px;
-
     height: 100%;
-
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -383,30 +297,21 @@ body {
 .weather-label h4 {
     font-size: 14px;
     font-weight: 700;
-
     line-height: 1.2;
-
     color: #0d241d;
 }
 
 .weather-label span {
     font-size: 11px;
-
     color: #0d241d;
-
     line-height: 1.2;
 }
-
-
-/* TEMPERATURE */
 
 .weather-temperature {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-
     gap: 6px;
-
     margin-top: auto;
     padding-left: 14px;
 }
@@ -419,7 +324,6 @@ body {
 .weather-temperature strong {
     font-size: 19px;
     font-weight: 800;
-
     color: #0d241d;
 }
 
@@ -429,50 +333,35 @@ body {
 
 .weather-box {
     background: #cde87c;
-
     border-radius: 16px;
-
     padding: 12px;
-
     height: 100%;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
-
     color: #0d241d;
 }
 
 .weather-box h4 {
     font-size: 14px;
     font-weight: 700;
-
     line-height: 1.2;
-
     margin: 0;
 }
 
 .weather-box span {
     font-size: 11px;
-
     color: #0d241d;
-
     margin-top: 3px;
-
     line-height: 1.2;
 }
 
 .weather-box strong {
     font-size: 20px;
     font-weight: 800;
-
     line-height: 1;
-
     margin-top: 6px;
 }
-
-
-/* RAIN */
 
 .rain-text {
     display: flex;
@@ -481,30 +370,177 @@ body {
 
 .rain-text h4 {
     font-size: 15px;
-
     font-weight: 700;
-
     line-height: 1.2;
-
     margin: 0;
 }
 
 .rain-text span {
     font-size: 11px;
-
     margin-top: 3px;
-
     color: #0d241d;
 }
 
+/* Add Note Modal */
+.note-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(5px);
+}
 
-/* RESPONSIVE */
+.note-modal.show {
+    display: flex;
+}
 
+/* Modal */
+.note-modal-content {
+    position: relative;
+    width: 1020px;
+    min-height: 520px;
+    display: grid;
+    grid-template-columns: 500px 1fr;
+    background: #ffffff;
+    border: 1px solid #173227;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.20);
+}
+
+/* Modal Calendar */
+.modal-calendar {
+    background: #e7f5b7;
+    padding: 26px;
+    border-right: 1px solid #173227;
+}
+
+.modal-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.modal-calendar-header h2 {
+    font-size: 25px;
+    font-weight: 700;
+    color: #0d241d;
+}
+
+.modal-month {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #c9f04c;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.modal-month i {
+    font-size: 12px;
+}
+
+.modal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 7px;
+}
+
+.modal-weekdays span {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0d241d;
+}
+
+.modal-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 5px;
+    text-align: center;
+}
+
+.modal-calendar-grid span {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+    color: #0d241d;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+.modal-calendar-grid span:hover {
+    background: #c9f04c;
+}
+
+/* Right Information */
+.modal-information {
+    padding: 26px 24px;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.activity-section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0d241d;
+    margin-bottom: 9px;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.tag-list button {
+    border: none;
+    background: #c9e978;
+    color: #0d241d;
+    border-radius: 5px;
+    padding: 7px 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.tag-list button:hover {
+    background: #b9df5e;
+}
+
+.tag-list button.selected {
+    background: #9bcf36;
+}
+
+/* Modal Footer */
+.note-modal-footer {
+    position: absolute;
+    right: 24px;
+    bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* Responsive */
 @media (max-width: 1100px) {
-
     .dashboard-main {
         margin-left: 270px;
-        padding: 20px 20px 30px;
+        padding: 20px;
     }
 
     .dashboard-layout {
@@ -519,18 +555,17 @@ body {
         height: 230px;
     }
 
-    .calendar-card {
-        height: auto;
-    }
-
+    .calendar-card,
     .weather-card {
         height: auto;
     }
+
+    .note-modal-content {
+        width: calc(100% - 40px);
+    }
 }
 
-
 @media (max-width: 768px) {
-
     .dashboard-main {
         margin-left: 0;
         padding: 20px;
@@ -570,297 +605,23 @@ body {
         flex-direction: column;
         gap: 10px;
     }
-}
 
-/* ADD NOTE MODAL */
-
-.note-modal {
-    position: fixed;
-    inset: 0;
-
-    z-index: 9999;
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(0, 0, 0, 0.25);
-
-    backdrop-filter: blur(5px);
-}
-
-.note-modal.show {
-    display: flex;
-}
-
-
-/* MODAL CONTAINER*/
-
-.note-modal-content {
-    width: 1020px;
-    min-height: 520px;
-
-    display: grid;
-    grid-template-columns: 500px 1fr;
-
-    background: #ffffff;
-
-    border: 1px solid #173227;
-    border-radius: 18px;
-
-    overflow: hidden;
-
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.20);
-}
-
-
-/* MODAL CALENDAR */
-
-.modal-calendar {
-    background: #e7f5b7;
-
-    padding: 26px;
-
-    border-right: 1px solid #173227;
-}
-
-
-/* HEADER */
-
-.modal-calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    margin-bottom: 20px;
-}
-
-.modal-calendar-header h2 {
-    font-size: 25px;
-    font-weight: 700;
-
-    color: #0d241d;
-}
-
-
-
-/* MONTH BUTTON */
-
-.modal-month {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    background: #c9f04c;
-
-    padding: 8px 15px;
-
-    border-radius: 6px;
-
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.modal-month i {
-    font-size: 12px;
-}
-
-
-/* WEEKDAYS*/
-
-.modal-weekdays {
-    display: grid;
-
-    grid-template-columns: repeat(7, 1fr);
-
-    text-align: center;
-
-    margin-bottom: 7px;
-}
-
-.modal-weekdays span {
-    font-size: 12px;
-    font-weight: 600;
-
-    color: #0d241d;
-}
-
-
-/* CALENDAR DATES */
-
-.modal-calendar-grid {
-    display: grid;
-
-    grid-template-columns: repeat(7, 1fr);
-
-    row-gap: 5px;
-
-    text-align: center;
-}
-
-.modal-calendar-grid span {
-    height: 44px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 17px;
-    font-weight: 600;
-
-    color: #0d241d;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-}
-
-.modal-calendar-grid span:hover {
-    background: #c9f04c;
-}
-
-
-/* RIGHT INFORMATION */
-
-.modal-information {
-    padding: 26px 24px;
-
-    background: #ffffff;
-
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.activity-section h2 {
-    font-size: 24px;
-    font-weight: 700;
-
-    color: #0d241d;
-
-    margin-bottom: 9px;
-}
-
-
-/* TAGS */
-
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-.tag-list button {
-    border: none;
-
-    background: #c9e978;
-
-    color: #0d241d;
-
-    border-radius: 5px;
-
-    padding: 7px 12px;
-
-    font-family: 'Poppins', sans-serif;
-
-    font-size: 11px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-.tag-list button:hover {
-    background: #b9df5e;
-}
-
-.tag-list button.selected {
-    background: #9bcf36;
-}
-.calendar-grid .date.today {
-    font-weight: 700;
-    outline: 2px solid currentColor;
-    border-radius: 50%;
-}
- 
-.calendar-grid .date.has-entry {
-    position: relative;
-}
- 
-.calendar-grid .date.has-entry::after {
-    content: "";
-    position: absolute;
-    bottom: 2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-}
- 
-.calendar-grid .date {
-    cursor: pointer;
-}
- 
-.calendar-header i[role="button"] {
-    cursor: pointer;
-    padding: 0 4px;
-}
- 
-.modal-calendar-grid span {
-    cursor: pointer;
-}
- 
-.modal-calendar-grid span.selected {
-    font-weight: 700;
-    outline: 2px solid currentColor;
-    border-radius: 50%;
-}
- 
-.modal-selected-date-label {
-    font-size: 0.85rem;
-    margin-top: 8px;
-}
- 
-.modal-existing-notes {
-    margin-top: 8px;
-    font-size: 0.85rem;
-}
- 
-.modal-existing-notes-heading {
-    font-weight: 600;
-    margin-bottom: 4px;
-}
- 
-.modal-existing-note {
-    opacity: 0.8;
-    margin: 2px 0;
-}
- 
-#modalFreeText {
-    width: 100%;
-    resize: vertical;
-    font-family: inherit;
-    padding: 8px;
-    border-radius: 8px;
-}
- 
-.modal-error-text {
-    color: #d1453b;
-    font-size: 0.85rem;
-    min-height: 1em;
-}
- 
-#saveNoteBtn {
-    width: 100%;
-    margin-top: 8px;
-}
- 
-#saveNoteBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+    .note-modal-content {
+        width: calc(100% - 30px);
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .modal-calendar {
+        border-right: none;
+        border-bottom: 1px solid #173227;
+    }
+
+    .note-modal-footer {
+        position: static;
+        width: 100%;
+        padding: 0 24px 20px;
+        justify-content: flex-end;
+    }
 }

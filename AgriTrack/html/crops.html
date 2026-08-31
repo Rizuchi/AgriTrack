@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack Crops</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/crops.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+        <nav class="menu">
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item active">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+        </nav>
+        <!-- LOG OUT -->
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="dashboard-main">
+    <!-- HEADER -->
+    <div class="crops-header">
+        <div>
+            <h1>Mga Pananim</h1>
+            <p>I-record at subaybayan ang kalagayan ng iyong mga pananim.</p>
+        </div>
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="crops-line"></div>
+
+    <!-- SEARCH AND CATEGORY -->
+    <div class="crop-tools">
+        <div class="search-box">
+            <input type="text" id="cropSearch" placeholder="Maghanap ng pananim...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <button class="category-btn">Mga Kategorya</button>
+    </div>
+
+   <div class="crop-grid">
+    <div class="crop-card">
+        <img src="../images/kamatis.jpg" alt="Kamatis" class="crop-image">
+        <div class="crop-info">
+            <h3>Kamatis</h3>
+            <span class="crop-name">Tomato</span>
+            <p><strong>Uri ng Pananim:</strong> Gulay</p>
+            <p><strong>Petsa ng Pagtatanim:</strong> Agosto 8, 2026</p>
+            <p><strong>Tagal:</strong> 30 hanggang 90 araw</p>
+            <p><strong>Inaasahang Pag-aani:</strong> Nobyembre 2026</p>
+            <p><strong>Katayuan:</strong> Lumalaki</p>
+            <button class="details-btn">Tingnan ang Detalye</button>
+        </div>
+    </div>
+
+    <div class="crop-card">
+        <img src="../images/talong.jpg" alt="Talong" class="crop-image">
+        <div class="crop-info">
+            <h3>Talong</h3>
+            <span class="crop-name">Eggplant</span>
+            <p><strong>Uri ng Pananim:</strong> Gulay</p>
+            <p><strong>Petsa ng Pagtatanim:</strong> Hunyo 20, 2026</p>
+            <p><strong>Tagal:</strong> 50 hanggang 80 araw</p>
+            <p><strong>Inaasahang Pag-aani:</strong> Oktubre 2026</p>
+            <p><strong>Katayuan:</strong> Lumalaki</p>
+            <button class="details-btn">Tingnan ang Detalye</button>
+        </div>
+    </div>
+
+    <div class="crop-card">
+        <img src="../images/sitaw.jpg" alt="Sitaw" class="crop-image">
+        <div class="crop-info">
+            <h3>Sitaw</h3>
+            <span class="crop-name">String Beans</span>
+            <p><strong>Uri ng Pananim:</strong> Legume</p>
+            <p><strong>Petsa ng Pagtatanim:</strong> Hulyo 30, 2026</p>
+            <p><strong>Tagal:</strong> 50 hanggang 70 araw</p>
+            <p><strong>Inaasahang Pag-aani:</strong> Oktubre 2026</p>
+            <p><strong>Katayuan:</strong> Lumalaki</p>
+            <button class="details-btn">Tingnan ang Detalye</button>
+        </div>
+    </div>
+
+    <button class="add-crop-card" id="openCropModal" type="button">
+        <i class="fa-solid fa-plus"></i>
+        <span>Magdagdag ng Pananim</span>
+    </button>
+</div>
+
+<div class="crop-modal" id="cropModal">
+    <div class="crop-modal-content">
+        <div class="crop-modal-header">
+            <div>
+                <h2>Magdagdag ng Pananim</h2>
+                <p>Ilagay ang mga detalye ng iyong pananim upang masubaybayan ang paglago nito.</p>
+            </div>
+
+            <button class="close-modal" id="closeCropModal" type="button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="cropForm">
+            <div class="crop-form-grid">
+                <div class="form-group">
+                    <label for="cropName">Pangalan ng Pananim</label>
+                    <input type="text" id="cropName" name="cropName" placeholder="Hal. Kamatis" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cropType">Uri ng Pananim</label>
+                    <select id="cropType" name="cropType" required>
+                        <option value="" disabled selected>Pumili ng uri</option>
+                        <option value="Gulay">Gulay</option>
+                        <option value="Prutas">Prutas</option>
+                        <option value="Legume">Legume</option>
+                        <option value="Root Crop">Root Crop</option>
+                        <option value="Butil">Butil</option>
+                        <option value="Iba pa">Iba pa</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cropVariety">Variety / Barayti</label>
+                    <input type="text" id="cropVariety" name="cropVariety" placeholder="Hal. Cherry Tomato">
+                </div>
+
+                <div class="form-group">
+                    <label for="cropQuantity">Dami ng Itinanim</label>
+                    <input type="number" id="cropQuantity" name="cropQuantity" placeholder="Hal. 50 halaman" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="plantingDate">Petsa ng Pagtatanim</label>
+                    <input type="date" id="plantingDate" name="plantingDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="harvestDate">Inaasahang Pag-aani</label>
+                    <input type="date" id="harvestDate" name="harvestDate">
+                </div>
+
+                <div class="form-group">
+                    <label>Larawan ng Pananim</label>
+                    <label class="image-upload" for="cropImage">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Mag-upload ng larawan ng iyong pananim.</span>
+                        <input type="file" id="cropImage" name="cropImage" accept="image/*">
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="cropNotes">Mga Tala <span>(Opsyonal)</span></label>
+                    <textarea id="cropNotes" name="cropNotes" placeholder="Maglagay ng karagdagang impormasyon..."></textarea>
+                </div>
+            </div>
+
+            <div class="crop-modal-actions">
+                <button type="button" class="cancel-btn" id="cancelCropModal">Kanselahin</button>
+                <button type="submit" class="save-crop-btn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    I-save ang Pananim
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+const openCropModal = document.getElementById("openCropModal");
+const cropModal = document.getElementById("cropModal");
+const closeCropModal = document.getElementById("closeCropModal");
+const cancelCropModal = document.getElementById("cancelCropModal");
+const cropForm = document.getElementById("cropForm");
+
+openCropModal.addEventListener("click", function() {
+    cropModal.classList.add("show");
+    document.body.classList.add("modal-open");
+});
+
+function closeModal() {
+    cropModal.classList.remove("show");
+    document.body.classList.remove("modal-open");
+}
+
+closeCropModal.addEventListener("click", closeModal);
+cancelCropModal.addEventListener("click", closeModal);
+
+cropModal.addEventListener("click", function(event) {
+    if (event.target === cropModal) {
+        closeModal();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeModal();
+    }
+});
+
+cropForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    alert("Matagumpay na na-save ang pananim!");
+    cropForm.reset();
+    closeModal();
+});
+
+const cropImage = document.getElementById("cropImage");
+const imageUploadText = document.querySelector(".image-upload span");
+
+cropImage.addEventListener("change", function() {
+    if (cropImage.files.length > 0) {
+        imageUploadText.textContent = cropImage.files[0].name;
+    } else {
+        imageUploadText.textContent = "Mag-upload ng larawan ng iyong pananim.";
+    }
+});
+
+const cropSearch = document.getElementById("cropSearch");
+const cropCards = document.querySelectorAll(".crop-card");
+
+cropSearch.addEventListener("input", function() {
+    const searchValue = cropSearch.value.toLowerCase().trim();
+    cropCards.forEach(function(card) {
+        const cropName = card.querySelector("h3").textContent.toLowerCase();
+        card.style.display = cropName.includes(searchValue) ? "" : "none";
+    });
+});
+</script>
+</body>
+</html>
