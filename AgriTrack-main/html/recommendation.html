@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack Dashboard</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/recommendation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+
+<div class="sidebar-content">
+
+    <div class="logo">AGRITRACK</div>
+
+    <nav class="menu">
+
+        <!-- DASHBOARD -->
+        <a href="userdashboard.html" class="menu-item">
+            <i class="fa-solid fa-table-columns"></i>
+            <div>
+                <span class="title">Dashboard</span>
+                <span class="subtitle">Dashboard</span>
+            </div>
+        </a>
+
+        <!-- MGA PANANIM -->
+        <a href="crops.html" class="menu-item">
+            <i class="fa-solid fa-seedling"></i>
+            <div>
+                <span class="title">Mga Pananim</span>
+                <span class="subtitle">Crops</span>
+            </div>
+        </a>
+
+        <!-- CROP MONITORING -->
+        <a href="monitoring.html" class="menu-item">
+            <i class="fa-solid fa-leaf"></i>
+            <div>
+                <span class="title">Subaybayan ang Pananim</span>
+                <span class="subtitle">Crop Monitoring</span>
+            </div>
+        </a>
+
+        <!-- CROP RECOMMENDATION -->
+        <a href="recommendation.html" class="menu-item active">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <div>
+                <span class="title">Rekomendasyon na Pananim</span>
+                <span class="subtitle">Crop Recommendation</span>
+            </div>
+        </a>
+
+        <!-- PEST AND DISEASE PREDICTION -->
+        <a href="prediction.html" class="menu-item">
+            <i class="fa-solid fa-bug"></i>
+            <div>
+                <span class="title">Prediksyon sa Peste at Sakit</span>
+                <span class="subtitle">Pest and Disease Prediction</span>
+            </div>
+        </a>
+
+        <!-- CONTACT -->
+        <a href="contact.html" class="menu-item">
+            <i class="fa-solid fa-phone"></i>
+            <div>
+                <span class="title">Makipag-ugnayan</span>
+                <span class="subtitle">Contact</span>
+            </div>
+        </a>
+
+        <a href="profile.html" class="menu-item">
+            <i class="fa-solid fa-user"></i>
+            <div>
+                <span class="title">Profile</span>
+                <span class="subtitle">Profile</span>
+            </div>
+        </a>
+
+    </nav>
+
+    <!-- LOG OUT -->
+    <div class="logout-section">
+        <a href="login.html" class="menu-item logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <div>
+                <span class="title">Mag-log Out</span>
+                <span class="subtitle">Log Out</span>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+</aside>
+
+<div class="dashboard-main">
+
+    <!-- HEADER -->
+    <div class="recommendation-header">
+
+        <div>
+            <h1>Inirerekomendang Pananim</h1>
+            <p>Alamin kung anong pananim ang angkop na itanim ngayong panahon.</p>
+        </div>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+
+    </div>
+
+    <div class="recommendation-line"></div>
+
+
+    <!-- CURRENT WEATHER -->
+    <div class="current-weather">
+        <h2>
+            Kasalukuyang Panahon:
+            <span id="currentSeasonLabel">Ikinakarga...</span>
+        </h2>
+    </div>
+
+
+    <!-- CROP CARDS  -->
+    <div class="crop-recommendation-grid" id="cropGrid">
+        <p class="loading-text">Ikinakarga ang mga inirerekomendang pananim...</p>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', loadRecommendedCrops);
+
+async function loadRecommendedCrops() {
+    const grid = document.getElementById('cropGrid');
+    const seasonLabel = document.getElementById('currentSeasonLabel');
+
+    try {
+        const response = await fetch('../php/get_crops.php?current=1');
+        if (!response.ok) throw new Error('Network response was not ok');
+
+        const data = await response.json();
+        if (!data.success) throw new Error(data.message || 'Unknown error');
+
+        seasonLabel.textContent = data.currentSeasonLabel || 'Hindi Matukoy';
+
+        renderCropCards(grid, data.crops);
+    } catch (err) {
+        console.error('Failed to load crop recommendations:', err);
+        seasonLabel.textContent = 'Hindi Available';
+        grid.innerHTML = '<p class="error-text">Hindi ma-load ang mga pananim. Pakisubukang muli mamaya.</p>';
+    }
+}
+
+function renderCropCards(grid, crops) {
+    if (!crops || crops.length === 0) {
+        grid.innerHTML = '<p class="empty-text">Walang inirerekomendang pananim para sa kasalukuyang panahon.</p>';
+        return;
+    }
+
+    grid.innerHTML = '';
+
+    crops.forEach(crop => {
+        const card = document.createElement('div');
+        card.className = 'crop-card';
+
+        card.innerHTML = `
+            <img src="${escapeHtml(crop.imageUrl)}" alt="${escapeHtml(crop.cropName)}" class="crop-image">
+
+            <div class="crop-info">
+                <h3>${escapeHtml(crop.cropName)}</h3>
+
+                <p><strong>${escapeHtml(crop.englishName || '')}</strong></p>
+
+                <p>
+                    <strong>Angkop na Itanim:</strong><br>
+                    ${escapeHtml(crop.plantingPeriod)}
+                </p>
+
+                <p>
+                    <strong>Crop Type:</strong><br>
+                    ${escapeHtml(crop.cropType)}
+                </p>
+
+                <button class="details-btn" data-id="${crop.cropId}">
+                    Tingnan ang Detalye
+                </button>
+            </div>
+        `;
+
+        card.querySelector('.details-btn').addEventListener('click', () => {
+            window.location.href = `recommendation-detail.html?id=${crop.cropId}`;
+        });
+
+        grid.appendChild(card);
+    });
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Crop Monitoring</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/monitoring.css">
+</head>
+
+<body>
+
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item active">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<main class="dashboard-main">
+
+    <div class="monitoring-header">
+        <div>
+            <h1>Subaybayan ang Pananim</h1>
+            <p>Tingnan ang progreso ng iyong mga pananim.</p>
+        </div>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="monitoring-line"></div>
+
+    <div class="monitoring-tools">
+        <div class="search-box">
+            <input type="text" id="monitoringSearch" placeholder="Maghanap ng pananim...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+
+        <button class="category-btn" type="button">
+            Mga Kategorya
+        </button>
+    </div>
+
+    <section class="monitoring-section">
+        <h2>Mga Pananim</h2>
+        <p class="section-description">
+            Subaybayan ang kasalukuyang kalagayan ng iyong mga pananim.
+        </p>
+
+        <div class="table-container">
+            <table id="cropTable">
+                <thead>
+                    <tr>
+                        <th>Mga Pananim</th>
+                        <th>Yugto ng Paglago</th>
+                        <th>Kalagayan</th>
+                        <th>Peste/Sakit</th>
+                        <th>Progreso</th>
+                        <th>Aksyon</th>
+                    </tr>
+                </thead>
+
+                <tbody id="cropTableBody">
+                    <tr><td colspan="6">Naglo-load ng datos...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="progress-section">
+        <h2>Progreso ng Ani</h2>
+        <p class="section-description">
+            Bawat pananim ay may sariling gauge na nagpapakita kung gaano na kalapit sa inaasahang petsa ng anihan.
+        </p>
+
+        <div class="harvest-gauge-grid" id="harvestGaugeGrid">
+            <p>Naglo-load ng datos...</p>
+        </div>
+    </section>
+
+</main>
+
+<style>
+/* Circular harvest-progress gauges — one per planted crop */
+.harvest-gauge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+.harvest-gauge-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 14px;
+    padding: 18px 12px;
+}
+
+.harvest-gauge {
+    --pct: 0;
+    --gauge-color: #6f8f3b;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(var(--gauge-color) calc(var(--pct) * 1%), #e5e5e5 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    transition: background 0.4s ease;
+}
+
+.harvest-gauge-inner {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.harvest-gauge-inner .gauge-percent {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1d2b24;
+}
+
+.harvest-gauge-inner .gauge-days {
+    font-size: 10px;
+    color: #777;
+    margin-top: 2px;
+}
+
+.harvest-gauge-card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1d2b24;
+    margin-bottom: 4px;
+}
+
+.harvest-gauge-card .gauge-stage {
+    font-size: 12px;
+    color: #6f8f3b;
+    font-weight: 600;
+}
+</style>
+
+<script>
+const monitoringSearch = document.getElementById("monitoringSearch");
+const cropTable = document.getElementById("cropTable");
+const cropTableBody = document.getElementById("cropTableBody");
+const gaugeGrid = document.getElementById("harvestGaugeGrid");
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+function gaugeColor(pct) {
+    if (pct >= 100) return '#2e7d32'; // ready — deep green
+    if (pct >= 60)  return '#6f8f3b'; // on track — house green
+    if (pct >= 30)  return '#c9a227'; // mid — amber
+    return '#a63a3a';                 // early — muted red, just for visual distinction
+}
+
+function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const target = new Date(dateStr);
+    const today = new Date();
+    const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+    return diff;
+}
+
+function renderTable(crops) {
+    if (!crops.length) {
+        cropTableBody.innerHTML = '<tr><td colspan="6">Wala pang itinanim na pananim.</td></tr>';
+        return;
+    }
+
+    cropTableBody.innerHTML = crops.map(crop => `
+        <tr>
+            <td>${escapeHtml(crop.CropName)}</td>
+            <td>${escapeHtml(crop.GrowthStage)}</td>
+            <td>${escapeHtml(crop.Condition)}</td>
+            <td>${escapeHtml(crop.PestOrDisease)}</td>
+            <td>
+                <div class="progress-cell">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${crop.Progress}%;"></div>
+                    </div>
+                    <span>${crop.Progress}%</span>
+                </div>
+            </td>
+            <td><button class="view-btn" onclick="window.location.href='planted-crop-detail.html?id=${crop.PlantedCropID}'">Tingnan</button></td>
+        </tr>
+    `).join('');
+}
+
+function renderGauges(crops) {
+    if (!crops.length) {
+        gaugeGrid.innerHTML = '<p>Wala pang itinanim na pananim.</p>';
+        return;
+    }
+
+    gaugeGrid.innerHTML = crops.map(crop => {
+        const remaining = daysUntil(crop.ExpectedHarvestDate);
+        const daysLabel = crop.Progress >= 100
+            ? 'Handa na'
+            : (remaining !== null ? `${remaining} araw na lang` : '');
+
+        return `
+            <div class="harvest-gauge-card" data-crop-name="${escapeHtml(crop.CropName).toLowerCase()}">
+                <div class="harvest-gauge" style="--pct: ${crop.Progress}; --gauge-color: ${gaugeColor(crop.Progress)};">
+                    <div class="harvest-gauge-inner">
+                        <span class="gauge-percent">${crop.Progress}%</span>
+                        <span class="gauge-days">${escapeHtml(daysLabel)}</span>
+                    </div>
+                </div>
+                <h4>${escapeHtml(crop.CropName)}</h4>
+                <span class="gauge-stage">${escapeHtml(crop.GrowthStage)}</span>
+            </div>
+        `;
+    }).join('');
+}
+
+fetch('../php/get_monitoring.php')
+    .then(res => res.json())
+    .then(json => {
+        if (!json.success) {
+            cropTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</td></tr>`;
+            gaugeGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
+            return;
+        }
+
+        renderTable(json.data);
+        renderGauges(json.data);
+
+        monitoringSearch.addEventListener("input", function () {
+            const searchValue = monitoringSearch.value.toLowerCase().trim();
+
+            cropTable.querySelectorAll("tbody tr").forEach(row => {
+                const cropName = row.cells[0].textContent.toLowerCase();
+                row.style.display = cropName.includes(searchValue) ? "" : "none";
+            });
+
+            gaugeGrid.querySelectorAll(".harvest-gauge-card").forEach(card => {
+                const cropName = card.dataset.cropName;
+                card.style.display = cropName.includes(searchValue) ? "" : "none";
+            });
+        });
+    })
+    .catch(err => {
+        cropTableBody.innerHTML = '<tr><td colspan="6">Hindi makonekta sa server.</td></tr>';
+        gaugeGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';
+        console.error(err);
+    });
+</script>
+
+</body>
+</html>

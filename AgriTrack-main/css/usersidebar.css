@@ -1,0 +1,137 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #d9d9d9;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}
+
+.user-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100vh;
+    background: url('../images/sidebar.jpg') center center / cover no-repeat;
+    border-top-right-radius: 28px;
+    border-bottom-right-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Overlay */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(18, 45, 25, 0.48);
+}
+
+/* Sidebar Content */
+.sidebar-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px;
+}
+
+/* Logo */
+.logo {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    margin-bottom: 18px;
+    margin-left: 45px;
+}
+
+/* Menu */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Menu Item */
+.menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #ffffff;
+    transition: background 0.25s ease;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}
+
+/* Icon */
+.menu-item i {
+    width: 22px;
+    text-align: center;
+    font-size: 18px;
+    color: #f2f2f2;
+    flex-shrink: 0;
+}
+
+/* Text */
+.menu-item .title {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.menu-item .subtitle {
+    display: block;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.78);
+    margin-top: 1px;
+    line-height: 1.1;
+}
+
+/* Active */
+.menu-item.active {
+    color: #dfff4f;
+}
+
+.menu-item.active i {
+    color: #dfff4f;
+}
+
+.menu-item.active .title {
+    color: #dfff4f;
+}
+
+.menu-item.active .subtitle {
+    color: rgba(223, 255, 79, 0.85);
+}
+
+/* Logout */
+.logout-section {
+    margin-top: 30px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.logout i,
+.logout .title,
+.logout .subtitle {
+    color: #ffffff;
+}
+
+/* Logout Hover */
+.logout:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+}

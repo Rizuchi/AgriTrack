@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Pest Detail</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/crop-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="prediction.html" class="menu-item active">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<div class="dashboard-main">
+
+    <div class="detail-header">
+        <div class="detail-title" id="detail-title">
+            <h1>
+                <a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
+                Naglo-load...
+            </h1>
+            <p></p>
+        </div>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="crop-detail-card" id="detail-container">
+        <p style="padding: 18px;">Naglo-load ng datos...</p>
+    </div>
+
+</div>
+
+<script>
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+function seasonLabel(type) {
+    switch (type) {
+        case 'Dry':  return 'Tag-Init';
+        case 'Wet':  return 'Tag-Ulan';
+        case 'Both': return 'Tag-Init at Tag-Ulan';
+        default:     return 'Hindi tiyak';
+    }
+}
+
+const params = new URLSearchParams(window.location.search);
+const pestId = params.get('id');
+const container = document.getElementById('detail-container');
+const titleBlock = document.getElementById('detail-title');
+
+if (!pestId) {
+    titleBlock.innerHTML = `
+        <h1><a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a> Hindi Natagpuan</h1>
+        <p>Walang tinukoy na peste o sakit.</p>
+    `;
+    container.innerHTML = '<p style="padding: 18px;">Wala pang piniling peste o sakit.</p>';
+} else {
+    fetch(`../php/get_pest.php?id=${encodeURIComponent(pestId)}`)
+        .then(res => res.json())
+        .then(json => {
+            if (!json.success) {
+                titleBlock.innerHTML = `
+                    <h1><a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a> Hindi Natagpuan</h1>
+                    <p>Walang nahanap na peste o sakit na tumutugma.</p>
+                `;
+                container.innerHTML = '';
+                return;
+            }
+
+            const pest = json.data;
+            document.title = 'AgriTrack - ' + pest.Name;
+
+            titleBlock.innerHTML = `
+                <h1><a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a> ${escapeHtml(pest.Name)}</h1>
+                <p>${escapeHtml(pest.Type)} &middot; ${escapeHtml(seasonLabel(pest.SeasonType))}</p>
+            `;
+
+            const affectedCropsHtml = (pest.AffectedCrops && pest.AffectedCrops.length)
+                ? `
+                    <p><strong>Apektadong Pananim:</strong></p>
+                    <ul>
+                        ${pest.AffectedCrops.map(c =>
+                            `<li>${escapeHtml(c.CropName)}${c.EnglishName ? ` (${escapeHtml(c.EnglishName)})` : ''}</li>`
+                        ).join('')}
+                    </ul>
+                `
+                : '';
+
+            container.innerHTML = `
+                <div class="detail-image">
+                    <img src="../php/pest_image.php?id=${pest.PestDiseaseID}" alt="${escapeHtml(pest.Name)}">
+                </div>
+
+                <div class="detail-content">
+                    <h2>${escapeHtml(pest.Name)}</h2>
+
+                    <div class="detail-scroll">
+                        <p><strong>Impormasyon:</strong><br>${escapeHtml(pest.Info)}</p>
+                        <p><strong>Mga Sintomas:</strong><br>${escapeHtml(pest.Symptoms)}</p>
+                        <p><strong>Pamamahala:</strong><br>${escapeHtml(pest.ManagementTips)}</p>
+                        ${affectedCropsHtml}
+                    </div>
+                </div>
+            `;
+        })
+        .catch(err => {
+            titleBlock.innerHTML = `
+                <h1><a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a> Error</h1>
+                <p>Hindi makonekta sa server.</p>
+            `;
+            container.innerHTML = '';
+            console.error(err);
+        });
+}
+</script>
+
+</body>
+</html>

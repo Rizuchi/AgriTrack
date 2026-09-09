@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="tl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/registration.css">
+</head>
+<body class="auth-page">
+
+<div class="container">
+
+    <!-- Left Panel -->
+    <div class="left-panel">
+        <div class="overlay"></div>
+
+        <div class="left-content">
+            <p class="tagline">YOUR SMART FARMING COMPANION</p>
+
+            <h1>
+                Gabay sa Malusog na<br>
+                Pananim at Masaganang Ani.
+            </h1>
+
+            <div class="bottom-text">
+                <p>Grow Smart with <strong>AGRITRACK</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+
+        <h2>Gumawa ng Account</h2>
+        <p class="subtitle">
+            Punan ang mga kinakailangang impormasyon upang makagawa ng bagong account.
+        </p>
+
+        <form id="registerForm" novalidate>
+
+            <div class="row">
+
+                <div class="field">
+                    <label>Unang Pangalan</label>
+                    <input type="text" name="fname" placeholder="First Name" required pattern="[A-Za-z\\s]+" title="Only letters and spaces are allowed.">
+                </div>
+
+                <div class="field">
+                    <label>Apelyido</label>
+                    <input type="text" name="lname" placeholder="Last Name" required pattern="[A-Za-z\\s]+" title="Only letters and spaces are allowed.">
+                </div>
+
+            </div>
+
+            <div class="field">
+                <label>Pangalan ng Gumagamit</label>
+                <input type="text" name="userName" placeholder="Username" required>
+            </div>
+
+            <div class="field">
+                <label>Email Address *Optional*</label>
+                <input type="email" name="email" placeholder="Email Address" >
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <div class="password-wrapper" style="position: relative;">
+                    <input type="password" name="password" placeholder="Password" required style="width: 100%; padding-right: 48px; box-sizing: border-box;">
+                    <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #14532d; font-size: 1rem;" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Kumpirmahin ang Password</label>
+                <div class="password-wrapper" style="position: relative;">
+                    <input type="password" name="confirmPassword" placeholder="Confirm Password" required style="width: 100%; padding-right: 48px; box-sizing: border-box;">
+                    <button type="button" class="toggle-password" data-target="confirmPassword" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #14532d; font-size: 1rem;" aria-label="Show password"><i class="fa-solid fa-eye"></i></button>
+                </div>
+            </div>
+
+            <div id="message" class="form-message" role="status" aria-live="polite"></div>
+
+            <button type="submit" class="register-btn">
+                GUMAWA NG ACCOUNT
+            </button>
+
+        </form>
+
+        <p class="login-link">
+            Mayroon na ba kayong account?
+            <a href="login.html">Mag-log in.</a>
+        </p>
+
+    </div>
+
+</div>
+
+<script src="../js/registration.js"></script>
+</body>
+</html>

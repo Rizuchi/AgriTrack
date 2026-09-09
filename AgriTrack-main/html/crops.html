@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack Crops</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/crops.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Flatpickr: nicer themed calendar popup for "Petsa ng Pagtatanim" -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
+    <style>
+        /* Scoped styles for the new/changed form bits. Move these into
+           crops.css whenever convenient — kept here so nothing else breaks. */
+        .crop-select-details {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            padding: 10px 12px;
+            border: 1px solid rgba(0,0,0,0.08);
+            border-radius: 10px;
+            background: rgba(0,0,0,0.02);
+            font-size: 13px;
+        }
+        .crop-select-details.show { display: flex; }
+        .crop-select-details img {
+            width: 44px;
+            height: 44px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        .crop-select-details .csd-text strong { display: block; }
+        .crop-select-details .csd-text span { opacity: 0.75; }
+        .form-group.full-width { grid-column: 1 / -1; }
+
+        /* Searchable crop combobox */
+        .crop-combobox { position: relative; }
+        .crop-combobox-options {
+            display: none;
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            max-height: 220px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            z-index: 30;
+        }
+        .crop-combobox-options.show { display: block; }
+        .crop-combobox-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .crop-combobox-option:hover,
+        .crop-combobox-option.active {
+            background: #eef7e3;
+        }
+        .crop-combobox-option .cco-english {
+            opacity: 0.65;
+            font-size: 12px;
+        }
+        .cco-badge {
+            flex-shrink: 0;
+            font-size: 11px;
+            font-weight: 600;
+            color: #1e7e34;
+            background: #e6f4ea;
+            padding: 2px 8px;
+            border-radius: 999px;
+        }
+        .crop-season-note {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            opacity: 0.7;
+            margin-bottom: 6px;
+        }
+        .crop-combobox-empty {
+            padding: 10px 14px;
+            font-size: 13px;
+            opacity: 0.65;
+        }
+        .field-error-text {
+            display: none;
+            color: #b3261e;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        .field-error-text.show { display: block; }
+        .field-retry-btn {
+            background: none;
+            border: none;
+            color: #1e7e34;
+            text-decoration: underline;
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px;
+        }
+        .crop-card .crop-label {
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.7;
+            display: block;
+            margin-bottom: 2px;
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-Growing { background: #e6f4ea; color: #1e7e34; }
+        .status-Ready.to.Harvest, .status-ready-to-harvest { background: #fff4e0; color: #b8860b; }
+        .status-Harvested { background: #e8eaf0; color: #444; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+        <nav class="menu">
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item active">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+        </nav>
+        <!-- LOG OUT -->
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<div class="dashboard-main">
+    <!-- HEADER -->
+    <div class="crops-header">
+        <div>
+            <h1>Mga Pananim</h1>
+            <p>I-record at subaybayan ang kalagayan ng iyong mga pananim.</p>
+        </div>
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="crops-line"></div>
+
+    <!-- SEARCH AND CATEGORY -->
+    <div class="crop-tools">
+        <div class="search-box">
+            <input type="text" id="cropSearch" placeholder="Maghanap ng pananim...">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <button class="category-btn">Mga Kategorya</button>
+    </div>
+
+    <!-- CROP CARDS -->
+    <div class="crop-grid" id="cropGrid">
+        <button class="add-crop-card" id="openCropModal" type="button">
+            <i class="fa-solid fa-plus"></i>
+            <span>Magdagdag ng Pananim</span>
+        </button>
+    </div>
+</div>
+
+<div class="crop-modal" id="cropModal">
+    <div class="crop-modal-content">
+        <div class="crop-modal-header">
+            <div>
+                <h2>Magdagdag ng Pananim</h2>
+                <p>Ilagay ang mga detalye ng iyong pananim upang masubaybayan ang paglago nito.</p>
+            </div>
+
+            <button class="close-modal" id="closeCropModal" type="button">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <form id="cropForm">
+            <div class="crop-form-grid">
+                <div class="form-group">
+                    <label for="cropLabel">Pangalan ng Pananim</label>
+                    <input type="text" id="cropLabel" name="cropLabel" placeholder="Hal. Patatas Plot 1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cropSearchInput">Piliin ang Pananim</label>
+                    <span class="crop-season-note" id="cropSeasonNote"></span>
+                    <div class="crop-combobox" id="cropCombobox">
+                        <input
+                            type="text"
+                            id="cropSearchInput"
+                            placeholder="Naglo-load ng listahan..."
+                            autocomplete="off"
+                            disabled
+                            required
+                        >
+                        <!-- Actual value that gets submitted; only ever set by clicking a real option -->
+                        <input type="hidden" id="cropId" name="cropId" value="">
+                        <div class="crop-combobox-options" id="cropComboboxOptions"></div>
+                    </div>
+                    <span class="field-error-text" id="cropLoadError"></span>
+                    <!-- Read-only preview of the selected crop: photo, type, estimated harvest window -->
+                    <div class="crop-select-details" id="cropSelectDetails">
+                        <img id="cropSelectImage" src="" alt="">
+                        <div class="csd-text">
+                            <strong id="cropSelectType">—</strong>
+                            <span id="cropSelectHarvestWindow">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="plantingDate">Petsa ng Pagtatanim</label>
+                    <input type="text" id="plantingDate" name="plantingDate" placeholder="Pumili ng petsa" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="expectedHarvestPreview">Tinatayang Pag-aani</label>
+                    <input type="text" id="expectedHarvestPreview" placeholder="Awtomatikong makokompyut" disabled>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="cropNotes">Mga Tala <span>(Opsyonal)</span></label>
+                    <textarea id="cropNotes" name="cropNotes" placeholder="Maglagay ng karagdagang impormasyon..."></textarea>
+                </div>
+            </div>
+
+            <div class="crop-modal-actions">
+                <button type="button" class="cancel-btn" id="cancelCropModal">Kanselahin</button>
+                <button type="submit" class="save-crop-btn">
+                    <i class="fa-solid fa-floppy-disk"></i>
+                    I-save ang Pananim
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
+<script>
+const openCropModal = document.getElementById("openCropModal");
+const cropModal = document.getElementById("cropModal");
+const closeCropModal = document.getElementById("closeCropModal");
+const cancelCropModal = document.getElementById("cancelCropModal");
+const cropForm = document.getElementById("cropForm");
+const cropGrid = document.getElementById("cropGrid");
+const addCropCard = document.getElementById("openCropModal");
+
+const cropSearchInput = document.getElementById("cropSearchInput");
+const cropIdInput = document.getElementById("cropId");
+const cropComboboxOptions = document.getElementById("cropComboboxOptions");
+const cropLoadError = document.getElementById("cropLoadError");
+const cropSeasonNote = document.getElementById("cropSeasonNote");
+const cropSelectDetails = document.getElementById("cropSelectDetails");
+const cropSelectImage = document.getElementById("cropSelectImage");
+const cropSelectType = document.getElementById("cropSelectType");
+const cropSelectHarvestWindow = document.getElementById("cropSelectHarvestWindow");
+const plantingDateInput = document.getElementById("plantingDate");
+const expectedHarvestPreview = document.getElementById("expectedHarvestPreview");
+
+// Full crop catalog (from crops table), keyed by CropID once loaded.
+let cropCatalog = {};
+let cropList = [];
+
+openCropModal.addEventListener("click", function() {
+    cropModal.classList.add("show");
+    document.body.classList.add("modal-open");
+});
+
+function closeModal() {
+    cropModal.classList.remove("show");
+    document.body.classList.remove("modal-open");
+}
+
+closeCropModal.addEventListener("click", closeModal);
+cancelCropModal.addEventListener("click", closeModal);
+
+cropModal.addEventListener("click", function(event) {
+    if (event.target === cropModal) {
+        closeModal();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeModal();
+    }
+});
+
+// ----- Calendar picker for Petsa ng Pagtatanim -----
+const datePicker = flatpickr(plantingDateInput, {
+    dateFormat: "Y-m-d",
+    altInput: true,
+    altFormat: "F j, Y",
+    maxDate: "today",
+    onChange: updateHarvestPreview
+});
+
+function loadCropCatalog() {
+    cropLoadError.classList.remove("show");
+    cropSearchInput.disabled = true;
+    cropSearchInput.value = "";
+    cropSearchInput.placeholder = "Naglo-load ng listahan...";
+    cropIdInput.value = "";
+    cropCatalog = {};
+    cropList = [];
+    cropSeasonNote.textContent = "";
+
+    fetch("../php/get_crops.php")
+        .then(res => res.json().then(body => ({ ok: res.ok, body })))
+        .then(({ ok, body }) => {
+            if (!ok || !body || body.success !== true || !Array.isArray(body.crops)) {
+                const msg = (body && body.message) ? body.message : "Hindi ma-load ang listahan ng pananim.";
+                throw new Error(msg);
+            }
+
+            cropList = body.crops;
+            cropList.forEach(crop => { cropCatalog[crop.cropId] = crop; });
+
+            cropSearchInput.disabled = false;
+            cropSearchInput.placeholder = "I-type o pumili ng pananim...";
+
+            if (body.currentSeasonLabel) {
+                cropSeasonNote.textContent = `Kasalukuyang panahon: ${body.currentSeasonLabel}`;
+            }
+
+            if (cropList.length === 0) {
+                cropLoadError.textContent = "Wala pang pananim na naka-listahan sa database.";
+                cropLoadError.classList.add("show");
+            }
+        })
+        .catch(err => {
+            console.error("Hindi ma-load ang listahan ng pananim:", err);
+            cropSearchInput.placeholder = "Hindi ma-load ang listahan";
+            cropLoadError.innerHTML = "";
+            cropLoadError.append(document.createTextNode(err.message + " "));
+            const retryBtn = document.createElement("button");
+            retryBtn.type = "button";
+            retryBtn.className = "field-retry-btn";
+            retryBtn.textContent = "Subukan ulit";
+            retryBtn.addEventListener("click", loadCropCatalog);
+            cropLoadError.appendChild(retryBtn);
+            cropLoadError.classList.add("show");
+        });
+}
+
+// ----- Searchable combobox behavior -----
+function renderCropOptions(filterText) {
+    const search = filterText.trim().toLowerCase();
+    const matches = cropList.filter(crop => {
+        const name = (crop.cropName || "").toLowerCase();
+        const english = (crop.englishName || "").toLowerCase();
+        return name.includes(search) || english.includes(search);
+    });
+
+    cropComboboxOptions.innerHTML = "";
+
+    if (matches.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "crop-combobox-empty";
+        empty.textContent = "Walang tugmang pananim.";
+        cropComboboxOptions.appendChild(empty);
+        return;
+    }
+
+    // Crops in season right now surface first.
+    matches.sort((a, b) => (b.isCurrentSeason === true) - (a.isCurrentSeason === true));
+
+    matches.forEach(crop => {
+        const option = document.createElement("div");
+        option.className = "crop-combobox-option";
+        option.dataset.id = crop.cropId;
+        const nameHtml = crop.englishName
+            ? `${escapeHtml(crop.cropName)} <span class="cco-english">(${escapeHtml(crop.englishName)})</span>`
+            : escapeHtml(crop.cropName);
+        const badge = crop.isCurrentSeason ? '<span class="cco-badge">Panahon ngayon</span>' : "";
+        option.innerHTML = `<span>${nameHtml}</span>${badge}`;
+        option.addEventListener("click", () => selectCrop(crop));
+        cropComboboxOptions.appendChild(option);
+    });
+}
+
+function openCropOptions() {
+    if (cropSearchInput.disabled) return;
+    renderCropOptions(cropSearchInput.value);
+    cropComboboxOptions.classList.add("show");
+}
+
+function closeCropOptions() {
+    cropComboboxOptions.classList.remove("show");
+}
+
+function selectCrop(crop) {
+    cropIdInput.value = crop.cropId;
+    cropSearchInput.value = crop.englishName ? `${crop.cropName} (${crop.englishName})` : crop.cropName;
+    closeCropOptions();
+
+    cropSelectType.textContent = crop.cropType || "Walang tinukoy na uri";
+    cropSelectImage.src = crop.imageUrl;
+    cropSelectImage.style.display = "";
+    cropSelectImage.onerror = function() { this.style.display = "none"; };
+
+    const harvestBits = [];
+    if (crop.minDaysToHarvest && crop.maxDaysToHarvest) {
+        harvestBits.push(`Karaniwang ani: ${crop.minDaysToHarvest}–${crop.maxDaysToHarvest} araw`);
+    }
+    if (crop.plantingPeriod) {
+        harvestBits.push(`Panahon ng pagtatanim: ${crop.plantingPeriod}`);
+    }
+    cropSelectHarvestWindow.textContent = harvestBits.length
+        ? harvestBits.join(" · ")
+        : "Walang datos sa haba ng pag-aani";
+
+    cropSelectDetails.classList.add("show");
+    updateHarvestPreview();
+}
+
+cropSearchInput.addEventListener("focus", openCropOptions);
+cropSearchInput.addEventListener("input", function() {
+    // Typing invalidates any previous selection until they click a real option.
+    cropIdInput.value = "";
+    cropSelectDetails.classList.remove("show");
+    expectedHarvestPreview.value = "";
+    openCropOptions();
+});
+
+document.addEventListener("click", function(event) {
+    if (!document.getElementById("cropCombobox").contains(event.target)) {
+        closeCropOptions();
+    }
+});
+
+
+cropSearchInput.addEventListener("blur", function() {
+    setTimeout(() => {
+        if (!cropIdInput.value) {
+            cropSearchInput.value = "";
+        }
+    }, 150);
+});
+
+// ----- Client-side preview only; the server computes the real value -----
+function updateHarvestPreview() {
+    const crop = cropCatalog[cropIdInput.value];
+    const dateValue = plantingDateInput.value;
+
+    if (!crop || !dateValue || !crop.minDaysToHarvest || !crop.maxDaysToHarvest) {
+        expectedHarvestPreview.value = "";
+        return;
+    }
+
+    const avgDays = Math.round((Number(crop.minDaysToHarvest) + Number(crop.maxDaysToHarvest)) / 2);
+    const plantDate = new Date(dateValue + "T00:00:00");
+    const harvestDate = new Date(plantDate);
+    harvestDate.setDate(harvestDate.getDate() + avgDays);
+
+    expectedHarvestPreview.value = formatDate(harvestDate.toISOString().slice(0, 10));
+}
+
+// ----- SAVE crop to the database -----
+cropForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    if (!cropIdInput.value) {
+        alert("Piliin muna ang pananim mula sa listahan.");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("plantLabel", document.getElementById("cropLabel").value.trim());
+    formData.append("cropId", cropIdInput.value);
+    formData.append("dateOfPlant", plantingDateInput.value);
+    formData.append("notes", document.getElementById("cropNotes").value.trim());
+
+    fetch("../php/add_planted_crops.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text().then(text => ({ status: res.status, ok: res.ok, text })))
+    .then(({ status, ok, text }) => {
+        let data;
+        try {
+            data = JSON.parse(text);
+        } catch (parseErr) {
+            console.error(`add_planted_crops.php returned non-JSON (HTTP ${status}):`, text);
+            throw new Error(`HTTP ${status})`);
+        }
+
+        if (!ok || !data.success) {
+            throw new Error(data.message || `Nabigo ang pag-save (HTTP ${status}).`);
+        }
+
+        return data;
+    })
+    .then(() => {
+        cropForm.reset();
+        datePicker.clear();
+        cropIdInput.value = "";
+        cropSelectDetails.classList.remove("show");
+        expectedHarvestPreview.value = "";
+        closeModal();
+        loadPlantedCrops();
+    })
+    .catch(err => {
+        console.error(err);
+        alert(err.message);
+    });
+});
+
+// ----- LOAD the user's planted crops and render cards -----
+function loadPlantedCrops() {
+    fetch("../php/get_planted_crops.php")
+        .then(res => res.text().then(text => ({ status: res.status, ok: res.ok, text })))
+        .then(({ status, ok, text }) => {
+            let crops;
+            try {
+                crops = JSON.parse(text);
+            } catch (parseErr) {
+                console.error(`get_planted_crops.php returned non-JSON (HTTP ${status}):`, text);
+                throw new Error(`Hindi wastong sagot mula sa server (HTTP ${status}).`);
+            }
+
+            if (!ok) {
+                throw new Error((crops && crops.message) || `Hindi ma-load ang mga pananim (HTTP ${status}).`);
+            }
+
+            cropGrid.innerHTML = "";
+
+            if (Array.isArray(crops)) {
+                crops.forEach(crop => {
+                    cropGrid.appendChild(buildCropCard(crop));
+                });
+            }
+
+            cropGrid.appendChild(addCropCard);
+        })
+        .catch(err => console.error("Hindi ma-load ang mga pananim:", err));
+}
+
+function buildCropCard(crop) {
+    const card = document.createElement("div");
+    card.className = "crop-card";
+
+    const plantingDate = crop.DateOfPlant ? formatDate(crop.DateOfPlant) : "—";
+    const harvestDate = crop.ExpectedHarvestDate ? formatDate(crop.ExpectedHarvestDate) : "—";
+    const statusClass = "status-" + String(crop.Status || "").replace(/\s+/g, "-");
+
+    card.innerHTML = `
+        <img src="../php/crop_image.php?id=${crop.CropID}" alt="${escapeHtml(crop.CropName)}" class="crop-image" onerror="this.style.display='none'">
+        <div class="crop-info">
+            <span class="crop-label">${escapeHtml(crop.CropName)}${crop.EnglishName ? " · " + escapeHtml(crop.EnglishName) : ""}</span>
+            <h3>${escapeHtml(crop.PlantLabel)}</h3>
+            <p><strong>Uri ng Pananim:</strong> ${escapeHtml(crop.CropType || "—")}</p>
+            <p><strong>Petsa ng Pagtatanim:</strong> ${plantingDate}</p>
+            <p><strong>Tinatayang Pag-aani:</strong> ${harvestDate}</p>
+            <p><strong>Katayuan:</strong> <span class="status-pill ${statusClass}">${escapeHtml(crop.Status)}</span></p>
+            <button class="details-btn" onclick="window.location.href='crop-detail.html?id=${crop.PlantedCropID}'">
+                Tingnan ang Detalye
+            </button>
+        </div>
+    `;
+
+    return card;
+}
+
+function formatDate(dateStr) {
+    const months = ["Enero","Pebrero","Marso","Abril","Mayo","Hunyo","Hulyo","Agosto","Setyembre","Oktubre","Nobyembre","Disyembre"];
+    const d = new Date(dateStr);
+    if (isNaN(d)) return dateStr;
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+
+function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str ?? "";
+    return div.innerHTML;
+}
+
+// ----- SEARCH (works on dynamically loaded cards too) -----
+const cropSearch = document.getElementById("cropSearch");
+
+cropSearch.addEventListener("input", function() {
+    const searchValue = cropSearch.value.toLowerCase().trim();
+    document.querySelectorAll(".crop-card").forEach(function(card) {
+        const searchable = card.textContent.toLowerCase();
+        card.style.display = searchable.includes(searchValue) ? "" : "none";
+    });
+});
+
+// initial load
+loadCropCatalog();
+loadPlantedCrops();
+</script>
+</body>
+</html>

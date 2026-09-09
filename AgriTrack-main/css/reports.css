@@ -1,0 +1,270 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+body {
+    background: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    color: #0d241d;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+.reports-main {
+    margin-left: 300px;
+    padding: 20px 40px 50px;
+    min-height: 100vh;
+    height: auto;
+    overflow: visible;
+    background: #ffffff;
+}
+
+.reports-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.reports-header .header-text h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0d241d;
+    line-height: 1.1;
+}
+
+.reports-header .header-text p {
+    margin-top: 6px;
+    font-size: 16px;
+    font-weight: 400;
+    color: #0d241d;
+    line-height: 1.2;
+}
+
+.header-icons {
+    display: flex;
+    gap: 14px;
+    padding-top: 4px;
+}
+
+.header-icons i {
+    font-size: 22px;
+    color: #0d241d;
+    cursor: pointer;
+}
+
+.header-icons i:hover {
+    transform: translateY(-1px);
+}
+
+.reports-line {
+    width: 100%;
+    height: 1px;
+    background: #173227;
+    margin-top: 16px;
+    margin-bottom: 20px;
+}
+
+.report-statistics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.report-stat-card {
+    height: 130px;
+    padding: 14px 20px;
+    background: #bfe56f;
+    border: 1px solid #163228;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.stat-label {
+    width: 100%;
+    color: #0d241d;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-number {
+    width: 100%;
+    text-align: center;
+    color: #0d241d;
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: 1.45fr 0.85fr;
+    gap: 20px;
+    width: 100%;
+    align-items: start;
+}
+
+.report-panel {
+    width: 100%;
+    height: 400px;
+    background: #ffffff;
+    border: 1px solid #163228;
+    border-radius: 16px;
+    padding: 18px 20px;
+    overflow: hidden;
+}
+
+.report-panel h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0d241d;
+    line-height: 1.1;
+    margin-bottom: 10px;
+}
+
+.chart-area {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 42px);
+}
+
+.chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.doughnut-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reports-main::after {
+    content: "";
+    display: block;
+    height: 30px;
+}
+
+@media (max-width: 1150px) {
+    .reports-main {
+        margin-left: 300px;
+        padding: 20px 25px 20px;
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .report-statistics {
+        gap: 14px;
+    }
+}
+
+@media (max-width: 900px) {
+    .reports-main {
+        margin-left: 270px;
+        padding: 16px;
+    }
+
+    .reports-header {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .header-icons {
+        align-self: flex-end;
+    }
+
+    .report-statistics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-panel {
+        height: 350px;
+    }
+}
+
+@media (max-width: 650px) {
+    .reports-main {
+        margin-left: 0;
+        padding: 20px;
+    }
+
+    .reports-header .header-text h1 {
+        font-size: 20px;
+    }
+
+    .reports-header .header-text p {
+        font-size: 15px;
+    }
+
+    .report-statistics {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .report-stat-card {
+        height: 110px;
+        padding: 12px 15px;
+    }
+
+    .stat-label {
+        font-size: 13px;
+    }
+
+    .stat-number {
+        font-size: 42px;
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-panel {
+        height: 320px;
+    }
+}
+
+@media (max-width: 450px) {
+    .report-statistics {
+        grid-template-columns: 1fr;
+    }
+
+    .report-stat-card {
+        height: 100px;
+    }
+
+    .report-panel {
+        height: 300px;
+    }
+}

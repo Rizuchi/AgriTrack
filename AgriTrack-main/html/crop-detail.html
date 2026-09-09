@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/crop-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="user-sidebar">
+        <div class="overlay"></div>
+        <div class="sidebar-content">
+            <div class="logo">AGRITRACK</div>
+            <nav class="menu">
+                <a href="userdashboard.html" class="menu-item active">
+                    <i class="fa-solid fa-table-columns"></i>
+                    <div>
+                        <span class="title">Dashboard</span>
+                        <span class="subtitle">Dashboard</span>
+                    </div>
+                </a>
+                <a href="crops.html" class="menu-item">
+                    <i class="fa-solid fa-seedling"></i>
+                    <div>
+                        <span class="title">Mga Pananim</span>
+                        <span class="subtitle">Crops</span>
+                    </div>
+                </a>
+                <a href="monitoring.html" class="menu-item">
+                    <i class="fa-solid fa-leaf"></i>
+                    <div>
+                        <span class="title">Subaybayan ang Pananim</span>
+                        <span class="subtitle">Crop Monitoring</span>
+                    </div>
+                </a>
+                <a href="recommendation.html" class="menu-item">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <div>
+                        <span class="title">Rekomendasyon na Pananim</span>
+                        <span class="subtitle">Crop Recommendation</span>
+                    </div>
+                </a>
+                <a href="prediction.html" class="menu-item">
+                    <i class="fa-solid fa-bug"></i>
+                    <div>
+                        <span class="title">Prediksyon sa Peste at Sakit</span>
+                        <span class="subtitle">Pest and Disease Prediction</span>
+                    </div>
+                </a>
+                <a href="contact.html" class="menu-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <div>
+                        <span class="title">Makipag-ugnayan</span>
+                        <span class="subtitle">Contact</span>
+                    </div>
+                </a>
+                <a href="profile.html" class="menu-item">
+                    <i class="fa-solid fa-user"></i>
+                    <div>
+                        <span class="title">Profile</span>
+                        <span class="subtitle">Profile</span>
+                    </div>
+                </a>
+            </nav>
+            <div class="logout-section">
+                <a href="login.html" class="menu-item logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <div>
+                        <span class="title">Mag-log Out</span>
+                        <span class="subtitle">Log Out</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        <header class="detail-header">
+            <div class="detail-title">
+                <h1>
+                    <a href="crops.html" class="back-btn">
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                    Detalye ng Pananim: <span id="detailCropName">Naglo-load...</span>
+                </h1>
+                <p>Mga detalye ng iyong itinanim at ang kasalukuyang kalagayan nito.</p>
+            </div>
+            <div class="dashboard-icons">
+                <i class="fa-solid fa-gear"></i>
+                <i class="fa-solid fa-moon"></i>
+            </div>
+        </header>
+
+        <div class="crop-detail-card">
+            <div class="detail-image">
+                <img id="detailImage" src="" alt="">
+            </div>
+
+            <div class="detail-content">
+                <h2>Pangunahing Impormasyon</h2>
+
+                <div class="detail-scroll" id="detailScroll">
+                    <p>Naglo-load ang detalye ng pananim...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const cropId = params.get("id");
+
+        const detailCropName = document.getElementById("detailCropName");
+        const detailImage = document.getElementById("detailImage");
+        const detailScroll = document.getElementById("detailScroll");
+
+        if (!cropId) {
+            detailCropName.textContent = "Walang napiling pananim";
+            detailScroll.innerHTML = "<p>Bumalik sa Mga Pananim at pumili ng isang pananim upang makita ang detalye.</p>";
+        } else {
+            fetch(`../php/get_crop.php?id=${encodeURIComponent(cropId)}`)
+                .then(res => {
+                    if (!res.ok) throw new Error("not found");
+                    return res.json();
+                })
+                .then(crop => {
+                    detailCropName.textContent = crop.CropName;
+                    detailImage.src = crop.ImageURL;
+                    detailImage.alt = crop.CropName;
+
+                    detailScroll.innerHTML = `
+                        <p>
+                            <strong>Pangalan ng Pananim:</strong> ${escapeHtml(crop.CropName)}<br>
+                            <strong>Uri ng Pananim:</strong> ${escapeHtml(crop.CropType || "—")}<br>
+                            <strong>Variety / Barayti:</strong> ${escapeHtml(crop.Variety || "—")}<br>
+                            <strong>Dami ng Itinanim:</strong> ${crop.Quantity ?? "—"}
+                        </p>
+                        <p>
+                            <strong>Petsa ng Pagtatanim:</strong> ${formatDate(crop.PlantingDate)}<br>
+                            <strong>Inaasahang Pag-aani:</strong> ${crop.HarvestDate ? formatDate(crop.HarvestDate) : "—"}<br>
+                            <strong>Kasalukuyang Katayuan:</strong> ${escapeHtml(crop.Status)}
+                        </p>
+                        <p>
+                            <strong>Mga Tala</strong><br>
+                            ${crop.Notes ? escapeHtml(crop.Notes) : "Walang naitalang tala."}
+                        </p>
+                    `;
+                })
+                .catch(err => {
+                    console.error(err);
+                    detailCropName.textContent = "Hindi nahanap";
+                    detailScroll.innerHTML = "<p>Hindi nahanap ang pananim na ito, o wala ka pang access dito.</p>";
+                });
+        }
+
+        function formatDate(dateStr) {
+            const months = ["Enero","Pebrero","Marso","Abril","Mayo","Hunyo","Hulyo","Agosto","Setyembre","Oktubre","Nobyembre","Disyembre"];
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement("div");
+            div.textContent = str ?? "";
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>

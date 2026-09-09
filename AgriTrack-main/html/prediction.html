@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Pest and Disease Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/prediction.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <a href="prediction.html" class="menu-item active">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+        </nav>
+
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+<main class="prediction-main">
+
+    <div class="prediction-header">
+        <div class="header-text">
+            <h1>Prediksyon sa Peste at Sakit</h1>
+            <p>Tuklasin ang mga posibleng peste at sakit ngayong panahon at alamin kung paano mapoprotektahan ang iyong mga pananim.</p>
+        </div>
+
+        <div class="dashboard-icons">
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-moon"></i>
+        </div>
+    </div>
+
+    <div class="prediction-line"></div>
+
+    <section class="season-section">
+        <h3>Season Filter</h3>
+
+        <div class="season-buttons">
+            <button class="season-btn" data-season="Wet">Tag-Ulan</button>
+            <button class="season-btn" data-season="Dry">Tag-Init</button>
+            <button class="season-btn active" data-season="all">All Seasons</button>
+        </div>
+    </section>
+
+    <h2 class="prediction-title">Predicted Pests and Diseases</h2>
+
+    <div class="prediction-grid" id="prediction-grid">
+        <p id="loading-message">Naglo-load ng datos...</p>
+    </div>
+
+</main>
+
+<script>
+const grid = document.getElementById('prediction-grid');
+const seasonButtons = document.querySelectorAll('.season-btn');
+let allPests = [];
+
+function seasonLabel(type) {
+    switch (type) {
+        case 'Dry':  return 'Tag-Init';
+        case 'Wet':  return 'Tag-Ulan';
+        case 'Both': return 'Tag-Init at Tag-Ulan';
+        default:     return 'Hindi tiyak';
+    }
+}
+
+function preview(text, limit = 140) {
+    if (!text) return '';
+    text = text.trim();
+    return text.length <= limit ? text : text.slice(0, limit) + '…';
+}
+
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str ?? '';
+    return div.innerHTML;
+}
+
+function renderPests(pests) {
+    if (!pests.length) {
+        grid.innerHTML = '<p>Walang nakalistang peste o sakit sa database.</p>';
+        return;
+    }
+
+    grid.innerHTML = pests.map(pest => `
+        <div class="prediction-card" data-season="${escapeHtml(pest.SeasonType || '')}">
+            <img src="../php/pest_image.php?id=${pest.PestDiseaseID}" alt="${escapeHtml(pest.Name)}" class="prediction-image">
+            <div class="prediction-info">
+                <h3>${escapeHtml(pest.Name)}</h3>
+                <p><strong>Uri:</strong> ${escapeHtml(pest.Type)}</p>
+                <p><strong>Panahon:</strong> ${escapeHtml(seasonLabel(pest.SeasonType))}</p>
+                <p><strong>Sintomas:</strong> ${escapeHtml(preview(pest.Symptoms))}</p>
+                <button class="details-btn" onclick="window.location.href='pest-detail.html?id=${pest.PestDiseaseID}'">
+                    Tingnan ang Detalye
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function applyFilter(selected) {
+    document.querySelectorAll('.prediction-card').forEach(card => {
+        const cardSeason = card.dataset.season;
+        const matches = selected === 'all' || cardSeason === selected || cardSeason === 'Both';
+        card.style.display = matches ? '' : 'none';
+    });
+}
+
+seasonButtons.forEach(button => {
+    button.addEventListener('click', function () {
+        seasonButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        applyFilter(this.dataset.season);
+    });
+});
+
+fetch('../php/get_pest.php')
+    .then(res => res.json())
+    .then(json => {
+        if (!json.success) {
+            grid.innerHTML = '<p>May error sa pagkuha ng datos: ' + escapeHtml(json.message || '') + '</p>';
+            return;
+        }
+        allPests = json.data;
+        renderPests(allPests);
+    })
+    .catch(err => {
+        grid.innerHTML = '<p>Hindi makonekta sa server. Subukan muli.</p>';
+        console.error(err);
+    });
+</script>
+
+</body>
+</html>

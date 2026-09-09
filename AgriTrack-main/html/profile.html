@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriTrack - Aking Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/profile.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+        <nav class="menu">
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item active">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+        </nav>
+        <!-- LOG OUT -->
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</aside>
+
+
+
+    <!--  MAIN CONTENT -->
+
+    <main class="profile-main">
+
+        <!-- HEADER -->
+
+        <header class="profile-header">
+
+            <div class="header-text">
+
+                <h1>
+                    Aking Profile
+                </h1>
+
+                <p>
+                    Tingnan at pamahalaan ang impormasyon ng iyong account.
+                </p>
+
+            </div>
+
+            <div class="header-icons">
+
+                <i class="fa-solid fa-bell"></i>
+
+                <i class="fa-solid fa-moon"></i>
+
+            </div>
+
+        </header>
+
+
+        <!-- HEADER LINE -->
+
+        <div class="profile-line"></div>
+
+
+        <!-- PROFILE SUMMARY= -->
+
+        <section class="profile-summary">
+
+            <!-- PROFILE IMAGE -->
+
+            <div class="profile-picture">
+
+                <i class="fa-solid fa-user"></i>
+
+            </div>
+
+
+<!-- USER INFORMATION -->
+
+<div class="profile-info">
+
+    <h2 id="profileFullName">
+        Ikinakarga...
+    </h2>
+
+    <!-- <p>
+        <span class="info-label" id="profileRole">User</span>
+    </p> -->
+
+    <p id="profileEmailDisplay">
+        &nbsp;
+    </p>
+
+    <p id="profileContactDisplay">
+        &nbsp;
+    </p>
+
+
+    <!-- LAST UPDATE -->
+
+    <div class="profile-update">
+
+        <p>
+            <strong>Huling Pag-update:</strong>
+            <span id="lastUpdateDate">Wala pa</span>
+        </p>
+
+        <button type="button" id="updateInfoBtn">
+            I-update
+        </button>
+
+    </div>
+
+</div>
+
+        </section>
+
+
+        <!-- ACCOUNT INFORMATION-->
+
+        <section class="account-card">
+
+            <div class="account-heading">
+
+                <h2>
+                    Impormasyon ng Account
+                </h2>
+
+            </div>
+
+            <p id="profileFormMessage" class="form-message" style="display:none;"></p>
+
+            <form id="profileForm">
+
+                <!-- ROW 1 -->
+
+                <div class="form-row">
+
+                    <!-- FIRST NAME -->
+
+                    <div class="form-group">
+
+                        <label for="firstName">
+
+                            Unang Pangalan
+
+                            <span>
+                                First Name
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="firstName"
+                            name="firstName"
+                            value=""
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- LAST NAME -->
+
+                    <div class="form-group">
+
+                        <label for="lastName">
+
+                            Apelyido
+
+                            <span>
+                                Last Name
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="lastName"
+                            name="lastName"
+                            value=""
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROW 2 -->
+
+                <div class="form-row">
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+
+                            Email Address
+
+                            <span>
+                                Email Address
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value=""
+                        >
+
+                    </div>
+
+
+                    <!-- CONTACT -->
+
+                    <div class="form-group">
+
+                        <label for="contact">
+
+                            Numero ng Contact
+
+                            <span>
+                                Contact
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="contact"
+                            name="contact"
+                            value=""
+                            placeholder=" Hal. +63917-123-4567"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ROW 3 -->
+
+                <div class="form-row last-row">
+
+                    <!-- USERNAME -->
+
+                    <div class="form-group">
+
+                        <label for="username">
+
+                            Username
+
+                            <span>
+                                Username
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            value=""
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- EMPTY SPACE -->
+
+                    <div class="form-group empty-group">
+
+                    </div>
+
+                </div>
+
+
+                <!-- SAVE BUTTON -->
+
+                <div class="form-submit">
+
+                    <button type="submit" id="profileSaveBtn">
+                        I-save ang Mga Pagbabago
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+    <script>
+
+        const FILIPINO_MONTHS = [
+            "Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo",
+            "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
+        ];
+
+        function formatFilipinoDate(mysqlDateTime) {
+            if (!mysqlDateTime) return "Wala pa";
+            // mysqlDateTime looks like "2026-08-17 10:22:00"; make it Safari/iOS-safe
+            const isoLike = mysqlDateTime.replace(" ", "T");
+            const d = new Date(isoLike);
+            if (isNaN(d.getTime())) return "Wala pa";
+            return `${FILIPINO_MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+        }
+
+        function showFormMessage(text, isError) {
+            const el = document.getElementById("profileFormMessage");
+            el.textContent = text;
+            el.style.display = "block";
+            el.style.color = isError ? "#c0392b" : "#2e7d32";
+        }
+
+        function applyProfileData(data) {
+            document.getElementById("profileFullName").textContent =
+                `${data.firstName} ${data.lastName}`.trim() || "Walang Pangalan";
+
+            // document.getElementById("profileRole").textContent = data.role || "User";
+            document.getElementById("profileEmailDisplay").textContent = data.email || "Walang email na naitala";
+            document.getElementById("profileContactDisplay").textContent = data.contact || "Walang numero na naitala";
+            document.getElementById("lastUpdateDate").textContent = formatFilipinoDate(data.updatedAt);
+
+            document.getElementById("firstName").value = data.firstName || "";
+            document.getElementById("lastName").value = data.lastName || "";
+            document.getElementById("email").value = data.email || "";
+            document.getElementById("contact").value = data.contact || "";
+            document.getElementById("username").value = data.userName || "";
+        }
+
+        async function loadProfile() {
+            try {
+                const res = await fetch("../php/get_profile.php", {
+                    method: "GET",
+                    credentials: "include"
+                });
+                const result = await res.json();
+
+                if (!result.success) {
+                    showFormMessage(result.message || "Hindi mai-load ang profile.", true);
+                    return;
+                }
+
+                applyProfileData(result.data);
+            } catch (err) {
+                showFormMessage("Hindi makakonekta sa server.", true);
+            }
+        }
+
+        document
+            .getElementById("profileForm")
+            .addEventListener("submit", async function (event) {
+
+                event.preventDefault();
+
+                const saveBtn = document.getElementById("profileSaveBtn");
+                saveBtn.disabled = true;
+
+                const payload = {
+                    firstName: document.getElementById("firstName").value.trim(),
+                    lastName: document.getElementById("lastName").value.trim(),
+                    email: document.getElementById("email").value.trim(),
+                    contact: document.getElementById("contact").value.trim(),
+                    username: document.getElementById("username").value.trim()
+                };
+
+                try {
+                    const res = await fetch("../php/update_profile.php", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await res.json();
+
+                    if (!result.success) {
+                        showFormMessage(result.message || "Hindi na-save ang mga pagbabago.", true);
+                        return;
+                    }
+
+                    showFormMessage(result.message || "Matagumpay na nai-save ang iyong mga pagbabago.", false);
+                    document.getElementById("profileFullName").textContent =
+                        `${payload.firstName} ${payload.lastName}`.trim();
+                    document.getElementById("profileEmailDisplay").textContent = payload.email || "Walang email na naitala";
+                    document.getElementById("profileContactDisplay").textContent = payload.contact || "Walang numero na naitala";
+                    document.getElementById("lastUpdateDate").textContent = formatFilipinoDate(result.updatedAt);
+                } catch (err) {
+                    showFormMessage("Hindi makakonekta sa server.", true);
+                } finally {
+                    saveBtn.disabled = false;
+                }
+            });
+
+        document.getElementById("updateInfoBtn").addEventListener("click", function () {
+            document.getElementById("firstName").focus();
+        });
+
+        loadProfile();
+
+    </script>
+
+</body>
+</html>
