@@ -1,10 +1,5 @@
 <?php
-// php/get_crop_info.php?id=CROP_ID
-//
-// Reference-crop detail endpoint (for recommendation.html's "Tingnan ang
-// Detalye" button). This is separate from get_crop.php, which is for a
-// user's own planted_crop log entries — this one reads from the master
-// `crops` table (Singkamas, Palay, etc.), not a specific planting.
+
 
 require_once __DIR__ . '/db.php';
 header('Content-Type: application/json; charset=utf-8');
@@ -55,8 +50,7 @@ $plantingPeriod = ($row['SeasonStart'] && $row['SeasonEnd'])
     ? formatSeasonRange($row['SeasonStart'], $row['SeasonEnd'], $monthsPH)
     : 'Taon-taon';
 
-// Pests/diseases known to affect this crop (crops <-> pest_diseases,
-// linked through pest_affected_crop)
+
 $pestStmt = $conn->prepare(
     "SELECT pd.PestDiseaseID, pd.Name, pd.Type, pd.Info, pd.Symptoms, pd.ManagementTips
      FROM pest_affected_crop pac

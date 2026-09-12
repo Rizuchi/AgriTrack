@@ -41,7 +41,7 @@ try {
             'email'     => decryptData($user['email']) ?? '',
             'contact'   => decryptData($user['contact']) ?? '',
             'role'      => $user['role'],
-            'updatedAt' => $user['updatedAt'], // e.g. 2026-08-17 10:22:00 or null
+            'updatedAt' => $user['updatedAt'], 
         ],
     ]);
 } catch (Throwable $e) {

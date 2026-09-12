@@ -9,9 +9,12 @@
 
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/toast.css">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <script src="../js/responsive.js" defer></script>
 </head>
 
 <body>
@@ -118,7 +121,6 @@
 
                 <i class="fa-solid fa-bell"></i>
 
-                <i class="fa-solid fa-moon"></i>
 
             </div>
 
@@ -365,6 +367,7 @@
 
     </main>
 
+    <script src="../js/toast.js"></script>
     <script>
 
         const FILIPINO_MONTHS = [
@@ -455,6 +458,7 @@
                     }
 
                     showFormMessage(result.message || "Matagumpay na nai-save ang iyong mga pagbabago.", false);
+                    showPageToast("Na-update ang impormasyon ng profile.");
                     document.getElementById("profileFullName").textContent =
                         `${payload.firstName} ${payload.lastName}`.trim();
                     document.getElementById("profileEmailDisplay").textContent = payload.email || "Walang email na naitala";

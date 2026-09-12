@@ -1,6 +1,6 @@
 <?php
 require '../php/db.php';
-require '../php/require_user_session.php'; // checks $_SESSION['UserID'] + role, exits with 401/403 if invalid
+require '../php/require_user_session.php'; 
 
 header('Content-Type: application/json');
 
@@ -15,7 +15,7 @@ if (!$userId) {
     exit;
 }
 
-// Pull every planted crop for this user
+
 $stmt = $conn->prepare("
     SELECT pc.PlantedCropID, pc.CropID, pc.DateOfPlant, pc.ExpectedHarvestDate, pc.Status,
            c.CropName, c.EnglishName
@@ -29,7 +29,6 @@ $stmt->execute();
 $plantedCrops = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
 $stmt->close();
 
-// Pull latest note per planted crop, to extract Kalagayan (condition) and pest mentions
 $noteStmt = $conn->prepare("
     SELECT Message
     FROM notes
@@ -39,7 +38,6 @@ $noteStmt = $conn->prepare("
 ");
 
 function extractSegment($message, $label) {
-    // Notes are stored like: "Gawain: ... | Kalagayan: ... | Panahon: ..."
     if (preg_match('/' . preg_quote($label, '/') . ':\s*(.*?)(\||$)/u', $message, $m)) {
         return trim($m[1]);
     }
@@ -86,8 +84,9 @@ foreach ($plantedCrops as &$crop) {
 
     if ($noteRow) {
         $condition = extractSegment($noteRow['Message'], 'Kalagayan');
-        if ($condition && stripos($condition, 'peste') !== false) {
-            $pest = $condition; // surface the actual pest-related tag text
+        $pestSegment = extractSegment($noteRow['Message'], 'Peste/Sakit');
+        if ($pestSegment) {
+            $pest = $pestSegment;
         }
     }
 

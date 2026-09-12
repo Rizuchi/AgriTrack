@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriTrack - Detalye ng Pagsubaybay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/monitoring-details.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <script src="../js/responsive.js" defer></script>
+</head>
+<body>
+<aside class="user-sidebar">
+    <div class="overlay"></div>
+    <div class="sidebar-content">
+        <div class="logo">AGRITRACK</div>
+        <nav class="menu">
+            <a href="userdashboard.html" class="menu-item"><i class="fa-solid fa-table-columns"></i><div><span class="title">Dashboard</span><span class="subtitle">Dashboard</span></div></a>
+            <a href="crops.html" class="menu-item"><i class="fa-solid fa-seedling"></i><div><span class="title">Mga Pananim</span><span class="subtitle">Crops</span></div></a>
+            <a href="monitoring.html" class="menu-item active"><i class="fa-solid fa-leaf"></i><div><span class="title">Subaybayan ang Pananim</span><span class="subtitle">Crop Monitoring</span></div></a>
+            <a href="recommendation.html" class="menu-item"><i class="fa-solid fa-wand-magic-sparkles"></i><div><span class="title">Rekomendasyon na Pananim</span><span class="subtitle">Crop Recommendation</span></div></a>
+            <a href="prediction.html" class="menu-item"><i class="fa-solid fa-bug"></i><div><span class="title">Prediksyon sa Peste at Sakit</span><span class="subtitle">Pest and Disease Prediction</span></div></a>
+            <a href="contact.html" class="menu-item"><i class="fa-solid fa-phone"></i><div><span class="title">Makipag-ugnayan</span><span class="subtitle">Contact</span></div></a>
+            <a href="profile.html" class="menu-item"><i class="fa-solid fa-user"></i><div><span class="title">Profile</span><span class="subtitle">Profile</span></div></a>
+        </nav>
+        <div class="logout-section"><a href="login.html" class="menu-item logout"><i class="fa-solid fa-right-from-bracket"></i><div><span class="title">Mag-log Out</span><span class="subtitle">Log Out</span></div></a></div>
+    </div>
+</aside>
+
+<main class="dashboard-main">
+    <header class="detail-header">
+        <div class="detail-title">
+            <h1><a href="monitoring.html" class="back-btn" aria-label="Bumalik sa monitoring"><i class="fa-solid fa-arrow-left"></i></a>Detalye ng Pagsubaybay: <span id="detailCropName">Naglo-load...</span></h1>
+            <p>I-update ang kalagayan at peste o sakit ng iyong pananim.</p>
+        </div>
+        <div class="dashboard-icons"><i class="fa-solid fa-bell"></i></div>
+    </header>
+
+    <section class="crop-detail-card monitoring-detail-card">
+        <div class="detail-image"><img id="detailImage" src="" alt=""></div>
+        <div class="detail-content">
+            <div class="detail-content-header">
+                <h2>Kasalukuyang Kalagayan</h2>
+                <button type="button" class="history-btn" id="openHistoryBtn">
+                    <i class="fa-solid fa-clock-rotate-left"></i> Tingnan ang Kasaysayan
+                </button>
+            </div>
+            <div class="detail-scroll">
+                <div id="cropSummary"><p>Naglo-load ang detalye ng pananim...</p></div>
+                <form id="monitoringForm" class="monitoring-form">
+                    <label for="condition">Kalagayan / Condition
+                        <select id="condition" required>
+                            <option value="Malusog ang Pananim">Malusog ang Pananim</option>
+                            <option value="Naninilaw ang Dahon">Naninilaw ang Dahon</option>
+                            <option value="Kulang sa Tubig">Kulang sa Tubig</option>
+                            <option value="Handa nang Anihin">Handa nang Anihin</option>
+                            <option value="May Peste">May Peste</option>
+                            <option value="May Sakit">May Sakit</option>
+                            <option value="Nabaha">Nabaha</option>
+                            <option value="Natuyuan">Natuyuan</option>
+                        </select>
+                    </label>
+                    <label for="pest">Peste / Sakit
+                        <select id="pest">
+                            <option value="Wala">Wala</option>
+                        </select>
+                    </label>
+                    <label for="additionalNote">Karagdagang Tala
+                        <textarea id="additionalNote" rows="3" placeholder="Opsyonal na tala..."></textarea>
+                    </label>
+                    <button class="save-monitoring-btn" type="submit"><i class="fa-solid fa-floppy-disk"></i> I-save ang Update</button>
+                    <p id="monitoringMessage" class="monitoring-message" role="status"></p>
+                </form>
+                <div id="tipPanel" class="tip-panel" hidden></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HISTORY PANEL -->
+    <div class="history-overlay" id="historyOverlay">
+        <div class="history-panel">
+            <div class="history-panel-header">
+                <h2><i class="fa-solid fa-clock-rotate-left"></i> Kasaysayan ng Pagsubaybay</h2>
+                <button type="button" class="history-close-btn" id="closeHistoryBtn" aria-label="Isara">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="history-panel-body" id="historyList">
+                <p>Naglo-load ang kasaysayan...</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+.detail-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.history-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #eef3e4;
+    border: 1px solid #c7d6ac;
+    color: #3f5a24;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.history-btn:hover {
+    background: #e1ecd0;
+}
+
+.history-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: none;
+    align-items: center;
+    justify-content: flex-end;
+    z-index: 1000;
+}
+
+.history-overlay.show {
+    display: flex;
+}
+
+.history-panel {
+    background: #fff;
+    width: min(420px, 100%);
+    height: 100%;
+    box-shadow: -6px 0 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(24px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.history-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.history-panel-header h2 {
+    font-size: 17px;
+    margin: 0;
+}
+
+.history-close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #555;
+}
+
+.history-panel-body {
+    padding: 16px 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.history-entry {
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+}
+
+.history-entry-date {
+    font-size: 12px;
+    color: #777;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.history-entry-row {
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.history-entry-row strong {
+    color: #3f5a24;
+}
+
+.history-empty {
+    color: #777;
+    font-size: 14px;
+}
+
+.save-monitoring-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+</style>
+
+<script src="../js/toast.js"></script>
+<script>
+const cropId = new URLSearchParams(window.location.search).get('id');
+const detailCropName = document.getElementById('detailCropName');
+const detailImage = document.getElementById('detailImage');
+const cropSummary = document.getElementById('cropSummary');
+const conditionSelect = document.getElementById('condition');
+const pestSelect = document.getElementById('pest');
+const tipPanel = document.getElementById('tipPanel');
+const message = document.getElementById('monitoringMessage');
+const historyOverlay = document.getElementById('historyOverlay');
+const historyList = document.getElementById('historyList');
+
+const SAVE_BUTTON_LABEL = '<i class="fa-solid fa-floppy-disk"></i> I-save ang Update';
+let cooldownTimer = null;
+
+function escapeHtml(value) {
+    const div = document.createElement('div');
+    div.textContent = value ?? '';
+    return div.innerHTML;
+}
+
+function formatDate(value) {
+    if (!value) return '—';
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString('fil-PH', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatDateTime(value) {
+    if (!value) return '—';
+    const date = new Date(value.replace(' ', 'T'));
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleString('fil-PH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function populatePestOptions(availablePests, selectedPestName) {
+    pestSelect.innerHTML = '<option value="Wala">Wala</option>';
+    (availablePests || []).forEach(p => {
+        const option = document.createElement('option');
+        option.value = p.name;
+        option.textContent = `${p.name} (${p.type})`;
+        pestSelect.appendChild(option);
+    });
+    if (selectedPestName && selectedPestName !== 'Wala') {
+        const match = Array.from(pestSelect.options).find(o => o.value.toLowerCase() === selectedPestName.toLowerCase());
+        pestSelect.value = match ? match.value : 'Wala';
+    } else {
+        pestSelect.value = 'Wala';
+    }
+}
+
+function renderTips(selectedPest) {
+    if (!selectedPest) {
+        tipPanel.hidden = true;
+        tipPanel.innerHTML = '';
+        return;
+    }
+    const typeLabel = selectedPest.type === 'Disease' ? 'Sakit' : 'Peste';
+    tipPanel.innerHTML = `
+        <h3><i class="fa-solid fa-lightbulb"></i> ${escapeHtml(selectedPest.name)} (${typeLabel})</h3>
+        ${selectedPest.symptoms ? `<p><strong>Mga Sintomas:</strong><br>${escapeHtml(selectedPest.symptoms)}</p>` : ''}
+        ${selectedPest.managementTips ? `<p><strong>Mga Tip sa Pamamahala:</strong><br>${escapeHtml(selectedPest.managementTips)}</p>` : '<p>Walang naitalang tip sa pamamahala para dito.</p>'}
+    `;
+    tipPanel.hidden = false;
+}
+
+function loadDetail() {
+    return fetch(`../php/get_monitoring_detail.php?id=${encodeURIComponent(cropId)}`)
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok || !data.success) throw new Error(data.message || 'Hindi nahanap ang pananim.');
+            const crop = data.crop;
+            detailCropName.textContent = crop.CropName;
+            detailImage.src = crop.ImageURL;
+            detailImage.alt = crop.CropName;
+            cropSummary.innerHTML = `<p><strong>Pangalan:</strong> ${escapeHtml(crop.CropName)}<br><strong>Uri:</strong> ${escapeHtml(crop.CropType || '—')}<br><strong>Petsa ng Pagtatanim:</strong> ${formatDate(crop.DateOfPlant)}<br><strong>Inaasahang Pag-aani:</strong> ${formatDate(crop.ExpectedHarvestDate)}<br><strong>Status:</strong> ${escapeHtml(crop.Status || '—')}</p>`;
+
+            const savedCondition = crop.Condition === 'Walang Tala' ? 'Malusog ang Pananim' : crop.Condition;
+            const conditionOption = Array.from(conditionSelect.options).find(option => option.value.toLowerCase() === savedCondition.toLowerCase());
+            conditionSelect.value = conditionOption ? conditionOption.value : 'Malusog ang Pananim';
+
+            populatePestOptions(data.availablePests, crop.PestOrDisease);
+            renderTips(data.selectedPest);
+        });
+}
+
+function renderHistory(history) {
+    if (!history || history.length === 0) {
+        historyList.innerHTML = '<p class="history-empty">Wala pang naitalang kasaysayan para sa pananim na ito.</p>';
+        return;
+    }
+
+    historyList.innerHTML = history.map(entry => {
+        const rows = [];
+        if (entry.condition) {
+            rows.push(`<div class="history-entry-row"><strong>Kalagayan:</strong> ${escapeHtml(entry.condition)}</div>`);
+        }
+        if (entry.pest) {
+            rows.push(`<div class="history-entry-row"><strong>Peste/Sakit:</strong> ${escapeHtml(entry.pest)}</div>`);
+        }
+        if (entry.note) {
+            rows.push(`<div class="history-entry-row"><strong>Tala:</strong> ${escapeHtml(entry.note)}</div>`);
+        }
+        if (rows.length === 0) {
+            rows.push('<div class="history-entry-row">Walang detalye.</div>');
+        }
+        return `
+            <div class="history-entry">
+                <div class="history-entry-date">${escapeHtml(formatDateTime(entry.timeCreated))}</div>
+                ${rows.join('')}
+            </div>
+        `;
+    }).join('');
+}
+
+function loadHistory() {
+    historyList.innerHTML = '<p>Naglo-load ang kasaysayan...</p>';
+    return fetch(`../php/get_monitoring_history.php?id=${encodeURIComponent(cropId)}`)
+        .then(response => response.json().then(data => ({ ok: response.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok || !data.success) throw new Error(data.message || 'Hindi na-load ang kasaysayan.');
+            renderHistory(data.history);
+        })
+        .catch(error => {
+            historyList.innerHTML = `<p class="history-empty">${escapeHtml(error.message)}</p>`;
+        });
+}
+
+function startCooldown(button, seconds) {
+    if (cooldownTimer) clearInterval(cooldownTimer);
+    let remaining = seconds;
+    button.disabled = true;
+    const tick = () => {
+        button.innerHTML = `<i class="fa-solid fa-clock"></i> Pakihintay (${remaining}s)`;
+        remaining -= 1;
+        if (remaining < 0) {
+            clearInterval(cooldownTimer);
+            cooldownTimer = null;
+            button.disabled = false;
+            button.innerHTML = SAVE_BUTTON_LABEL;
+        }
+    };
+    tick();
+    cooldownTimer = setInterval(tick, 1000);
+}
+
+if (!cropId) {
+    detailCropName.textContent = 'Walang napiling pananim';
+    cropSummary.innerHTML = '<p>Bumalik sa Crop Monitoring at pumili ng pananim.</p>';
+} else {
+    loadDetail().catch(error => {
+        detailCropName.textContent = 'Hindi nahanap';
+        cropSummary.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
+    });
+}
+
+document.getElementById('monitoringForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!cropId) return;
+    const button = event.target.querySelector('button');
+    if (button.disabled) return; 
+    button.disabled = true;
+    message.textContent = 'Sine-save...';
+    try {
+        const response = await fetch('../php/update_monitoring.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantedCropId: cropId,
+                condition: conditionSelect.value,
+                pest: pestSelect.value,
+                additionalNote: document.getElementById('additionalNote').value.trim()
+            })
+        });
+        const data = await response.json();
+
+        if (response.status === 429) {
+            message.textContent = data.message || 'Masyadong mabilis. Pakihintay saglit.';
+            startCooldown(button, data.retryAfter || 4);
+            return;
+        }
+        if (!response.ok || !data.success) throw new Error(data.message || 'Hindi na-save ang update.');
+
+        message.textContent = 'Matagumpay na nai-save ang monitoring update.';
+        showPageToast('Na-update ang kalagayan ng pananim.');
+        document.getElementById('additionalNote').value = '';
+        await loadDetail();
+        startCooldown(button, 4);
+    } catch (error) {
+        message.textContent = error.message;
+        button.disabled = false;
+    }
+});
+
+document.getElementById('openHistoryBtn').addEventListener('click', () => {
+    if (!cropId) return;
+    historyOverlay.classList.add('show');
+    loadHistory();
+});
+
+document.getElementById('closeHistoryBtn').addEventListener('click', () => {
+    historyOverlay.classList.remove('show');
+});
+
+historyOverlay.addEventListener('click', event => {
+    if (event.target === historyOverlay) {
+        historyOverlay.classList.remove('show');
+    }
+});
+</script>
+</body>
+</html>

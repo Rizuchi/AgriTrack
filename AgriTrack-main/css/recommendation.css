@@ -113,16 +113,15 @@ body::-webkit-scrollbar {
 
 .crop-recommendation-grid {
     display: grid;
-    grid-template-columns: repeat(2, 490px);
-    column-gap: 10px;
-    row-gap: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
     width: 100%;
     overflow: visible;
-    padding-right: 16px;
+    padding-right: 0;
 }
 
 .crop-card {
-    width: 470px;
+    width: 100%;
     height: 330px;
     background: #ffffff;
     border: 1px solid #0d241d;
@@ -205,44 +204,91 @@ body::-webkit-scrollbar {
 
 @media (max-width: 1150px) {
     .crop-recommendation-grid {
-        grid-template-columns: repeat(2, minmax(320px, 1fr));
-        column-gap: 10px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
     }
 
     .crop-card {
         width: 100%;
+        min-width: 0;
+    }
+
+    .crop-image {
+        width: clamp(140px, 18vw, 200px);
+        height: clamp(200px, 25vw, 280px);
     }
 }
 
 @media (max-width: 900px) {
     .dashboard-main {
-        margin-left: 270px;
+        margin-left: 240px;
         padding: 16px;
     }
 
     .crop-card {
         height: auto;
+        min-height: 280px;
+    }
+
+    .crop-info h3 {
+        font-size: clamp(20px, 3vw, 28px);
     }
 }
 
-@media (max-width: 650px) {
+@media (max-width: 760px) {
     .dashboard-main {
         margin-left: 0;
-        padding: 20px;
+        padding: 16px;
     }
 
     .crop-recommendation-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
+        padding-right: 0;
     }
 
     .crop-card {
         width: 100%;
-        max-width: 490px;
+        max-width: none;
         height: auto;
-        min-height: 310px;
+        min-height: 0;
+        padding: 14px;
+        gap: 14px;
+    }
+
+    .crop-image {
+        width: clamp(110px, 32vw, 160px);
+        height: clamp(160px, 44vw, 220px);
+    }
+
+    .crop-info {
+        padding-bottom: 48px;
+    }
+
+    .crop-info h3 {
+        font-size: clamp(18px, 6vw, 26px);
     }
 
     .recommendation-header h1 {
-        font-size: 20px;
+        font-size: clamp(24px, 7vw, 32px);
+    }
+
+    .recommendation-header p {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 420px) {
+    .crop-card {
+        align-items: stretch;
+    }
+
+    .crop-image {
+        width: 105px;
+        height: 150px;
+    }
+
+    .crop-info p {
+        font-size: 12px;
     }
 }

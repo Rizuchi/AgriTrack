@@ -39,11 +39,11 @@ while ($row = $tasksResult->fetch_assoc()) {
 }
 $stmt->close();
 
-// Notes this month
+
 $stmt = $conn->prepare(
     "SELECT NotesID, EntryDate, Message, TimeCreated
      FROM notes
-     WHERE UserID = ? AND EntryDate BETWEEN ? AND ?
+        WHERE UserID = ? AND EntryDate BETWEEN ? AND ?
      ORDER BY EntryDate ASC"
 );
 $stmt->bind_param('iss', $userId, $monthStart, $monthEnd);
@@ -55,6 +55,25 @@ while ($row = $notesResult->fetch_assoc()) {
 }
 $stmt->close();
 
+
+$stmt = $conn->prepare(
+    "SELECT pc.PlantedCropID, pc.PlantLabel, pc.ExpectedHarvestDate,
+            c.CropName, c.EnglishName
+     FROM planted_crop pc
+     JOIN crops c ON c.CropID = pc.CropID
+     WHERE pc.UserID = ? AND pc.ExpectedHarvestDate BETWEEN ? AND ?
+       AND pc.Status != 'Harvested'
+     ORDER BY pc.ExpectedHarvestDate ASC"
+);
+$stmt->bind_param('iss', $userId, $monthStart, $monthEnd);
+$stmt->execute();
+$harvestResult = $stmt->get_result();
+$harvests = [];
+while ($row = $harvestResult->fetch_assoc()) {
+    $harvests[] = $row;
+}
+$stmt->close();
+
 $conn->close();
 
 echo json_encode([
@@ -63,4 +82,5 @@ echo json_encode([
     'month' => $month,
     'tasks' => $tasks,
     'notes' => $notes,
+    'harvests' => $harvests,
 ]);

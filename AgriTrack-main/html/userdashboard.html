@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/userdashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=2">
+    <script src="../js/responsive.js" defer></script>
 </head>
 <body>
 
@@ -104,8 +106,6 @@
 
         <div class="dashboard-icons">
             <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-gear"></i>
-            <i class="fa-solid fa-moon"></i>
         </div>
 
     </div>
@@ -287,7 +287,7 @@
                 </div>
 
 
-                <!-- CALENDAR DATES (rendered by userdashboard.js) -->
+                <!-- CALENDAR DATES  -->
                 <div class="calendar-grid" id="calendarGrid">
                 </div>
 
@@ -438,6 +438,13 @@
                     Napiling Petsa / Selected Date: <strong id="modalSelectedDateText">&ndash;</strong>
                 </p>
 
+                <label class="modal-crop-select" for="modalCropSelect">
+                    Pananim / Crop
+                    <select id="modalCropSelect">
+                        <option value="">Pangkalahatang tala / General note</option>
+                    </select>
+                </label>
+
                 <div id="modalExistingNotes" class="modal-existing-notes"></div>
 
             </div>
@@ -524,6 +531,11 @@
 
         </div>
 
+    </div>
+
+    <div class="save-toast" id="saveToast" role="status" aria-live="polite">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="saveToastText">Na-save ang impormasyon.</span>
     </div>
 
     <script src="../js/userdashboard.js"></script>

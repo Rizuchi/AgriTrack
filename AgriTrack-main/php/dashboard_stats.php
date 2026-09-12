@@ -11,11 +11,43 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 $userId = $_SESSION['UserID'];
 $conn = getDbConnection();
 
-// Total crops
+// CROPS STATS
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM planted_crop WHERE UserID = ?");
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $totalCrops = (int) $stmt->get_result()->fetch_assoc()['total'];
+$stmt->close();
+
+// HINDI ISASAMA YUNG HARVESTED NA 
+$stmt = $conn->prepare(
+        "SELECT COUNT(*) AS total
+         FROM planted_crop
+         WHERE UserID = ? AND (Status IS NULL OR Status <> 'Harvested')"
+);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$activeMonitoring = (int) $stmt->get_result()->fetch_assoc()['total'];
+$stmt->close();
+
+// PESTS STATS
+$stmt = $conn->prepare(
+        "SELECT COUNT(*) AS total
+         FROM notes n
+         WHERE n.UserID = ?
+             AND LOWER(n.Message) LIKE '%kalagayan:%'
+             AND LOWER(n.Message) LIKE '%peste%'
+             AND NOT EXISTS (
+                     SELECT 1
+                     FROM notes newer
+                     WHERE newer.UserID = n.UserID
+                         AND (newer.PlantedCropID = n.PlantedCropID
+                                    OR (newer.PlantedCropID IS NULL AND n.PlantedCropID IS NULL))
+                         AND newer.TimeCreated > n.TimeCreated
+             )"
+);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$pestAlerts = (int) $stmt->get_result()->fetch_assoc()['total'];
 $stmt->close();
 
 // Pending tasks
@@ -30,7 +62,7 @@ $conn->close();
 echo json_encode([
     'success' => true,
     'totalCrops' => $totalCrops,
-    'activeMonitoring' => 0,
-    'pestAlerts' => 0,
+    'activeMonitoring' => $activeMonitoring,
+    'pestAlerts' => $pestAlerts,
     'scheduledTasks' => $scheduledTasks,
 ]);

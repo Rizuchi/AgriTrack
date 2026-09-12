@@ -11,12 +11,18 @@ const TAG_ROW_LABELS = {
     'Panahon': 'Panahon / Weather',
 };
 
+const NOTE_SAVE_LABEL = 'I-save / Save';
+let noteCooldownTimer = null;
+
 const state = {
     viewYear: new Date().getFullYear(),
-    viewMonth: new Date().getMonth() + 1, // 1-12
-    tasksByDate: {},   // 'YYYY-MM-DD' FORMAT FOR TASK AND NOTES
-    notesByDate: {},   
-    selectedNoteDate: null, 
+    viewMonth: new Date().getMonth() + 1, 
+    tasksByDate: {},   
+    notesByDate: {},
+    harvestByDate: {},
+    selectedNoteDate: null,
+    selectedPlantedCropId: null,
+    plantedCrops: [],
 };
 
 function pad2(n) {
@@ -27,9 +33,7 @@ function toDateKey(year, month, day) {
     return `${year}-${pad2(month)}-${pad2(day)}`;
 }
 
-// Normalizes any date-ish string from the server ("2026-08-05",
-// "2026-08-05 00:00:00", etc.) down to the plain "YYYY-MM-DD" key the
-// calendar grid uses, so the has-entry indicator matches reliably.
+
 function normalizeDateKey(raw) {
     if (!raw) return raw;
     return String(raw).slice(0, 10);
@@ -58,7 +62,10 @@ async function apiPost(path, body) {
     });
     const data = await res.json().catch(() => ({ success: false, message: 'Invalid server response.' }));
     if (!res.ok || !data.success) {
-        throw new Error(data.message || 'Request failed.');
+        const err = new Error(data.message || 'Request failed.');
+        err.status = res.status;
+        err.retryAfter = data.retryAfter;
+        throw err;
     }
     return data;
 }
@@ -108,10 +115,18 @@ async function loadMonthData(year, month) {
             if (!state.notesByDate[key]) state.notesByDate[key] = [];
             state.notesByDate[key].push(n);
         });
+
+        state.harvestByDate = {};
+        (data.harvests || []).forEach(h => {
+            const key = normalizeDateKey(h.ExpectedHarvestDate);
+            if (!state.harvestByDate[key]) state.harvestByDate[key] = [];
+            state.harvestByDate[key].push(h);
+        });
     } catch (err) {
         console.error('Failed to load calendar data:', err);
         state.tasksByDate = {};
         state.notesByDate = {};
+        state.harvestByDate = {};
     }
 
     renderMainCalendar();
@@ -144,6 +159,16 @@ function renderMainCalendar() {
         }
         if (state.tasksByDate[key] || state.notesByDate[key]) {
             span.classList.add('has-entry');
+        }
+        if (state.notesByDate[key]) {
+            span.classList.add('has-note');
+            span.title = 'May tala / Has note';
+        }
+        if (state.harvestByDate[key]) {
+            span.classList.add('harvest-ready');
+            span.title = state.harvestByDate[key]
+                .map(h => `${h.CropName || h.EnglishName} — handa nang anihin`)
+                .join(', ');
         }
 
         span.addEventListener('click', () => openNoteModal(key));
@@ -201,6 +226,9 @@ function renderModalCalendar(selectedKey) {
         if (key === selectedKey) {
             span.classList.add('selected');
         }
+        if (state.harvestByDate[key]) {
+            span.classList.add('harvest-ready');
+        }
 
         span.addEventListener('click', () => {
             grid.querySelectorAll('span').forEach(s => s.classList.remove('selected'));
@@ -216,6 +244,26 @@ function setSelectedNoteDate(key) {
     state.selectedNoteDate = key;
     document.getElementById('modalSelectedDateText').textContent = key;
     loadExistingNotesForDate(key);
+}
+
+async function loadPlantedCrops() {
+    try {
+        const res = await fetch(API_BASE + 'get_planted_crops.php', { credentials: 'same-origin' });
+        const crops = await res.json();
+        if (!res.ok || !Array.isArray(crops)) throw new Error('Invalid crop response.');
+        state.plantedCrops = crops;
+
+        const select = document.getElementById('modalCropSelect');
+        select.innerHTML = '<option value="">Pangkalahatang tala / General note</option>';
+        crops.forEach(crop => {
+            const option = document.createElement('option');
+            option.value = crop.PlantedCropID;
+            option.textContent = `${crop.PlantLabel} - ${crop.CropName}`;
+            select.appendChild(option);
+        });
+    } catch (err) {
+        console.error('Failed to load planted crops:', err);
+    }
 }
 
 // Parses a stored Message string like:
@@ -295,11 +343,37 @@ function buildNoteCard(note) {
     return card;
 }
 
+// Renders the "🌾 crop ready" banner for a date that has one or more
+// planted crops reaching their ExpectedHarvestDate that day.
+function buildHarvestBanner(harvests) {
+    const banner = document.createElement('div');
+    banner.className = 'harvest-banner';
+
+    harvests.forEach(h => {
+        const item = document.createElement('p');
+        item.className = 'harvest-banner-item';
+        const name = h.CropName || h.EnglishName || 'Pananim';
+        item.textContent = `🌾 ${name} — handa nang anihin / ready to harvest`;
+        banner.appendChild(item);
+    });
+
+    return banner;
+}
+
 async function loadExistingNotesForDate(key) {
     const container = document.getElementById('modalExistingNotes');
     container.innerHTML = '';
+
+    const harvests = state.harvestByDate[key];
+    if (harvests && harvests.length > 0) {
+        container.appendChild(buildHarvestBanner(harvests));
+    }
+
     try {
-        const data = await apiGet(`notes_get.php?date=${key}`);
+        const cropQuery = state.selectedPlantedCropId === null
+            ? ''
+            : `&plantedCropId=${encodeURIComponent(state.selectedPlantedCropId)}`;
+        const data = await apiGet(`notes_get.php?date=${key}${cropQuery}`);
         if (!data.notes || data.notes.length === 0) return;
 
         const heading = document.createElement('p');
@@ -327,11 +401,42 @@ function resetModalSelections() {
     document.querySelectorAll('.tag-list button').forEach(btn => btn.classList.remove('selected'));
     document.getElementById('modalFreeText').value = '';
     document.getElementById('modalErrorText').textContent = '';
+    state.selectedPlantedCropId = null;
+    const cropSelect = document.getElementById('modalCropSelect');
+    cropSelect.value = '';
+    cropSelect.size = 1;
 }
 
 function getSelectedTags(group) {
     return Array.from(document.querySelectorAll(`.tag-list[data-group="${group}"] button.selected`))
         .map(btn => btn.textContent.trim());
+}
+
+function startNoteCooldown(button, seconds) {
+    if (noteCooldownTimer) clearInterval(noteCooldownTimer);
+    let remaining = seconds;
+    button.disabled = true;
+    const tick = () => {
+        button.textContent = `Pakihintay (${remaining}s)`;
+        remaining -= 1;
+        if (remaining < 0) {
+            clearInterval(noteCooldownTimer);
+            noteCooldownTimer = null;
+            button.disabled = false;
+            button.textContent = NOTE_SAVE_LABEL;
+        }
+    };
+    tick();
+    noteCooldownTimer = setInterval(tick, 1000);
+}
+
+function showSaveToast(message) {
+    const toast = document.getElementById('saveToast');
+    document.getElementById('saveToastText').textContent = message;
+    toast.classList.remove('show');
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3600);
 }
 
 async function saveNote() {
@@ -345,6 +450,7 @@ async function saveNote() {
 
     const payload = {
         entryDate: state.selectedNoteDate,
+        plantedCropId: state.selectedPlantedCropId,
         activityTags: getSelectedTags('activity'),
         conditionTags: getSelectedTags('condition'),
         weatherTags: getSelectedTags('weather'),
@@ -362,19 +468,27 @@ async function saveNote() {
     }
 
     const saveBtn = document.getElementById('saveNoteBtn');
+    if (saveBtn.disabled) return; // extra guard against double-fire
     saveBtn.disabled = true;
     saveBtn.textContent = 'Sine-save...';
 
     try {
         await apiPost('notes_add.php', payload);
         noteModal.classList.remove('show');
+        saveBtn.disabled = false;
+        saveBtn.textContent = NOTE_SAVE_LABEL;
         await loadMonthData(state.viewYear, state.viewMonth);
+        showSaveToast('Na-save ang impormasyon ng pananim. / Crop information saved.');
     } catch (err) {
+        if (err.status === 429) {
+            errorEl.textContent = err.message || 'Masyadong mabilis. Pakihintay saglit.';
+            startNoteCooldown(saveBtn, err.retryAfter || 4);
+            return;
+        }
         errorEl.textContent = err.message || 'Hindi na-save ang tala. / Failed to save note.';
         console.error('saveNote failed:', err);
-    } finally {
         saveBtn.disabled = false;
-        saveBtn.textContent = 'I-save / Save';
+        saveBtn.textContent = NOTE_SAVE_LABEL;
     }
 }
 
@@ -383,12 +497,31 @@ async function saveNote() {
 document.addEventListener('DOMContentLoaded', () => {
     loadGreeting();
     loadStats();
+    loadPlantedCrops();
     loadMonthData(state.viewYear, state.viewMonth);
 
     document.getElementById('prevMonthBtn').addEventListener('click', () => goToMonth(-1));
     document.getElementById('nextMonthBtn').addEventListener('click', () => goToMonth(1));
 
     document.getElementById('openNoteModal').addEventListener('click', () => openNoteModal(null));
+
+    const cropSelect = document.getElementById('modalCropSelect');
+
+    cropSelect.addEventListener('focus', () => {
+        cropSelect.size = Math.min(6, Math.max(1, cropSelect.options.length));
+    });
+
+    cropSelect.addEventListener('blur', () => {
+        cropSelect.size = 1;
+    });
+
+    cropSelect.addEventListener('change', (event) => {
+        state.selectedPlantedCropId = event.target.value === '' ? null : Number(event.target.value);
+        if (state.selectedNoteDate) loadExistingNotesForDate(state.selectedNoteDate);
+        window.setTimeout(() => {
+            cropSelect.size = 1;
+        }, 0);
+    });
 
     noteModal.addEventListener('click', (event) => {
         if (event.target === noteModal) {

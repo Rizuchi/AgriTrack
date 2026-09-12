@@ -1,13 +1,4 @@
 <?php
-/**
- * Inserts a row into `planted_crop` for the logged-in user.
- *
- * require_user_session.php already: starts the session, sets the JSON
- * header, and exits with a 401/403 if the user isn't logged in or isn't
- * role "User" — so by the time we get past it, $_SESSION['UserID'] is safe
- * to use.
- */
-
 require_once 'require_user_session.php';
 require_once 'db.php';
 
@@ -28,7 +19,7 @@ if ($plantLabel === '' || !$cropId || $dateOfPlant === '') {
     exit;
 }
 
-// Validate the date format (expects YYYY-MM-DD from the <input type="date">)
+// Validate the date format 
 $d = DateTime::createFromFormat('Y-m-d', $dateOfPlant);
 if (!$d || $d->format('Y-m-d') !== $dateOfPlant) {
     http_response_code(400);
@@ -37,8 +28,6 @@ if (!$d || $d->format('Y-m-d') !== $dateOfPlant) {
     exit;
 }
 
-// Confirm the selected crop actually exists, and pull its harvest window so
-// we can compute ExpectedHarvestDate ourselves (the user never types this).
 $stmt = $conn->prepare('SELECT MinDaysToHarvest, MaxDaysToHarvest FROM crops WHERE CropID = ?');
 $stmt->bind_param('i', $cropId);
 $stmt->execute();
@@ -71,7 +60,6 @@ try {
     $plantedCropId = $stmt->insert_id;
     $stmt->close();
 
-    // Optional: if the user left an initial note, log it against this planting.
     if ($notes !== '') {
         $stmt = $conn->prepare(
             'INSERT INTO notes (UserID, PlantedCropID, EntryDate, Message) VALUES (?, ?, CURDATE(), ?)'

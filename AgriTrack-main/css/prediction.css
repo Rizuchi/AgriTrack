@@ -136,16 +136,15 @@ body::-webkit-scrollbar {
 
 .prediction-grid {
     display: grid;
-    grid-template-columns: repeat(2, 490px);
-    column-gap: 10px;
-    row-gap: 30px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
     width: 100%;
     overflow: visible;
-    padding-right: 16px;
+    padding-right: 0;
 }
 
 .prediction-card {
-    width: 470px;
+    width: 100%;
     height: 330px;
     background: #ffffff;
     border: 1px solid #0d241d;
@@ -222,13 +221,10 @@ body::-webkit-scrollbar {
     transform: translateY(-1px);
 }
 
-.prediction-card:nth-child(3) {
-    grid-column: 1;
-}
-
 @media (max-width: 1150px) {
     .prediction-grid {
-        grid-template-columns: repeat(2, minmax(320px, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
     }
 
     .prediction-card {

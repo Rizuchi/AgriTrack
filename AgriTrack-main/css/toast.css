@@ -1,0 +1,50 @@
+.page-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(380px, calc(100vw - 32px));
+    padding: 13px 18px;
+    border: 2px solid #c9f04c;
+    border-radius: 10px;
+    background: #173227;
+    color: #ffffff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: 0 10px 24px rgba(13, 36, 29, 0.22);
+    opacity: 0;
+    transform: translateY(-12px);
+    pointer-events: none;
+}
+
+.page-toast i {
+    color: #c9f04c;
+    font-size: 1.1rem;
+}
+
+.page-toast.show {
+    animation: page-toast-in 3.6s ease both;
+}
+
+@keyframes page-toast-in {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    10%, 88% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    .page-toast {
+        top: 16px;
+        right: 16px;
+        left: 16px;
+        max-width: none;
+    }
+}

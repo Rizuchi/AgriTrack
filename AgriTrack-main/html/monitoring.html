@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/monitoring.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <script src="../js/responsive.js" defer></script>
 </head>
 
 <body>
@@ -98,7 +101,6 @@
 
         <div class="dashboard-icons">
             <i class="fa-solid fa-bell"></i>
-            <i class="fa-solid fa-moon"></i>
         </div>
     </div>
 
@@ -121,23 +123,25 @@
             Subaybayan ang kasalukuyang kalagayan ng iyong mga pananim.
         </p>
 
-        <div class="table-container">
-            <table id="cropTable">
-                <thead>
-                    <tr>
-                        <th>Mga Pananim</th>
-                        <th>Yugto ng Paglago</th>
-                        <th>Kalagayan</th>
-                        <th>Peste/Sakit</th>
-                        <th>Progreso</th>
-                        <th>Aksyon</th>
-                    </tr>
-                </thead>
+        <div class="panel">
+            <div class="table-container">
+                <table id="cropTable">
+                    <thead>
+                        <tr>
+                            <th>Mga Pananim</th>
+                            <th>Yugto ng Paglago</th>
+                            <th>Kalagayan</th>
+                            <th>Peste/Sakit</th>
+                            <th>Progreso</th>
+                            <th>Aksyon</th>
+                        </tr>
+                    </thead>
 
-                <tbody id="cropTableBody">
-                    <tr><td colspan="6">Naglo-load ng datos...</td></tr>
-                </tbody>
-            </table>
+                    <tbody id="cropTableBody">
+                        <tr><td colspan="6">Naglo-load ng datos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 
@@ -147,83 +151,16 @@
             Bawat pananim ay may sariling gauge na nagpapakita kung gaano na kalapit sa inaasahang petsa ng anihan.
         </p>
 
-        <div class="harvest-gauge-grid" id="harvestGaugeGrid">
-            <p>Naglo-load ng datos...</p>
+        <div class="panel">
+            <div class="harvest-gauge-grid" id="harvestGaugeGrid">
+                <p>Naglo-load ng datos...</p>
+            </div>
         </div>
     </section>
 
 </main>
 
-<style>
-/* Circular harvest-progress gauges — one per planted crop */
-.harvest-gauge-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 24px;
-    margin-top: 20px;
-}
-
-.harvest-gauge-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    background: #fff;
-    border: 1px solid #e2e2e2;
-    border-radius: 14px;
-    padding: 18px 12px;
-}
-
-.harvest-gauge {
-    --pct: 0;
-    --gauge-color: #6f8f3b;
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background: conic-gradient(var(--gauge-color) calc(var(--pct) * 1%), #e5e5e5 0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 12px;
-    transition: background 0.4s ease;
-}
-
-.harvest-gauge-inner {
-    width: 92px;
-    height: 92px;
-    border-radius: 50%;
-    background: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.harvest-gauge-inner .gauge-percent {
-    font-size: 20px;
-    font-weight: 700;
-    color: #1d2b24;
-}
-
-.harvest-gauge-inner .gauge-days {
-    font-size: 10px;
-    color: #777;
-    margin-top: 2px;
-}
-
-.harvest-gauge-card h4 {
-    font-size: 15px;
-    font-weight: 600;
-    color: #1d2b24;
-    margin-bottom: 4px;
-}
-
-.harvest-gauge-card .gauge-stage {
-    font-size: 12px;
-    color: #6f8f3b;
-    font-weight: 600;
-}
-</style>
+<script src="../js/toast.js"></script>
 
 <script>
 const monitoringSearch = document.getElementById("monitoringSearch");
@@ -238,10 +175,35 @@ function escapeHtml(str) {
 }
 
 function gaugeColor(pct) {
-    if (pct >= 100) return '#2e7d32'; // ready — deep green
-    if (pct >= 60)  return '#6f8f3b'; // on track — house green
-    if (pct >= 30)  return '#c9a227'; // mid — amber
-    return '#a63a3a';                 // early — muted red, just for visual distinction
+    if (pct >= 100) return '#173227';
+    if (pct >= 60)  return '#6f8f3b';
+    if (pct >= 30)  return '#c9a227';
+    return '#c1652f';
+}
+
+// Classifies a Kalagayan / Peste-Sakit value into a pill style so the table
+// reads at a glance instead of as plain text.
+function statusPillClass(text) {
+    const value = (text || '').toLowerCase();
+
+    if (!value || value === 'wala' || value === '—' || value === '-') {
+        return 'status-neutral';
+    }
+    if (value.includes('malusog') || value.includes('handa')) {
+        return 'status-good';
+    }
+    if (value.includes('peste') || value.includes('sakit') || value.includes('nabaha')) {
+        return 'status-danger';
+    }
+    if (value.includes('kulang') || value.includes('naninilaw') || value.includes('namumula') || value.includes('natuyuan')) {
+        return 'status-warning';
+    }
+    return 'status-neutral';
+}
+
+function statusPill(text) {
+    const label = text && text.trim() !== '' ? text : 'Wala';
+    return `<span class="status-pill ${statusPillClass(label)}">${escapeHtml(label)}</span>`;
 }
 
 function daysUntil(dateStr) {
@@ -262,8 +224,8 @@ function renderTable(crops) {
         <tr>
             <td>${escapeHtml(crop.CropName)}</td>
             <td>${escapeHtml(crop.GrowthStage)}</td>
-            <td>${escapeHtml(crop.Condition)}</td>
-            <td>${escapeHtml(crop.PestOrDisease)}</td>
+            <td>${statusPill(crop.Condition)}</td>
+            <td>${statusPill(crop.PestOrDisease)}</td>
             <td>
                 <div class="progress-cell">
                     <div class="progress-bar">
@@ -272,7 +234,7 @@ function renderTable(crops) {
                     <span>${crop.Progress}%</span>
                 </div>
             </td>
-            <td><button class="view-btn" onclick="window.location.href='planted-crop-detail.html?id=${crop.PlantedCropID}'">Tingnan</button></td>
+            <td><button class="view-btn" type="button" onclick="window.location.href='monitoring-details.html?id=${crop.PlantedCropID}'"><i class="fa-solid fa-pen-to-square"></i><span>Aksyon</span></button></td>
         </tr>
     `).join('');
 }

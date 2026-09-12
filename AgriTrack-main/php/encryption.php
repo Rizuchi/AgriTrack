@@ -3,7 +3,7 @@
 function getEncryptionKey(): string
 {
     
-    $key = 'deividIsBisaya';
+    $key = 'AgriTrack-Flores-Cruz-Estrellado-D'; //KEY
 
     return hash('sha256', $key, true);
 }

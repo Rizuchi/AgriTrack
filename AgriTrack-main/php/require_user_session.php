@@ -1,5 +1,4 @@
 <?php
-// Require logged-in user
 
 session_start();
 

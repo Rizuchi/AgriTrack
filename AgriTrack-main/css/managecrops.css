@@ -31,9 +31,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* =========================
-   MAIN CROPS
-========================= */
+/* I style the crops page. */
 
 .crops-main {
     margin-left: 300px;
@@ -43,9 +41,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* =========================
-   HEADER
-========================= */
+/* I style the page header. */
 
 .crops-header {
     display: flex;

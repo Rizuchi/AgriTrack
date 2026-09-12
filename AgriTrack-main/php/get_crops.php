@@ -1,5 +1,4 @@
 <?php
-// Crop data endpoint
 
 require_once __DIR__ . '/db.php';
 header('Content-Type: application/json; charset=utf-8');
@@ -14,7 +13,7 @@ $monthsPH = [
     9 => 'Setyembre', 10 => 'Oktubre', 11 => 'Nobyembre', 12 => 'Disyembre',
 ];
 
-// Season comparison helper
+
 function isDateWithinSeason(string $today, string $start, string $end): bool
 {
     $todayMD = date('md', strtotime($today));
@@ -24,7 +23,7 @@ function isDateWithinSeason(string $today, string $start, string $end): bool
     if ($startMD <= $endMD) {
         return $todayMD >= $startMD && $todayMD <= $endMD;
     }
-    // Wrap-around season
+
     return $todayMD >= $startMD || $todayMD <= $endMD;
 }
 
@@ -35,7 +34,7 @@ function formatSeasonRange(string $start, string $end, array $monthsPH): string
     return $startMonth === $endMonth ? $startMonth : "{$startMonth}–{$endMonth}";
 }
 
-// Current season label
+
 $currentSeasonLabel = 'Hindi Matukoy';
 $currentSeasonType  = null;
 
@@ -56,7 +55,7 @@ if ($seasonRes) {
     }
 }
 
-// Crop query
+
 $onlyCurrent = isset($_GET['current']) && $_GET['current'] == '1';
 
 $sql = "SELECT c.CropID, c.SeasonID, c.CropName, c.EnglishName, c.CropType,
