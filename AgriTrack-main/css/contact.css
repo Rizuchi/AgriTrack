@@ -73,7 +73,7 @@ body {
 
 .contact-container {
     width: 1100px;
-    height: 550px;
+    min-height: 550px;
     display: grid;
     grid-template-columns: 300px 1fr;
     background: #ffffff;
@@ -255,6 +255,39 @@ body {
 .form-submit button:hover {
     background: #aeda5c;
     transform: translateY(-1px);
+}
+
+.form-submit button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* FORM MESSAGE (error / success text above the fields) */
+
+.form-message {
+    display: none;
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.form-message.show {
+    display: block;
+}
+
+.form-message.error {
+    background: #fdecea;
+    color: #b91c1c;
+    border: 1px solid #f5c2c0;
+}
+
+.form-message.success {
+    background: #eef7e6;
+    color: #14532d;
+    border: 1px solid #c9f04c;
 }
 
 /* RESPONSIVE */

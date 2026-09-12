@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/contact.js" defer></script>
 </head>
 <body>
 
@@ -133,8 +134,8 @@
                 <i class="fa-solid fa-envelope"></i>
                 <div>
                     <h3>Email</h3>
-                    <p>agritrack.team@gmail.com</p>
-                    <p>support@agritrack.com</p>
+                    <p>agritrack.ph@gmail.com</p>
+                
                 </div>
             </div>
 
@@ -182,7 +183,11 @@
             </div>
 
             <!-- FORM -->
-            <form>
+            <form id="contactForm">
+
+                <!-- FORM MESSAGE -->
+                <div id="contactFormMessage" class="form-message"></div>
+
                 <!-- NAME ROW -->
                 <div class="form-row">
                     <!-- FIRST NAME -->
@@ -224,7 +229,7 @@
 
                 <!-- SUBMIT -->
                 <div class="form-submit">
-                    <button type="submit">Ipadala</button>
+                    <button type="submit" id="contactSubmitBtn">Ipadala</button>
                 </div>
             </form>
         </div>
