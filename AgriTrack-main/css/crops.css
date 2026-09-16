@@ -89,6 +89,7 @@ body::-webkit-scrollbar {
     align-items: center;
     gap: 35px;
     margin-bottom: 24px;
+    flex-wrap: wrap;
 }
 
 .search-box {
@@ -149,7 +150,7 @@ body::-webkit-scrollbar {
 
 .crop-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
     gap: 24px;
     width: 100%;
     overflow: visible;
@@ -158,7 +159,8 @@ body::-webkit-scrollbar {
 
 .crop-card {
     width: 100%;
-    height: 330px;
+    min-height: 330px;
+    height: auto;
     background: #ffffff;
     border: 1px solid #0d241d;
     border-radius: 18px;
@@ -167,6 +169,7 @@ body::-webkit-scrollbar {
     align-items: flex-start;
     gap: 24px;
     overflow: hidden;
+    min-width: 0;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -186,9 +189,12 @@ body::-webkit-scrollbar {
 .crop-info {
     position: relative;
     flex: 1;
-    height: 100%;
+    height: auto;
     padding: 0 2px 20px 0;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-wrap: anywhere;
 }
 
 .crop-info h3 {
@@ -197,6 +203,7 @@ body::-webkit-scrollbar {
     color: #0d241d;
     line-height: 1.15;
     margin-bottom: 4px;
+    overflow-wrap: anywhere;
 }
 
 .crop-name {
@@ -219,10 +226,10 @@ body::-webkit-scrollbar {
 }
 
 .details-btn {
-    position: absolute;
-    left: 0;
-    right: 4px;
-    bottom: 2px;
+    position: static;
+    width: 100%;
+    margin-top: auto;
+    flex-shrink: 0;
     height: 38px;
     border: none;
     border-radius: 7px;
@@ -272,7 +279,7 @@ body::-webkit-scrollbar {
 
 @media (max-width: 1150px) {
     .crop-grid {
-        grid-template-columns: repeat(2, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
         gap: 20px;
     }
 
@@ -289,7 +296,7 @@ body::-webkit-scrollbar {
     }
 
     .crop-card {
-        height: auto;
+        min-height: 330px;
     }
 }
 
@@ -300,15 +307,62 @@ body::-webkit-scrollbar {
     }
 
     .crop-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .crop-tools {
+        gap: 12px;
+    }
+
+    .search-box {
+        width: min(385px, 100%);
+        flex: 1 1 240px;
+    }
+
+    .category-btn {
+        width: auto;
+        flex: 1 1 160px;
     }
 
     .crop-card,
     .add-crop-card {
         width: 100%;
-        max-width: 490px;
+        max-width: none;
         height: auto;
-        min-height: 310px;
+        min-height: 120px;
+        padding: 14px;
+    }
+
+    .crop-card {
+        display: block;
+    }
+
+    .crop-card .crop-image,
+    .crop-card .crop-label,
+    .crop-card .crop-info p,
+    .crop-card .details-btn {
+        display: none;
+    }
+
+    .crop-card .crop-info {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding: 0;
+    }
+
+    .crop-card .crop-info h3 {
+        font-size: 18px;
+        line-height: 1.15;
+        margin: 0 0 12px;
+    }
+
+    .crop-card .details-btn {
+        display: block;
+        height: 34px;
+        margin-top: auto;
+        font-size: 10px;
     }
 
     .crops-header h1 {

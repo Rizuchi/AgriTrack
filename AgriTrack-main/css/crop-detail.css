@@ -198,3 +198,74 @@ body {
         align-self: flex-end;
     }
 }
+
+@media (max-width: 760px) {
+    .dashboard-main {
+        width: 100%;
+        margin-left: 0;
+        padding: 12px;
+    }
+
+    .detail-header {
+        gap: 12px;
+        margin-bottom: 16px;
+    }
+
+    .detail-title {
+        min-width: 0;
+    }
+
+    .detail-title h1 {
+        align-items: flex-start;
+        font-size: clamp(22px, 7vw, 30px);
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-title p {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .crop-detail-card {
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 12px;
+        gap: 14px;
+        overflow: visible;
+    }
+
+    .detail-image {
+        width: 100%;
+        height: 180px;
+        flex: none;
+    }
+
+    .detail-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .detail-content {
+        width: 100%;
+    }
+
+    .detail-content h2 {
+        font-size: 22px;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .detail-scroll {
+        overflow: visible;
+        padding-right: 0;
+    }
+
+    .detail-scroll p,
+    .detail-scroll li {
+        font-size: 14px;
+        overflow-wrap: anywhere;
+    }
+}

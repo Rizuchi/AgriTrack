@@ -136,7 +136,7 @@ body::-webkit-scrollbar {
 
 .prediction-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
     gap: 24px;
     width: 100%;
     overflow: visible;
@@ -154,6 +154,7 @@ body::-webkit-scrollbar {
     align-items: flex-start;
     gap: 24px;
     overflow: hidden;
+    min-width: 0;
     transition:
         transform 0.2s ease,
         box-shadow 0.2s ease;
@@ -186,6 +187,7 @@ body::-webkit-scrollbar {
     color: #0d241d;
     line-height: 1.15;
     margin-bottom: 4px;
+    overflow-wrap: anywhere;
 }
 
 .prediction-info p {
@@ -223,7 +225,7 @@ body::-webkit-scrollbar {
 
 @media (max-width: 1150px) {
     .prediction-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
         gap: 20px;
     }
 
@@ -250,14 +252,44 @@ body::-webkit-scrollbar {
     }
 
     .prediction-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
     }
 
     .prediction-card {
         width: 100%;
-        max-width: 490px;
+        max-width: none;
         height: auto;
-        min-height: 330px;
+        min-height: 120px;
+        padding: 14px;
+        display: block;
+    }
+
+    .prediction-card .prediction-image,
+    .prediction-card .prediction-info p,
+    .prediction-card .details-btn {
+        display: none;
+    }
+
+    .prediction-card .prediction-info {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        padding: 0;
+    }
+
+    .prediction-card .prediction-info h3 {
+        font-size: 18px;
+        line-height: 1.15;
+        margin: 0 0 12px;
+    }
+
+    .prediction-card .details-btn {
+        display: block;
+        position: static;
+        height: 34px;
+        margin-top: auto;
+        font-size: 10px;
     }
 
     .prediction-header h1 {
