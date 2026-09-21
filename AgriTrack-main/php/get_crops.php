@@ -82,7 +82,7 @@ while ($row = $result->fetch_assoc()) {
 
     $isCurrent = false;
     if ($seasonType === 'Both') {
-        $isCurrent = true; // Year-round crop
+        $isCurrent = true;
     } elseif ($seasonStart && $seasonEnd) {
         $isCurrent = isDateWithinSeason($today, $seasonStart, $seasonEnd);
     }

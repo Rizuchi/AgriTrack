@@ -10,15 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $userId = $_SESSION['UserID'];
 $conn = getDbConnection();
-
-// CROPS STATS
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM planted_crop WHERE UserID = ?");
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $totalCrops = (int) $stmt->get_result()->fetch_assoc()['total'];
 $stmt->close();
-
-// HINDI ISASAMA YUNG HARVESTED NA 
 $stmt = $conn->prepare(
         "SELECT COUNT(*) AS total
          FROM planted_crop
@@ -28,8 +24,6 @@ $stmt->bind_param('i', $userId);
 $stmt->execute();
 $activeMonitoring = (int) $stmt->get_result()->fetch_assoc()['total'];
 $stmt->close();
-
-// PESTS STATS
 $stmt = $conn->prepare(
         "SELECT COUNT(*) AS total
          FROM notes n
@@ -49,8 +43,6 @@ $stmt->bind_param('i', $userId);
 $stmt->execute();
 $pestAlerts = (int) $stmt->get_result()->fetch_assoc()['total'];
 $stmt->close();
-
-// Pending tasks
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM calendar WHERE UserID = ? AND Status = 'Pending'");
 $stmt->bind_param('i', $userId);
 $stmt->execute();

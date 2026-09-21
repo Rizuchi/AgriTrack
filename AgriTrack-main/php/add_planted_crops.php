@@ -18,8 +18,6 @@ if ($plantLabel === '' || !$cropId || $dateOfPlant === '') {
     echo json_encode($response);
     exit;
 }
-
-// Validate the date format 
 $d = DateTime::createFromFormat('Y-m-d', $dateOfPlant);
 if (!$d || $d->format('Y-m-d') !== $dateOfPlant) {
     http_response_code(400);

@@ -26,6 +26,7 @@ $fname = trim($input['fname'] ?? '');
 $lname = trim($input['lname'] ?? '');
 $userName = trim($input['userName'] ?? '');
 $email = trim($input['email'] ?? '');
+$contact = trim($input['contact'] ?? '');
 $password = $input['password'] ?? '';
 $confirmPassword = $input['confirmPassword'] ?? '';
 
@@ -84,9 +85,10 @@ $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 $encryptedLname = encryptData($lname);
 $encryptedFname = encryptData($fname);
 $encryptedEmail = encryptData($email);
+$encryptedContact = encryptData($contact);
 
-$insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, role, accStatus, sessionStatus, isActive) VALUES (?, ?, ?, ?, ?, 'User', 'Active', TRUE, TRUE)");
-$insertStmt->bind_param('sssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail);
+$insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, contact, role, accStatus, sessionStatus, isActive) VALUES (?, ?, ?, ?, ?, ?, 'User', 'Active', TRUE, TRUE)");
+$insertStmt->bind_param('ssssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail, $encryptedContact);
 
 if ($insertStmt->execute()) {
     echo json_encode(['success' => true, 'message' => 'Registration successful.']);

@@ -11,11 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 const NOTE_COOLDOWN_SECONDS = 4;
 const TAG_GROUP_ORDER = ['Gawain', 'Kalagayan', 'Peste/Sakit', 'Panahon'];
 
-/**
- * Parses a stored "Tala: ... | Gawain: a, b | Kalagayan: c" string into
- * [freeText, ['Gawain' => ['a','b'], 'Kalagayan' => ['c']]].
- * Mirrors parseNoteMessage() in userdashboard.js.
- */
+
 function parseNoteMessage(string $message): array {
     $segments = array_filter(array_map('trim', explode('|', $message)), fn($s) => $s !== '');
     $freeText = '';
@@ -49,7 +45,7 @@ function parseNoteMessage(string $message): array {
     return [$freeText, $tagGroups];
 }
 
-/** Rebuilds a "Tala: ... | Gawain: ..." string from parsed parts. */
+
 function buildNoteMessage(string $freeText, array $tagGroups): string {
     $parts = [];
     if ($freeText !== '') {
@@ -108,8 +104,6 @@ if ($plantedCropId !== null) {
         exit;
     }
 }
-
-// I slow repeated saves for the same date and crop.
 if (!isset($_SESSION['lastNoteSave']) || !is_array($_SESSION['lastNoteSave'])) {
     $_SESSION['lastNoteSave'] = [];
 }
@@ -126,8 +120,6 @@ if ($elapsed < NOTE_COOLDOWN_SECONDS) {
     ]);
     exit;
 }
-
-// This is the message we'd save if there's nothing to merge into (insert case).
 $parts = [];
 if ($freeText !== '') {
     $parts[] = 'Tala: ' . $freeText;

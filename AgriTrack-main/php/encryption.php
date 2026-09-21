@@ -3,7 +3,7 @@
 function getEncryptionKey(): string
 {
     
-    $key = 'AgriTrack-Flores-Cruz-Estrellado-D'; //KEY
+    $key = 'AgriTrack-Flores-Cruz-Estrellado-D';
 
     return hash('sha256', $key, true);
 }

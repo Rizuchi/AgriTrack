@@ -57,8 +57,6 @@ $today = new DateTime();
 foreach ($plantedCrops as &$crop) {
     $planted = new DateTime($crop['DateOfPlant']);
     $expected = $crop['ExpectedHarvestDate'] ? new DateTime($crop['ExpectedHarvestDate']) : null;
-
-    // Progress % based on elapsed time vs total expected duration
     if ($expected && $expected > $planted) {
         $totalDays = $planted->diff($expected)->days;
         $elapsedDays = $planted->diff($today)->days;
@@ -73,8 +71,6 @@ foreach ($plantedCrops as &$crop) {
 
     $crop['Progress'] = (int) $percent;
     $crop['GrowthStage'] = growthStage($percent);
-
-    // Latest note lookup
     $noteStmt->bind_param("i", $crop['PlantedCropID']);
     $noteStmt->execute();
     $noteRow = $noteStmt->get_result()->fetch_assoc();

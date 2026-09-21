@@ -9,8 +9,6 @@ if (!isset($_SESSION['UserID'])) {
     echo json_encode(['success' => false, 'message' => 'Not logged in.']);
     exit;
 }
-
-// User-only access
 if (($_SESSION['role'] ?? '') !== 'User') {
     http_response_code(403);
     echo json_encode(['success' => false, 'message' => 'This feature is only available to Users.']);

@@ -21,8 +21,6 @@ if ($calendarId <= 0 || !in_array($status, ['Pending', 'Completed'], true)) {
 
 $userId = $_SESSION['UserID'];
 $conn = getDbConnection();
-
-// for current user
 $stmt = $conn->prepare("UPDATE calendar SET Status = ? WHERE CalendarID = ? AND UserID = ?");
 $stmt->bind_param('sii', $status, $calendarId, $userId);
 

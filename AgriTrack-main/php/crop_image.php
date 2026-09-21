@@ -24,7 +24,8 @@ if ($stmt->fetch() && $imageBlob !== null && $imageBlob !== '') {
 
     header('Content-Type: ' . ($mime ?: 'image/jpeg'));
     header('Content-Length: ' . strlen($imageBlob));
-    header('Cache-Control: public, max-age=86400');
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
     echo $imageBlob;
     exit;
 }

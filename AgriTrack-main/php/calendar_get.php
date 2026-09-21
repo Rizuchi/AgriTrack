@@ -22,8 +22,6 @@ $monthStart = sprintf('%04d-%02d-01', $year, $month);
 $monthEnd = date('Y-m-t', strtotime($monthStart));
 
 $conn = getDbConnection();
-
-// Tasks this month
 $stmt = $conn->prepare(
     "SELECT CalendarID, TaskType, StartDate, EndDate, Status
      FROM calendar

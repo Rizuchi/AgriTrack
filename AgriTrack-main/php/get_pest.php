@@ -27,8 +27,6 @@ if ($id) {
         $conn->close();
         exit;
     }
-
-    // Crops affected by this pest/disease
     $cropStmt = $conn->prepare("
         SELECT c.CropID, c.CropName, c.EnglishName
         FROM pest_affected_crop pac
