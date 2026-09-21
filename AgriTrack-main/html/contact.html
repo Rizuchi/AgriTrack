@@ -10,18 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <script src="../js/responsive.js" defer></script>
-    <script src="../js/contact.js" defer></script>
 </head>
 <body>
 
-<!-- SIDEBAR -->
+
 <aside class="user-sidebar">
     <div class="overlay"></div>
     <div class="sidebar-content">
         <div class="logo">AGRITRACK</div>
 
         <nav class="menu">
-            <!-- DASHBOARD -->
+            
             <a href="userdashboard.html" class="menu-item">
                 <i class="fa-solid fa-table-columns"></i>
                 <div>
@@ -30,7 +29,7 @@
                 </div>
             </a>
 
-            <!-- MGA PANANIM -->
+            
             <a href="crops.html" class="menu-item">
                 <i class="fa-solid fa-seedling"></i>
                 <div>
@@ -39,7 +38,7 @@
                 </div>
             </a>
 
-            <!-- CROP MONITORING -->
+            
             <a href="monitoring.html" class="menu-item">
                 <i class="fa-solid fa-leaf"></i>
                 <div>
@@ -48,7 +47,7 @@
                 </div>
             </a>
 
-            <!-- CROP RECOMMENDATION -->
+            
             <a href="recommendation.html" class="menu-item">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
                 <div>
@@ -57,7 +56,7 @@
                 </div>
             </a>
 
-            <!-- PEST AND DISEASE PREDICTION -->
+            
             <a href="prediction.html" class="menu-item">
                 <i class="fa-solid fa-bug"></i>
                 <div>
@@ -66,7 +65,7 @@
                 </div>
             </a>
 
-            <!-- CONTACT -->
+            
             <a href="contact.html" class="menu-item active">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -84,7 +83,7 @@
             </a>
         </nav>
 
-        <!-- LOG OUT -->
+        
         <div class="logout-section">
             <a href="login.html" class="menu-item logout">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -97,9 +96,9 @@
     </div>
 </aside>
 
-<!-- MAIN CONTENT -->
+
 <main class="contact-main">
-    <!-- HEADER -->
+    
     <header class="contact-header">
         <div class="header-text">
             <h1>Makipag-ugnayan</h1>
@@ -109,18 +108,18 @@
             </p>
         </div>
 
-        <!-- HEADER ICONS -->
+        
         <div class="header-icons">
             <i class="fa-solid fa-bell"></i>
         </div>
     </header>
 
-    <!-- HEADER LINE -->
+    
     <div class="contact-line"></div>
 
-    <!-- CONTACT CONTAINER -->
+    
     <section class="contact-container">
-        <!-- FARMER SUPPORT -->
+        
         <div class="support-card">
             <h2>Farmer Support System</h2>
 
@@ -129,17 +128,17 @@
                 pamamahala ng mga pananim.
             </p>
 
-            <!-- EMAIL -->
+            
             <div class="support-info">
                 <i class="fa-solid fa-envelope"></i>
                 <div>
                     <h3>Email</h3>
-                    <p>agritrack.ph@gmail.com</p>
-                
+                    <p>agritrack.team@gmail.com</p>
+                    <p>support@agritrack.com</p>
                 </div>
             </div>
 
-            <!-- PHONE -->
+            
             <div class="support-info">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -148,7 +147,7 @@
                 </div>
             </div>
 
-            <!-- LOCATION -->
+            
             <div class="support-info">
                 <i class="fa-solid fa-location-dot"></i>
                 <div>
@@ -157,7 +156,7 @@
                 </div>
             </div>
 
-            <!-- SERVICE HOURS -->
+            
             <div class="support-info">
                 <i class="fa-regular fa-clock"></i>
                 <div>
@@ -170,9 +169,9 @@
             </div>
         </div>
 
-        <!-- CONTACT FORM -->
+        
         <div class="form-card">
-            <!-- FORM HEADING -->
+            
             <div class="form-heading">
                 <h2>Ibahagi ang Iyong Concern</h2>
                 <p>
@@ -182,15 +181,11 @@
                 </p>
             </div>
 
-            <!-- FORM -->
-            <form id="contactForm">
-
-                <!-- FORM MESSAGE -->
-                <div id="contactFormMessage" class="form-message"></div>
-
-                <!-- NAME ROW -->
+            
+            <form>
+                
                 <div class="form-row">
-                    <!-- FIRST NAME -->
+                    
                     <div class="form-group">
                         <label for="firstName">
                             Unang Pangalan
@@ -199,7 +194,7 @@
                         <input type="text" id="firstName" name="firstName" required>
                     </div>
 
-                    <!-- LAST NAME -->
+                    
                     <div class="form-group">
                         <label for="lastName">
                             Apelyido
@@ -209,7 +204,7 @@
                     </div>
                 </div>
 
-                <!-- EMAIL -->
+                
                 <div class="form-group full-width">
                     <label for="email">
                         Email Address
@@ -218,7 +213,7 @@
                     <input type="email" id="email" name="email" required>
                 </div>
 
-                <!-- MESSAGE -->
+                
                 <div class="form-group full-width">
                     <label for="message">
                         Mensahe
@@ -227,9 +222,9 @@
                     <textarea id="message" name="message" required></textarea>
                 </div>
 
-                <!-- SUBMIT -->
+                
                 <div class="form-submit">
-                    <button type="submit" id="contactSubmitBtn">Ipadala</button>
+                    <button type="submit">Ipadala</button>
                 </div>
             </form>
         </div>

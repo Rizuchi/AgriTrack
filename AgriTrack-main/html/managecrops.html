@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/managecrops.css">
+    <link rel="stylesheet" href="../css/managecrops.css?v=3">
     <link rel="stylesheet" href="../css/responsive.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -138,70 +138,7 @@
 
         </div>
 
-        <section class="crop-card-grid">
-    <article class="crop-card">
-        <img src="../images/singkamas.jpg" alt="Singkamas" class="crop-image">
-        <div class="crop-info">
-            <h2>Singkamas</h2>
-            <p class="crop-name">Yambean</p>
-            <p>
-                <strong>Inirerekomendang Pagtatanim:</strong>
-                <br>
-                Oktubre–Nobyembre
-            </p>
-            <p>
-                <strong>Crop Type:</strong>
-                <br>
-                Root Crop
-            </p>
-            <button type="button" class="edit-crop-btn">
-                I-edit ang Impormasyon
-            </button>
-        </div>
-    </article>
-
-    <article class="crop-card">
-        <img src="../images/kamote.jpg" alt="Kamoteng Kahoy" class="crop-image">
-        <div class="crop-info">
-            <h2>Kamoteng Kahoy</h2>
-            <p class="crop-name">Cassava</p>
-            <p>
-                <strong>Inirerekomendang Pagtatanim:</strong>
-                <br>
-                Disyembre–Mayo
-            </p>
-            <p>
-                <strong>Crop Type:</strong>
-                <br>
-                Root Crop
-            </p>
-            <button type="button" class="edit-crop-btn">
-                I-edit ang Impormasyon
-            </button>
-        </div>
-    </article>
-
-    <article class="crop-card">
-        <img src="../images/palay.jpg" alt="Palay" class="crop-image">
-        <div class="crop-info">
-            <h2>Palay</h2>
-            <p class="crop-name">Rice</p>
-            <p>
-                <strong>Inirerekomendang Pagtatanim:</strong>
-                <br>
-                Disyembre–Mayo
-            </p>
-            <p>
-                <strong>Crop Type:</strong>
-                <br>
-                Cereal / Grain
-            </p>
-            <button type="button" class="edit-crop-btn">
-                I-edit ang Impormasyon
-            </button>
-        </div>
-    </article>
-</section>
+        <section class="crop-card-grid" id="cropCardGrid"></section>
 </main>
 
     <div class="crop-modal" id="cropModal">
@@ -212,7 +149,7 @@
 
                 <div class="crop-modal-title">
 
-                    <h2>Magdagdag ng Inirerekomendang Pananim</h2>
+                    <h2 id="cropModalTitle">Magdagdag ng Inirerekomendang Pananim</h2>
 
                     <p>
                         Maglagay ng impormasyon tungkol sa pananim na angkop irekomenda batay sa panahon at kondisyon ng pagsasaka.
@@ -232,6 +169,8 @@
             </div>
 
             <form class="crop-form" id="cropForm">
+
+                <input type="hidden" id="cropId" name="cropId" value="0">
 
                 <div class="crop-form-group">
 
@@ -284,12 +223,15 @@
                         Inirerekomendang Pagtatanim
                     </label>
 
-                    <input
-                        type="text"
+                    <select
                         id="plantingSeason"
-                        name="plantingSeason"
-                        placeholder="Tag-ulan / Tag-init"
+                        name="seasonId"
                     >
+                        <option value="0">Pumili ng panahon</option>
+                        <option value="1">Tag-init (Dry)</option>
+                        <option value="2">Tag-ulan (Wet)</option>
+                        <option value="3">Buong taon (Both)</option>
+                    </select>
 
                 </div>
 
@@ -343,6 +285,10 @@
 
                         <div class="image-upload-content">
 
+                            <div class="image-preview-frame">
+                                <img id="cropImagePreview" class="image-preview" alt="Crop preview">
+                            </div>
+
                             <i class="fa-solid fa-cloud-arrow-up"></i>
 
                             <span>
@@ -389,50 +335,121 @@
     </div>
 
     <script>
-
+        const apiUrl = "../Admin/managecrops.php";
         const cropModal = document.getElementById("cropModal");
-        const openCropModal = document.getElementById("openCropModal");
-        const closeCropModal = document.getElementById("closeCropModal");
-        const cancelCrop = document.getElementById("cancelCrop");
         const cropForm = document.getElementById("cropForm");
+        const cropCardGrid = document.getElementById("cropCardGrid");
+        const modalTitle = document.getElementById("cropModalTitle");
 
         function closeCropForm() {
             cropModal.classList.remove("show");
             document.body.classList.remove("modal-open");
         }
 
-        openCropModal.addEventListener("click", function () {
+        function openCropForm(crop = null) {
+            cropForm.reset();
+            const cropPreview = document.getElementById("cropImagePreview");
+            cropPreview.removeAttribute("src");
+            cropPreview.hidden = true;
+            cropPreview.style.display = "none";
+            cropPreview.closest(".image-upload").classList.remove("has-preview");
+            document.getElementById("cropId").value = crop ? crop.CropID : "0";
+            modalTitle.textContent = crop ? "I-edit ang Impormasyon ng Pananim" : "Magdagdag ng Inirerekomendang Pananim";
+            if (crop) {
+                document.getElementById("cropName").value = crop.CropName || "";
+                document.getElementById("englishName").value = crop.EnglishName || "";
+                document.getElementById("cropType").value = crop.CropType || "";
+                document.getElementById("plantingSeason").value = crop.SeasonID || "0";
+                document.getElementById("reason").value = crop.Reason || "";
+            }
             cropModal.classList.add("show");
             document.body.classList.add("modal-open");
+        }
+
+        function renderCrops(crops) {
+            cropCardGrid.innerHTML = crops.map(crop => `
+                <article class="crop-card">
+                    <img src="${crop.imageUrl}&v=${Date.now()}" alt="${escapeHtml(crop.CropName)}" class="crop-image">
+                    <div class="crop-info">
+                        <h2>${escapeHtml(crop.CropName)}</h2>
+                        <p class="crop-name">${escapeHtml(crop.EnglishName || "")}</p>
+                        <p><strong>Inirerekomendang Pagtatanim:</strong><br>${escapeHtml(crop.SeasonType || "Hindi itinakda")}</p>
+                        <p><strong>Crop Type:</strong><br>${escapeHtml(crop.CropType || "Hindi itinakda")}</p>
+                        <button type="button" class="edit-crop-btn" data-crop-id="${crop.CropID}">I-edit ang Impormasyon</button>
+                    </div>
+                </article>
+            `).join("");
+            cropCardGrid.querySelectorAll(".edit-crop-btn").forEach(button => {
+                button.addEventListener("click", () => openCropForm(crops.find(crop => crop.CropID === Number(button.dataset.cropId))));
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
+        }
+
+        async function loadCrops() {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            if (!data.success) throw new Error(data.message);
+            renderCrops(data.crops);
+        }
+
+        document.getElementById("openCropModal").addEventListener("click", () => openCropForm());
+        document.getElementById("closeCropModal").addEventListener("click", closeCropForm);
+        document.getElementById("cancelCrop").addEventListener("click", closeCropForm);
+        cropModal.addEventListener("click", event => {
+            if (event.target === cropModal) closeCropForm();
+        });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape") closeCropForm();
         });
 
-        closeCropModal.addEventListener("click", function () {
-            closeCropForm();
-        });
-
-        cancelCrop.addEventListener("click", function () {
-            closeCropForm();
-        });
-
-        cropModal.addEventListener("click", function (event) {
-            if (event.target === cropModal) {
-                closeCropForm();
+        document.getElementById("cropImage").addEventListener("change", event => {
+            const file = event.target.files[0];
+            if (file) {
+                document.querySelector(".image-upload span").textContent = file.name;
+                const cropPreview = document.getElementById("cropImagePreview");
+                const reader = new FileReader();
+                reader.onload = () => {
+                    cropPreview.src = reader.result;
+                    cropPreview.hidden = false;
+                    cropPreview.style.display = "block";
+                };
+                reader.readAsDataURL(file);
+                cropPreview.hidden = false;
+                cropPreview.closest(".image-upload").classList.add("has-preview");
             }
         });
 
-        document.addEventListener("keydown", function (event) {
-            if (event.key === "Escape") {
-                closeCropForm();
-            }
-        });
-
-        cropForm.addEventListener("submit", function (event) {
+        cropForm.addEventListener("submit", async event => {
             event.preventDefault();
-
-            closeCropForm();
-            cropForm.reset();
+            const saveButton = document.querySelector(".save-crop-btn");
+            saveButton.disabled = true;
+            try {
+                const response = await fetch(apiUrl, { method: "POST", body: new FormData(cropForm) });
+                const data = await response.json();
+                if (!data.success) throw new Error(data.message);
+                closeCropForm();
+                await loadCrops();
+                cropForm.reset();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                saveButton.disabled = false;
+            }
         });
 
+        document.getElementById("searchCrop").addEventListener("input", event => {
+            const search = event.target.value.toLowerCase();
+            document.querySelectorAll(".crop-card").forEach(card => {
+                card.hidden = !card.textContent.toLowerCase().includes(search);
+            });
+        });
+
+        loadCrops().catch(error => {
+            cropCardGrid.innerHTML = `<p>Hindi ma-load ang mga pananim: ${escapeHtml(error.message)}</p>`;
+        });
     </script>
 
 </body>

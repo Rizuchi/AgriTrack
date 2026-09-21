@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/managepests.css">
+    <link rel="stylesheet" href="../css/managepests.css?v=3">
     <link rel="stylesheet" href="../css/responsive.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -105,40 +105,9 @@
         </button>
     </div>
 
-    <section class="pest-card-grid">
-    <article class="pest-card">
-        <img src="../images/planthopper.jpg" alt="Brown Planthopper" class="pest-image">
-        <div class="pest-info">
-            <h2>Brown<br>Planthopper</h2>
-            <p class="pest-name">Brown Planthopper</p>
-            <p><strong>Panahon:</strong> Tag-Ulan (June–November)</p>
-            <p><strong>Sintomas:</strong> Naninilaw ang mga dahon ng palay, nagiging kayumanggi at unti-unting nalalanta.</p>
-            <button type="button" class="edit-pest-btn">I-edit ang Impormasyon</button>
-        </div>
-    </article>
-
-    <article class="pest-card">
-        <img src="../images/blast_1.jpg" alt="Rice Blast Disease" class="pest-image">
-        <div class="pest-info">
-            <h2>Rice Blast<br>Disease</h2>
-            <p class="pest-name">Rice Blast Disease</p>
-            <p><strong>Panahon:</strong> Tag-Ulan</p>
-            <p><strong>Sintomas:</strong> Nagkakaroon ng hugis-diyamante na mga batik sa dahon ng palay.</p>
-            <button type="button" class="edit-pest-btn">I-edit ang Impormasyon</button>
-        </div>
-    </article>
-
-    <article class="pest-card">
-        <img src="../images/Rice Stem.jpg" alt="Rice Stem Borer" class="pest-image">
-        <div class="pest-info">
-            <h2>Rice Stem<br>Borer</h2>
-            <p class="pest-name">Rice Stem Borer</p>
-            <p><strong>Panahon:</strong> Tag-Ulan (June–November)</p>
-            <p><strong>Sintomas:</strong> Naninilaw at nanlalanta ang mga dahon ng palay.</p>
-            <button type="button" class="edit-pest-btn">I-edit ang Impormasyon</button>
-        </div>
-    </article>
-</section>
+    <section class="pest-card-grid" id="pestCardGrid">
+        <p>Naglo-load ang mga peste at sakit...</p>
+    </section>
 </main>
 
 <div class="pest-modal" id="pestModal">
@@ -157,6 +126,8 @@
 
         <form class="pest-form" id="pestForm">
 
+            <input type="hidden" id="pestId" name="pestId" value="0">
+
             <div class="pest-form-group">
                 <label for="pestName">Pangalan ng Peste o Sakit</label>
                 <input type="text" id="pestName" name="pestName" placeholder="Halimbawa: Brown Planthopper" required>
@@ -164,7 +135,11 @@
 
             <div class="pest-form-group">
                 <label for="pestType">Uri</label>
-                <input type="text" id="pestType" name="pestType" placeholder="Peste / Sakit" required>
+                <select id="pestType" name="pestType" required>
+                    <option value="">Pumili ng uri</option>
+                    <option value="Pest">Peste</option>
+                    <option value="Disease">Sakit</option>
+                </select>
             </div>
 
             <div class="pest-form-group">
@@ -196,6 +171,9 @@
                 <label for="pestImage">Larawan ng Peste o Sakit</label>
                 <label class="image-upload">
                     <div class="image-upload-content">
+                        <div class="image-preview-frame">
+                            <img id="pestImagePreview" class="image-preview" alt="Pest or disease preview">
+                        </div>
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Mag-upload ng larawan ng peste o sakit.</span>
                     </div>
@@ -218,44 +196,118 @@
 </div>
 
 <script>
+const pestApiUrl = "../Admin/managepests.php";
 const pestModal = document.getElementById("pestModal");
-const openPestModal = document.getElementById("openPestModal");
-const cancelPestModal = document.getElementById("cancelPestModal");
-const closePestModal = document.getElementById("closePestModal");
 const pestForm = document.getElementById("pestForm");
+const pestCardGrid = document.getElementById("pestCardGrid");
+const pestModalTitle = document.querySelector(".pest-modal-title h2");
+let pests = [];
 
-openPestModal.addEventListener("click", function() {
+function escapeHtml(value) {
+    return String(value || "").replace(/[&<>"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
+}
+
+function openPestForm(pest = null) {
+    pestForm.reset();
+    const pestPreview = document.getElementById("pestImagePreview");
+    pestPreview.removeAttribute("src");
+    pestPreview.hidden = true;
+    pestPreview.style.display = "none";
+    pestPreview.closest(".image-upload").classList.remove("has-preview");
+    document.getElementById("pestId").value = pest ? pest.PestDiseaseID : "0";
+    pestModalTitle.textContent = pest ? "I-edit ang Peste o Sakit" : "Magdagdag ng Peste o Sakit";
+    if (pest) {
+        document.getElementById("pestName").value = pest.Name || "";
+        document.getElementById("pestType").value = pest.Type || "";
+        document.getElementById("affectedCrop").value = pest.AffectedCrop || "";
+        document.getElementById("season").value = pest.SeasonType || "";
+        document.getElementById("symptoms").value = pest.Symptoms || "";
+        document.getElementById("conditions").value = pest.Info || "";
+        document.getElementById("recommendedAction").value = pest.ManagementTips || "";
+    }
     pestModal.classList.add("show");
     document.body.classList.add("modal-open");
-});
+}
 
 function closePestForm() {
     pestModal.classList.remove("show");
     document.body.classList.remove("modal-open");
 }
 
-cancelPestModal.addEventListener("click", function() {
-    closePestForm();
-});
+function renderPests() {
+    pestCardGrid.innerHTML = pests.map(pest => `
+        <article class="pest-card">
+            <img src="${pest.imageUrl}" alt="${escapeHtml(pest.Name)}" class="pest-image">
+            <div class="pest-info">
+                <h2>${escapeHtml(pest.Name)}</h2>
+                <p class="pest-name">${escapeHtml(pest.Type)}</p>
+                <p><strong>Panahon:</strong> ${escapeHtml(pest.SeasonType)}</p>
+                <p><strong>Sintomas:</strong> ${escapeHtml(pest.Symptoms)}</p>
+                <button type="button" class="edit-pest-btn" data-pest-id="${pest.PestDiseaseID}">I-edit ang Impormasyon</button>
+            </div>
+        </article>
+    `).join("");
+    pestCardGrid.querySelectorAll(".edit-pest-btn").forEach(button => {
+        button.addEventListener("click", () => openPestForm(pests.find(pest => pest.PestDiseaseID === Number(button.dataset.pestId))));
+    });
+}
 
-closePestModal.addEventListener("click", function() {
-    closePestForm();
-});
+async function loadPests() {
+    const response = await fetch(pestApiUrl);
+    const data = await response.json();
+    if (!data.success) throw new Error(data.message);
+    pests = data.pests;
+    renderPests();
+}
 
-pestModal.addEventListener("click", function(event) {
-    if (event.target === pestModal) {
-        closePestForm();
+document.getElementById("openPestModal").addEventListener("click", () => openPestForm());
+document.getElementById("cancelPestModal").addEventListener("click", closePestForm);
+document.getElementById("closePestModal").addEventListener("click", closePestForm);
+pestModal.addEventListener("click", event => {
+    if (event.target === pestModal) closePestForm();
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closePestForm();
+});
+document.getElementById("pestImage").addEventListener("change", event => {
+    const file = event.target.files[0];
+    if (file) {
+        event.target.closest(".image-upload").querySelector("span").textContent = file.name;
+        const pestPreview = document.getElementById("pestImagePreview");
+        const reader = new FileReader();
+        reader.onload = () => {
+            pestPreview.src = reader.result;
+            pestPreview.hidden = false;
+            pestPreview.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+        pestPreview.closest(".image-upload").classList.add("has-preview");
     }
 });
-
-document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape") {
-        closePestForm();
-    }
-});
-
-pestForm.addEventListener("submit", function(event) {
+pestForm.addEventListener("submit", async event => {
     event.preventDefault();
+    const saveButton = document.querySelector(".save-pest-btn");
+    saveButton.disabled = true;
+    try {
+        const response = await fetch(pestApiUrl, { method: "POST", body: new FormData(pestForm) });
+        const data = await response.json();
+        if (!data.success) throw new Error(data.message);
+        closePestForm();
+        await loadPests();
+    } catch (error) {
+        alert(error.message);
+    } finally {
+        saveButton.disabled = false;
+    }
+});
+document.getElementById("searchPest").addEventListener("input", event => {
+    const search = event.target.value.toLowerCase();
+    document.querySelectorAll(".pest-card").forEach(card => {
+        card.hidden = !card.textContent.toLowerCase().includes(search);
+    });
+});
+loadPests().catch(error => {
+    pestCardGrid.innerHTML = `<p>Hindi ma-load ang mga peste: ${escapeHtml(error.message)}</p>`;
 });
 </script>
 

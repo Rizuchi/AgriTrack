@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/manageusers.css">
+    <link rel="stylesheet" href="../css/manageusers.css?v=2">
     <link rel="stylesheet" href="../css/responsive.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -97,11 +97,11 @@
 
     <div class="users-toolbar">
         <div class="search-area">
-            <input type="text" id="searchUser" placeholder="Maghanap ng pananim...">
+                    <input type="text" id="searchUser" placeholder="Maghanap ng user...">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
 
-        <button type="button" class="add-user-btn">
+        <button type="button" class="add-user-btn" id="openAddUserModal">
             <i class="fa-solid fa-plus"></i>
             Magdagdag ng User
         </button>
@@ -119,65 +119,132 @@
                     <th>Aksyon</th>
                 </tr>
             </thead>
-
-            <tbody>
-                <tr>
-                    <td>Juan</td>
-                    <td>Dela Cruz</td>
-                    <td>juandelacruz@gmail.com</td>
-                    <td>0917-123-4567</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
-
-                <tr>
-                    <td>Maria</td>
-                    <td>Santos</td>
-                    <td>mariasantos@gmail.com</td>
-                    <td>0918-234-5678</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
-
-                <tr>
-                    <td>Pedro</td>
-                    <td>Reyes</td>
-                    <td>pedroreyes@gmail.com</td>
-                    <td>0920-345-6789</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
-
-                <tr>
-                    <td>Ana</td>
-                    <td>Garcia</td>
-                    <td>anagarcia@gmail.com</td>
-                    <td>0919-456-7890</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
-
-                <tr>
-                    <td>Rosa</td>
-                    <td>Cruz</td>
-                    <td>rosacruz@gmail.com</td>
-                    <td>0921-567-8901</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
-
-                <tr>
-                    <td>Carlo</td>
-                    <td>Batumbakal</td>
-                    <td>carlobatumbakal@gmail.com</td>
-                    <td>0922-678-9012</td>
-                    <td>Aktibo</td>
-                    <td><button type="button" class="view-btn">Tingnan</button></td>
-                </tr>
+            <tbody id="usersTableBody">
+                <tr><td colspan="6">Naglo-load ang mga user...</td></tr>
             </tbody>
         </table>
     </div>
 </main>
+
+<div class="user-modal" id="addUserModal" hidden>
+    <div class="user-modal-content" role="dialog" aria-modal="true" aria-labelledby="addUserTitle">
+        <button type="button" class="user-modal-close" id="closeAddUserModal" aria-label="Isara">&times;</button>
+        <h2 id="addUserTitle">Magdagdag ng User</h2>
+        <p>Maglagay ng impormasyon para sa bagong regular na user.</p>
+        <form id="addUserForm">
+            <div class="user-form-grid">
+                <label>Unang Pangalan<input name="fname" required></label>
+                <label>Apelyido<input name="lname" required></label>
+                <label>Pangalan ng Gumagamit<input name="userName" required></label>
+                <label>Email <span>(optional)</span><input type="email" name="email"></label>
+                <label>Numero ng Contact <span>(optional)</span><input name="contact"></label>
+                <label>Password<input type="password" name="password" required minlength="8"></label>
+                <label>Kumpirmahin ang Password<input type="password" name="confirmPassword" required minlength="8"></label>
+            </div>
+            <p id="addUserMessage" class="add-user-message" role="status" aria-live="polite"></p>
+            <div class="user-modal-actions">
+                <button type="button" class="cancel-user-btn" id="cancelAddUser">Kanselahin</button>
+                <button type="submit" class="save-user-btn">I-save ang User</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const usersApiUrl = "../Admin/manageusers.php";
+const usersTableBody = document.getElementById("usersTableBody");
+const searchUser = document.getElementById("searchUser");
+const addUserModal = document.getElementById("addUserModal");
+const addUserForm = document.getElementById("addUserForm");
+const addUserMessage = document.getElementById("addUserMessage");
+let users = [];
+
+function escapeHtml(value) {
+    return String(value || "").replace(/[&<>\"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
+}
+
+function renderUsers() {
+    const search = searchUser.value.trim().toLowerCase();
+    const filteredUsers = users.filter(user =>
+        `${user.firstName} ${user.lastName} ${user.email} ${user.contact}`.toLowerCase().includes(search)
+    );
+
+    usersTableBody.innerHTML = filteredUsers.length
+        ? filteredUsers.map(user => `
+            <tr>
+                <td>${escapeHtml(user.firstName)}</td>
+                <td>${escapeHtml(user.lastName)}</td>
+                <td>${escapeHtml(user.email || "—")}</td>
+                <td>${escapeHtml(user.contact || "—")}</td>
+                <td>${escapeHtml(user.status)}</td>
+                <td><button type="button" class="view-btn" data-user-id="${user.userId}">Tingnan</button></td>
+            </tr>
+        `).join("")
+        : '<tr><td colspan="6">Walang regular user na nakita.</td></tr>';
+}
+
+async function loadUsers() {
+    const response = await fetch(usersApiUrl, { credentials: "include" });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || "Unable to load users.");
+    users = data.users;
+    renderUsers();
+}
+
+searchUser.addEventListener("input", renderUsers);
+
+function closeAddUserModal() {
+    addUserModal.hidden = true;
+    document.body.classList.remove("modal-open");
+    addUserForm.reset();
+    addUserMessage.textContent = "";
+}
+
+document.getElementById("openAddUserModal").addEventListener("click", () => {
+    addUserModal.hidden = false;
+    document.body.classList.add("modal-open");
+    addUserForm.elements.fname.focus();
+});
+document.getElementById("closeAddUserModal").addEventListener("click", closeAddUserModal);
+document.getElementById("cancelAddUser").addEventListener("click", closeAddUserModal);
+addUserModal.addEventListener("click", event => {
+    if (event.target === addUserModal) closeAddUserModal();
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !addUserModal.hidden) closeAddUserModal();
+});
+
+addUserForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    const saveButton = addUserForm.querySelector(".save-user-btn");
+    const payload = Object.fromEntries(new FormData(addUserForm).entries());
+    saveButton.disabled = true;
+    addUserMessage.textContent = "Sine-save ang user...";
+    addUserMessage.className = "add-user-message";
+
+    try {
+        const response = await fetch("../php/registration.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || "Hindi ma-save ang user.");
+        closeAddUserModal();
+        await loadUsers();
+    } catch (error) {
+        addUserMessage.textContent = error.message;
+        addUserMessage.className = "add-user-message error";
+    } finally {
+        saveButton.disabled = false;
+    }
+});
+
+loadUsers().catch(error => {
+    usersTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+});
+</script>
 
 </body>
 </html>

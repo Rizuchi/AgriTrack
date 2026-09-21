@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<!-- ADMIN SIDEBAR -->
+
 
 <aside class="admin-sidebar">
     <div class="overlay"></div>
@@ -23,7 +23,7 @@
         <div class="logo">AGRITRACK</div>
 
         <nav class="menu">
-            <!-- DASHBOARD -->
+            
             <a href="admindashboard.html" class="menu-item">
                 <i class="fa-solid fa-table-columns"></i>
                 <div class="menu-text">
@@ -32,7 +32,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE USERS -->
+            
             <a href="manageusers.html" class="menu-item">
                 <i class="fa-solid fa-users"></i>
                 <div class="menu-text">
@@ -41,7 +41,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE CROPS -->
+            
             <a href="managecrops.html" class="menu-item">
                 <i class="fa-solid fa-seedling"></i>
                 <div class="menu-text">
@@ -50,7 +50,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE PESTS AND DISEASES -->
+            
             <a href="managepests.html" class="menu-item">
                 <i class="fa-solid fa-bug"></i>
                 <div class="menu-text">
@@ -59,7 +59,7 @@
                 </div>
             </a>
 
-            <!-- REPORTS -->
+            
             <a href="reports.html" class="menu-item">
                 <i class="fa-regular fa-clipboard"></i>
                 <div class="menu-text">
@@ -68,7 +68,7 @@
                 </div>
             </a>
 
-            <!-- CONTACT -->
+            
             <a href="admincontact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div class="menu-text">
@@ -78,7 +78,7 @@
             </a>
         </nav>
 
-        <!-- LOGOUT -->
+        
         <div class="logout-section">
             <a href="login.html" class="menu-item logout">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -91,14 +91,14 @@
     </div>
 </aside>
 
-<!-- MAIN CONTACT -->
+
 
 <main class="contact-main">
-    <!-- HEADER -->
+    
     <header class="contact-header">
         <div class="header-text">
             <h1>Makipag-ugnayan</h1>
-            <p>Sagutin ang mga feedback at katanungan ng mga magsasaka.</p>
+            <p>Makipag-ugnayan sa mga rehistradong magsasaka.</p>
         </div>
 
         <div class="header-icons">
@@ -106,12 +106,12 @@
         </div>
     </header>
 
-    <!-- HEADER LINE -->
+    
     <div class="contact-line"></div>
 
     <div class="contact-toolbar">
         <div class="search-area">
-            <input type="text" id="searchMessage" placeholder="Maghanap ng pananim...">
+            <input type="text" id="searchMessage" placeholder="Maghanap ng user...">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
 
@@ -120,11 +120,11 @@
         </button>
     </div>
 
-    <!-- MESSAGE SECTION -->
+    
     <section class="message-section">
-        <h2>Mga Mensahe</h2>
+        <h2>Mga Rehistradong User</h2>
 
-        <!-- MESSAGE TABLE -->
+        
         <div class="message-table-wrapper">
             <table class="message-table">
                 <thead>
@@ -138,95 +138,58 @@
                     </tr>
                 </thead>
 
-                <tbody>
-                    <!-- JUAN -->
-                    <tr>
-                        <td>Juan</td>
-                        <td>Dela Cruz</td>
-                        <td>juandelacruz@gmail.com</td>
-                        <td>Agosto 27, 2026</td>
-                        <td>Bago</td>
-                        <td>
-                            <button type="button" class="message-action reply">
-                                Sagutin
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- MARIA -->
-                    <tr>
-                        <td>Maria</td>
-                        <td>Santos</td>
-                        <td>mariasantos@gmail.com</td>
-                        <td>Agosto 17, 2026</td>
-                        <td>Nasagot</td>
-                        <td>
-                            <button type="button" class="message-action">
-                                Tingnan
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- PEDRO -->
-                    <tr>
-                        <td>Pedro</td>
-                        <td>Reyes</td>
-                        <td>pedroreyes@gmail.com</td>
-                        <td>Agosto 15, 2026</td>
-                        <td>Nasagot</td>
-                        <td>
-                            <button type="button" class="message-action">
-                                Tingnan
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- ANA -->
-                    <tr>
-                        <td>Ana</td>
-                        <td>Garcia</td>
-                        <td>anagarcia@gmail.com</td>
-                        <td>Agosto 12, 2026</td>
-                        <td>Bago</td>
-                        <td>
-                            <button type="button" class="message-action reply">
-                                Sagutin
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- ROSA -->
-                    <tr>
-                        <td>Rosa</td>
-                        <td>Cruz</td>
-                        <td>rosacruz@gmail.com</td>
-                        <td>Agosto 09, 2026</td>
-                        <td>Bago</td>
-                        <td>
-                            <button type="button" class="message-action reply">
-                                Sagutin
-                            </button>
-                        </td>
-                    </tr>
-
-                    <!-- CARLO -->
-                    <tr>
-                        <td>Carlo</td>
-                        <td>Batumbakal</td>
-                        <td>carlobatumbakal@gmail.com</td>
-                        <td>Agosto 01, 2026</td>
-                        <td>Nasagot</td>
-                        <td>
-                            <button type="button" class="message-action">
-                                Tingnan
-                            </button>
-                        </td>
-                    </tr>
+                <tbody id="contactTableBody">
+                    <tr><td colspan="6">Naglo-load ang mga user...</td></tr>
                 </tbody>
             </table>
         </div>
     </section>
 </main>
+
+<script>
+const contactTableBody = document.getElementById('contactTableBody');
+const searchMessage = document.getElementById('searchMessage');
+let contacts = [];
+
+function escapeHtml(value) {
+    return String(value || '').replace(/[&<>\"]/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[character]));
+}
+
+function formatDate(value) {
+    if (!value) return 'Walang aktibidad';
+    return new Date(value.replace(' ', 'T')).toLocaleDateString('fil-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+
+function renderContacts() {
+    const search = searchMessage.value.trim().toLowerCase();
+    const filtered = contacts.filter(user =>
+        `${user.firstName} ${user.lastName} ${user.email} ${user.contact}`.toLowerCase().includes(search)
+    );
+    contactTableBody.innerHTML = filtered.length ? filtered.map(user => `
+        <tr>
+            <td>${escapeHtml(user.firstName)}</td>
+            <td>${escapeHtml(user.lastName)}</td>
+            <td>${escapeHtml(user.email || 'Walang email')}</td>
+            <td>${formatDate(user.updatedAt)}</td>
+            <td>${escapeHtml(user.status)}</td>
+            <td>${user.email ? `<a class="message-action reply" href="mailto:${escapeHtml(user.email)}">Mag-email</a>` : '<span>Walang email</span>'}</td>
+        </tr>
+    `).join('') : '<tr><td colspan="6">Walang user na nakita.</td></tr>';
+}
+
+async function loadContacts() {
+    const response = await fetch('../Admin/manageusers.php', { credentials: 'include' });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || 'Hindi ma-load ang mga user.');
+    contacts = data.users;
+    renderContacts();
+}
+
+searchMessage.addEventListener('input', renderContacts);
+loadContacts().catch(error => {
+    contactTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+});
+</script>
 
 </body>
 </html>

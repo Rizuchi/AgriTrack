@@ -18,7 +18,7 @@
 
 <body>
 
-<!-- ADMIN SIDEBAR -->
+
 
 <aside class="admin-sidebar">
     <div class="overlay"></div>
@@ -91,7 +91,7 @@
     </div>
 </aside>
 
-<!-- MAIN REPORTS -->
+
 
 <main class="reports-main">
 
@@ -108,33 +108,33 @@
 
     <div class="reports-line"></div>
 
-    <!-- SUMMARY CARDS -->
+    
 
     <section class="report-statistics">
 
         <div class="report-stat-card">
             <div class="stat-label">Kabuuang<br>Gumagamit</div>
-            <div class="stat-number">128</div>
+            <div class="stat-number" id="reportUsers">0</div>
         </div>
 
         <div class="report-stat-card">
             <div class="stat-label">Aktibong<br>Gumagamit</div>
-            <div class="stat-number">32</div>
+            <div class="stat-number" id="reportActiveUsers">0</div>
         </div>
 
         <div class="report-stat-card">
             <div class="stat-label">Mga Pananim</div>
-            <div class="stat-number">321</div>
+            <div class="stat-number" id="reportCrops">0</div>
         </div>
 
         <div class="report-stat-card">
             <div class="stat-label">Malapit sa Ani</div>
-            <div class="stat-number">75</div>
+            <div class="stat-number" id="reportReadyToHarvest">0</div>
         </div>
 
     </section>
 
-    <!-- REPORT CHARTS -->
+    
 
     <section class="reports-grid">
 
@@ -158,27 +158,31 @@
 
 </main>
 
-<!-- CHART SCRIPT -->
+
 
 <script>
-const cropCtx = document.getElementById('cropReportChart');
+const statsApiUrl = '../Admin/admin_stats.php';
 
-new Chart(cropCtx, {
+async function loadReports() {
+    const response = await fetch(statsApiUrl, { credentials: 'include' });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load reports.');
+
+    document.getElementById('reportUsers').textContent = data.summary.users;
+    document.getElementById('reportActiveUsers').textContent = data.summary.activeUsers;
+    document.getElementById('reportCrops').textContent = data.summary.crops;
+    document.getElementById('reportReadyToHarvest').textContent = data.summary.readyToHarvest;
+
+    const cropCtx = document.getElementById('cropReportChart');
+    new Chart(cropCtx, {
     type: 'bar',
     data: {
         labels: [
-            'Palay',
-            'Mais',
-            'Talong',
-            'Kamatis',
-            'Sibuyas',
-            'Pechay',
-            'Sitaw',
-            'Ampalaya'
+            ...data.cropDistribution.labels
         ],
         datasets: [{
             label: 'Bilang ng Pananim',
-            data: [24, 15, 18, 12, 10, 8, 14, 9],
+            data: data.cropDistribution.data,
             backgroundColor: '#143f34',
             borderRadius: 3,
             borderWidth: 0
@@ -228,9 +232,9 @@ new Chart(cropCtx, {
             }
         }
     }
-});
+    });
 
-const userCtx = document.getElementById('userStatusChart');
+    const userCtx = document.getElementById('userStatusChart');
 
 new Chart(userCtx, {
     type: 'doughnut',
@@ -240,7 +244,7 @@ new Chart(userCtx, {
             'Hindi Aktibo'
         ],
         datasets: [{
-            data: [75, 25],
+            data: [data.userStatus.Active, data.userStatus.Inactive],
             backgroundColor: [
                 '#c6f24a',
                 '#4b7ff0'
@@ -268,7 +272,7 @@ new Chart(userCtx, {
                 },
                 formatter: function(value, context) {
                     const label = context.chart.data.labels[context.dataIndex];
-                    return label + '\n' + value + '%';
+                    return label + '\n' + value;
                 },
                 anchor: 'end',
                 align: 'end',
@@ -277,6 +281,11 @@ new Chart(userCtx, {
             }
         }
     }
+    });
+}
+
+loadReports().catch(error => {
+    document.querySelector('.reports-main').insertAdjacentHTML('beforeend', `<p>${error.message}</p>`);
 });
 </script>
 

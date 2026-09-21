@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<!-- ADMIN SIDEBAR -->
+
 <aside class="admin-sidebar">
     <div class="overlay"></div>
     <div class="sidebar-content">
@@ -24,7 +24,7 @@
 
         <nav class="menu">
 
-            <!-- DASHBOARD -->
+            
             <a href="admindashboard.html" class="menu-item active">
                 <i class="fa-solid fa-table-columns"></i>
                 <div class="menu-text">
@@ -33,7 +33,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE USERS -->
+            
             <a href="manageusers.html" class="menu-item">
                 <i class="fa-solid fa-users"></i>
                 <div class="menu-text">
@@ -42,7 +42,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE CROPS -->
+            
             <a href="managecrops.html" class="menu-item">
                 <i class="fa-solid fa-seedling"></i>
                 <div class="menu-text">
@@ -51,7 +51,7 @@
                 </div>
             </a>
 
-            <!-- MANAGE PESTS AND DISEASES -->
+            
             <a href="managepests.html" class="menu-item">
                 <i class="fa-solid fa-bug"></i>
                 <div class="menu-text">
@@ -60,7 +60,7 @@
                 </div>
             </a>
 
-            <!-- REPORTS -->
+            
             <a href="reports.html" class="menu-item">
                 <i class="fa-regular fa-clipboard"></i>
                 <div class="menu-text">
@@ -69,7 +69,7 @@
                 </div>
             </a>
 
-            <!-- CONTACT -->
+            
             <a href="admincontact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div class="menu-text">
@@ -80,7 +80,7 @@
 
         </nav>
 
-        <!-- LOGOUT -->
+        
         <div class="logout-section">
             <a href="login.html" class="menu-item logout">
                 <i class="fa-solid fa-right-from-bracket"></i>
@@ -93,10 +93,10 @@
     </div>
 </aside>
 
-<!-- MAIN DASHBOARD -->
+
 <main class="dashboard-main">
 
-    <!-- HEADER -->
+    
     <header class="dashboard-header">
         <h1>Administrator Dashboard</h1>
         <div class="header-icons">
@@ -104,7 +104,7 @@
         </div>
     </header>
 
-    <!-- WELCOME BANNER -->
+    
     <section class="welcome-banner">
         <div class="welcome-overlay"></div>
         <div class="welcome-text">
@@ -113,37 +113,37 @@
         </div>
     </section>
 
-    <!-- SYSTEM OVERVIEW -->
+    
     <h2 class="section-title">
         Pangkalahatang kalagayan ng Agritrack system
     </h2>
 
-    <!-- STATISTICS CARDS -->
+    
     <section class="statistics">
 
         <div class="stat-card">
             <span class="stat-title">Kabuuang User</span>
-            <span class="stat-number">128</span>
+            <span class="stat-number" id="totalUsers">0</span>
         </div>
 
         <div class="stat-card">
             <span class="stat-title">Kabuuang Pananim</span>
-            <span class="stat-number">32</span>
+            <span class="stat-number" id="totalCrops">0</span>
         </div>
 
         <div class="stat-card">
             <span class="stat-title">Kabuuang Crop<br>Records</span>
-            <span class="stat-number">321</span>
+            <span class="stat-number" id="totalPlantedCrops">0</span>
         </div>
 
         <div class="stat-card">
-            <span class="stat-title">Inirerekomendang<br>Pananim</span>
-            <span class="stat-number">75</span>
+            <span class="stat-title">Malapit sa<br>Ani</span>
+            <span class="stat-number" id="readyToHarvest">0</span>
         </div>
 
     </section>
 
-    <!-- CHART SECTION -->
+    
     <h2 class="section-title chart-title">
         Ulat at Estadistika ng mga Pananim
     </h2>
@@ -157,29 +157,27 @@
 </main>
 
 <script>
+const statsApiUrl = '../Admin/admin_stats.php';
 const ctx = document.getElementById('cropChart');
 
-new Chart(ctx, {
+async function loadDashboard() {
+    const response = await fetch(statsApiUrl, { credentials: 'include' });
+    const data = await response.json();
+    if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load dashboard data.');
+
+    document.getElementById('totalUsers').textContent = data.summary.users;
+    document.getElementById('totalCrops').textContent = data.summary.crops;
+    document.getElementById('totalPlantedCrops').textContent = data.summary.plantedCrops;
+    document.getElementById('readyToHarvest').textContent = data.summary.readyToHarvest;
+
+    new Chart(ctx, {
     type: 'line',
     data: {
-        labels: [
-            'Enero',
-            'Pebrero',
-            'Marso',
-            'Abril',
-            'Mayo',
-            'Hunyo',
-            'Hulyo',
-            'Agosto',
-            'Setyembre',
-            'Oktubre',
-            'Nobyembre',
-            'Disyembre'
-        ],
+        labels: ['Enero', 'Pebrero', 'Marso', 'Abril', 'Mayo', 'Hunyo', 'Hulyo', 'Agosto', 'Setyembre', 'Oktubre', 'Nobyembre', 'Disyembre'],
         datasets: [
             {
                 label: 'Kabuuang Crop Records',
-                data: [32, 38, 41, 35, 46, 39, 52, 48, 25, 20, 12, 8],
+                data: data.monthly.map(month => month.planted),
                 borderColor: '#4285f4',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
@@ -189,7 +187,7 @@ new Chart(ctx, {
             },
             {
                 label: 'Mga Bagong Pananim',
-                data: [9, 12, 14, 10, 15, 12, 17, 16, 9, 8, 5, 3],
+                data: data.monthly.map(month => month.tasks),
                 borderColor: '#a78bfa',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
@@ -199,7 +197,7 @@ new Chart(ctx, {
             },
             {
                 label: 'Mga Na-update na Record',
-                data: [15, 18, 20, 17, 23, 21, 28, 25, 13, 11, 7, 5],
+                data: data.monthly.map(month => month.notes),
                 borderColor: '#f4ad5b',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
@@ -209,7 +207,7 @@ new Chart(ctx, {
             },
             {
                 label: 'Mga Ulat na Nabuo',
-                data: [12, 15, 17, 14, 19, 16, 21, 20, 10, 8, 5, 4],
+                data: data.monthly.map(month => month.planted + month.tasks + month.notes),
                 borderColor: '#f7c948',
                 backgroundColor: 'transparent',
                 borderWidth: 2,
@@ -275,6 +273,11 @@ new Chart(ctx, {
             }
         }
     }
+    });
+}
+
+loadDashboard().catch(error => {
+    document.querySelector('.chart-card').insertAdjacentHTML('beforeend', `<p>${error.message}</p>`);
 });
 </script>
 
