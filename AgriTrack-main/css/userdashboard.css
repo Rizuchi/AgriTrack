@@ -10,7 +10,7 @@ body {
 }
 
 
-/* MAIN DASHBOARD */
+
 
 .dashboard-main {
     margin-left: 300px;
@@ -42,7 +42,7 @@ body {
 }
 
 
-/* MAIN LAYOUT */
+
 
 .dashboard-layout {
     display: grid;
@@ -63,7 +63,7 @@ body {
 }
 
 
-/* HERO CARD */
+
 
 .hero-card {
     position: relative;
@@ -106,7 +106,7 @@ body {
 }
 
 
-/* SECTION TITLE */
+
 
 .section-title {
     margin: 22px 0 14px;
@@ -126,7 +126,7 @@ body {
 }
 
 
-/*  STATISTICS */
+
 
 .stats-grid {
     display: grid;
@@ -174,7 +174,7 @@ body {
 }
 
 
-/* CALENDAR */
+
 
 .calendar-card {
     background: #e7f5b7;
@@ -210,7 +210,7 @@ body {
 }
 
 
-/* MONTH */
+
 
 .calendar-month {
     display: flex;
@@ -233,7 +233,7 @@ body {
 }
 
 
-/* WEEKDAYS */
+
 
 .calendar-weekdays {
     display: grid;
@@ -251,7 +251,7 @@ body {
 }
 
 
-/* DATES */
+
 
 .calendar-grid {
     display: grid;
@@ -287,7 +287,7 @@ body {
 }
 
 
-/* ADD NOTE */
+
 
 .add-note-btn {
     margin-top: 10px;
@@ -314,7 +314,7 @@ body {
 }
 
 
-/* WEATHER CARD */
+
 
 .weather-card {
     background: #e7f5b7;
@@ -328,7 +328,7 @@ body {
 }
 
 
-/* WEATHER TITLE */
+
 
 .weather-title {
     margin-bottom: 12px;
@@ -364,7 +364,7 @@ body {
 }
 
 
-/* MAIN WEATHER */
+
 
 .weather-main {
     background: #cde87c;
@@ -398,7 +398,7 @@ body {
 }
 
 
-/* TEMPERATURE */
+
 
 .weather-temperature {
     display: flex;
@@ -472,7 +472,7 @@ body {
 }
 
 
-/* RAIN */
+
 
 .rain-text {
     display: flex;
@@ -498,7 +498,7 @@ body {
 }
 
 
-/* RESPONSIVE */
+
 
 @media (max-width: 1100px) {
 
@@ -572,7 +572,7 @@ body {
     }
 }
 
-/* ADD NOTE MODAL */
+
 
 .note-modal {
     position: fixed;
@@ -594,7 +594,7 @@ body {
 }
 
 
-/* MODAL CONTAINER*/
+
 
 .note-modal-content {
     width: 1020px;
@@ -614,7 +614,7 @@ body {
 }
 
 
-/* MODAL CALENDAR */
+
 
 .modal-calendar {
     background: #e7f5b7;
@@ -625,7 +625,7 @@ body {
 }
 
 
-/* HEADER */
+
 
 .modal-calendar-header {
     display: flex;
@@ -644,7 +644,7 @@ body {
 
 
 
-/* MONTH BUTTON */
+
 
 .modal-month {
     display: flex;
@@ -667,7 +667,7 @@ body {
 }
 
 
-/* WEEKDAYS*/
+
 
 .modal-weekdays {
     display: grid;
@@ -687,7 +687,7 @@ body {
 }
 
 
-/* CALENDAR DATES */
+
 
 .modal-calendar-grid {
     display: grid;
@@ -721,7 +721,7 @@ body {
 }
 
 
-/* RIGHT INFORMATION */
+
 
 .modal-information {
     padding: 26px 24px;
@@ -743,7 +743,7 @@ body {
 }
 
 
-/* TAGS */
+
 
 .tag-list {
     display: flex;
@@ -933,7 +933,7 @@ body {
     cursor: not-allowed;
 }
 
-/* HARVEST-READY MARKER */
+
 
 .calendar-grid .date.harvest-ready {
     background: #f4a300;

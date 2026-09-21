@@ -10,7 +10,7 @@ body {
 }
 
 
-/* MAIN DASHBOARD */
+
 
 .dashboard-main {
     margin-left: 300px;
@@ -41,7 +41,7 @@ body {
     cursor: pointer;
 }
 
-/*  HEADER */
+
 
 .detail-header {
     display: flex;
@@ -78,7 +78,7 @@ body {
 }
 
 
-/*  DETAIL CARD */
+
 
 .crop-detail-card {
     display: flex;
@@ -90,7 +90,7 @@ body {
     height: 560px;
 }
 
-/* LEFT IMAGE */
+
 
 .detail-image {
     flex: 0 0 330px;
@@ -104,7 +104,7 @@ body {
     display: block;
 }
 
-/* RIGHT CONTENT */
+
 
 .detail-content {
     flex: 1;
@@ -120,7 +120,7 @@ body {
     margin-bottom: 16px;
 }
 
-/* SCROLLABLE CONTENT */
+
 
 .detail-scroll {
     flex: 1;
@@ -150,7 +150,7 @@ body {
     line-height: 1.5;
 }
 
-/* CUSTOM SCROLLBAR */
+
 
 .detail-scroll::-webkit-scrollbar {
     width: 8px;
@@ -170,7 +170,7 @@ body {
     background: #5c7731;
 }
 
-/* RESPONSIVE */
+
 
 @media (max-width: 1100px) {
 

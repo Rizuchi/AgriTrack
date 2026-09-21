@@ -30,7 +30,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* MAIN DASHBOARD */
+
 
 .dashboard-main {
     margin-left: 300px;
@@ -41,7 +41,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER */
+
 
 .monitoring-header {
     display: flex;
@@ -67,7 +67,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER ICONS */
+
 
 .dashboard-icons {
     display: flex;
@@ -87,7 +87,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER LINE */
+
 
 .monitoring-line {
     width: 100%;
@@ -98,7 +98,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* SEARCH / CATEGORY */
+
 
 .monitoring-tools {
     display: flex;
@@ -108,7 +108,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* SEARCH */
+
 
 .search-box {
     position: relative;
@@ -149,7 +149,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* CATEGORY */
+
 
 .category-btn {
     height: 40px;
@@ -171,7 +171,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* SECTION HEADINGS */
+
 
 .monitoring-section,
 .progress-section {
@@ -196,7 +196,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* PANEL — shared card wrapper for the table and gauge sections */
+
 
 .panel {
     background: #ffffff;
@@ -207,7 +207,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE CONTAINER */
+
 
 .table-container {
     width: 100%;
@@ -225,7 +225,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE */
+
 
 #cropTable {
     width: 100%;
@@ -236,7 +236,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE HEADER */
+
 
 #cropTable thead {
     background: #e7f5b7;
@@ -257,7 +257,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE BODY */
+
 
 #cropTable td {
     height: 54px;
@@ -284,7 +284,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* STATUS PILLS — Kalagayan / Peste-Sakit columns */
+
 
 .status-pill {
     display: inline-flex;
@@ -319,7 +319,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* PROGRESS BAR */
+
 
 .progress-cell {
     display: flex;
@@ -350,7 +350,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* VIEW BUTTON */
+
 
 .view-btn {
     display: inline-flex;
@@ -384,7 +384,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HARVEST GAUGE GRID */
+
 
 .harvest-gauge-grid {
     display: grid;
@@ -466,7 +466,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* PROGRESS CHART (kept for compatibility, unused styling untouched) */
+
 
 .chart-container {
     width: 100%;
@@ -486,7 +486,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* EXTRA BOTTOM SPACE */
+
 
 .dashboard-main::after {
     content: "";
@@ -495,7 +495,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* RESPONSIVE */
+
 
 @media (max-width: 1150px) {
 

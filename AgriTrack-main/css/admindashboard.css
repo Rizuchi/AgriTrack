@@ -19,7 +19,7 @@ body {
 }
 
 
-/* Main */
+
 
 .dashboard-main {
     margin-left: 300px;
@@ -30,7 +30,7 @@ body {
 }
 
 
-/* Header */
+
 
 .dashboard-header {
     display: flex;
@@ -63,7 +63,7 @@ body {
 }
 
 
-/* Welcome */
+
 
 .welcome-banner {
     position: relative;
@@ -97,7 +97,7 @@ body {
 }
 
 
-/* Section Title */
+
 
 .section-title {
     margin-top: 20px;
@@ -109,7 +109,7 @@ body {
 }
 
 
-/* Statistics */
+
 
 .statistics {
     display: grid;
@@ -151,7 +151,7 @@ body {
 }
 
 
-/* Chart */
+
 
 .chart-title {
     margin-top: 20px;
@@ -179,7 +179,7 @@ body {
 }
 
 
-/* Responsive */
+
 
 @media (max-width: 1100px) {
     .dashboard-main {

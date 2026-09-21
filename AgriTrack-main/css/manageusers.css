@@ -30,7 +30,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* MAIN USERS PAGE */
+
 
 .users-main {
     margin-left: 300px;
@@ -42,7 +42,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER */
+
 
 .users-header {
     display: flex;
@@ -67,7 +67,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER ICONS */
+
 
 .header-icons {
     display: flex;
@@ -87,7 +87,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* HEADER LINE */
+
 
 .users-line {
     width: 100%;
@@ -98,7 +98,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* SEARCH / ADD USER */
+
 
 .users-toolbar {
     display: flex;
@@ -108,7 +108,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* SEARCH */
+
 
 .search-area {
     position: relative;
@@ -148,7 +148,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* ADD USER BUTTON */
+
 
 .add-user-btn {
     width: 200px;
@@ -175,7 +175,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE WRAPPER */
+
 
 .users-table-wrapper {
     width: 100%;
@@ -194,7 +194,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* USER TABLE */
+
 
 .users-table {
     width: 100%;
@@ -210,7 +210,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE HEADER */
+
 
 .users-table thead {
     background: #e0efb9;
@@ -240,7 +240,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE BODY */
+
 
 .users-table td {
     height: 50px;
@@ -260,7 +260,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* LAST ROW ROUNDING */
+
 
 .users-table tbody tr:last-child td:first-child {
     border-bottom-left-radius: 8px;
@@ -271,14 +271,14 @@ body::-webkit-scrollbar {
 }
 
 
-/* TABLE HOVER */
+
 
 .users-table tbody tr:hover td {
     background: #f5f9e5;
 }
 
 
-/* COLUMN WIDTHS */
+
 
 .users-table th:nth-child(1),
 .users-table td:nth-child(1) {
@@ -311,7 +311,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* VIEW BUTTON */
+
 
 .view-btn {
     border: none;
@@ -331,7 +331,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* EXTRA BOTTOM SPACE */
+
 
 .users-main::after {
     content: "";
@@ -340,7 +340,7 @@ body::-webkit-scrollbar {
 }
 
 
-/* RESPONSIVE */
+
 
 @media (max-width: 1150px) {
 

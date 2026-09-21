@@ -10,14 +10,14 @@ body {
 }
 
 
-/* MAIN PROFILE= */
+
 
 .profile-main {
     margin-left: 300px;
     padding: 20px 40px;
 }
 
-/* HEADER */
+
 
 .profile-header {
     display: flex;
@@ -47,7 +47,7 @@ body {
     line-height: 1.4;
 }
 
-/* HEADER ICONS */
+
 
 .header-icons {
     display: flex;
@@ -78,7 +78,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* HEADER LINE */
+
 
 .profile-line {
     width: 100%;
@@ -90,7 +90,7 @@ body {
     margin-bottom: 28px;
 }
 
-/* PROFILE SUMMARY */
+
 
 .profile-summary {
     width: 1100px;
@@ -112,7 +112,7 @@ body {
     position: relative;
 }
 
-/* PROFILE PICTURE */
+
 
 .profile-picture {
     width: 150px;
@@ -139,7 +139,7 @@ body {
 }
 
 
-/* PROFILE INFORMATION */
+
 
 .profile-info {
     margin-left: 20px;
@@ -170,7 +170,7 @@ body {
 }
 
 
-/* LAST UPDATE */
+
 
 .profile-update {
     position: absolute;
@@ -227,7 +227,7 @@ body {
 }
 
 
-/* ACCOUNT CARD */
+
 
 .account-card {
     width: 1100px;
@@ -247,7 +247,7 @@ body {
 }
 
 
-/* ACCOUNT HEADING */
+
 
 .account-heading h2 {
     font-size: 20px;
@@ -261,7 +261,7 @@ body {
 }
 
 
-/* FORM ROW */
+
 
 .form-row {
     display: grid;
@@ -274,7 +274,7 @@ body {
 }
 
 
-/* FORM GROUP */
+
 
 .form-group {
     margin-bottom: 8px;
@@ -305,7 +305,7 @@ body {
 }
 
 
-/* INPUTS */
+
 
 .form-group input {
     width: 100%;
@@ -341,7 +341,7 @@ body {
 }
 
 
-/* LAST ROW */
+
 
 .last-row {
     margin-bottom: 0;
@@ -352,7 +352,7 @@ body {
 }
 
 
-/*  SAVE BUTTON*/
+
 
 .form-submit {
     position: absolute;
@@ -398,7 +398,7 @@ body {
 }
 
 
-/* RESPONSIVE */
+
 
 @media (max-width: 1150px) {
 
