@@ -387,6 +387,7 @@ body.modal-open {
 }
 
 .crop-form-group input,
+.crop-form-group select,
 .crop-form-group textarea {
     width: 100%;
     border: 1px solid #9aa895;
@@ -400,10 +401,20 @@ body.modal-open {
     transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
-.crop-form-group input {
+.crop-form-group input,
+.crop-form-group select {
     height: 35px;
     padding: 0 10px;
     line-height: 35px;
+}
+
+.crop-form-group select {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, #233b2d 50%), linear-gradient(135deg, #233b2d 50%, transparent 50%);
+    background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 11px) calc(50% - 3px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 34px;
 }
 
 .crop-form-group textarea {
@@ -415,6 +426,7 @@ body.modal-open {
 }
 
 .crop-form-group input:focus,
+.crop-form-group select:focus,
 .crop-form-group textarea:focus {
     border-color: #7c9b5c;
     box-shadow: 0 0 0 3px rgba(124, 155, 92, 0.15);
@@ -427,10 +439,10 @@ body.modal-open {
     opacity: 1;
 }
 
-
 .image-upload {
     width: 100%;
-    height: 100px;
+    min-height: 110px;
+    height: 110px;
     border: 1px solid #9aa895;
     border-radius: 8px;
     background: #ffffff;
@@ -442,6 +454,7 @@ body.modal-open {
     overflow: hidden;
     transition: 0.2s ease;
     box-sizing: border-box;
+    padding: 10px;
 }
 
 .image-upload:hover {
@@ -450,16 +463,52 @@ body.modal-open {
 }
 
 .image-upload-content {
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.image-preview-frame {
+    display: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(18, 44, 29, 0.12);
+    background: linear-gradient(135deg, #f5f8ee, #e5efcf);
+}
+
+.image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #edf4dc;
+}
+
+.image-upload.has-preview {
+    padding: 0;
+    background: #f6f9ef;
+}
+
+.image-upload.has-preview .image-preview-frame {
+    display: block;
+}
+
+.image-upload.has-preview .image-upload-content i,
+.image-upload.has-preview .image-upload-content span {
+    display: none;
 }
 
 .image-upload i {
     font-size: 32px;
     color: #203b34;
-    margin-bottom: 6px;
+    margin-bottom: 0;
 }
 
 .image-upload span {

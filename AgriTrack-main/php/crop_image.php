@@ -33,7 +33,6 @@ if ($stmt->fetch() && $imageBlob !== null && $imageBlob !== '') {
 $stmt->close();
 
 
-http_response_code(404);
 header('Content-Type: image/svg+xml');
 echo '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">'
    . '<rect width="100%" height="100%" fill="#e5e5e5"/>'

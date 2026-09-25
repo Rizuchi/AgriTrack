@@ -16,7 +16,8 @@ body {
 
 .container {
     width: 1100px;
-    height: 720px;              
+    height: auto;
+    min-height: 720px;
     background: #efefef;
     display: flex;
     border-radius: 24px;
@@ -31,7 +32,7 @@ body {
 
 .left-panel {
     width: 48%;
-    height: 100%;               
+    min-height: 720px;
     position: relative;
     background: url('../images/Picture.webp') center center/cover no-repeat;
 }
@@ -88,7 +89,7 @@ body {
 
 .right-panel {
     width: 52%;
-    height: 100%;               
+    min-height: 720px;
     background: #efefef;
     padding: 28px 34px;
     display: flex;
@@ -137,6 +138,35 @@ body {
     font-size: 14px;
     outline: none;
     border-radius: 10px; 
+}
+
+.phone-input {
+    display: flex;
+    width: 100%;
+}
+
+.phone-input select,
+.phone-input input {
+    height: 44px;
+    border: 1px solid #7d8a84;
+    background: #f4f4f4;
+    font-size: 14px;
+    outline: none;
+}
+
+.phone-input select {
+    width: 72px;
+    padding: 0 8px;
+    border-radius: 10px 0 0 10px;
+    color: #143933;
+}
+
+.phone-input input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 12px;
+    border-left: 0;
+    border-radius: 0 10px 10px 0;
 }
 
 

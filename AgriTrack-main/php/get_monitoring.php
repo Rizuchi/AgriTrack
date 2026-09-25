@@ -1,8 +1,8 @@
 <?php
-require '../php/db.php';
-require '../php/require_user_session.php'; 
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/require_user_session.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 $conn = getDbConnection();
 

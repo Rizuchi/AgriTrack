@@ -63,8 +63,18 @@
             </div>
 
             <div class="field">
-                <label>Email Address *Optional*</label>
-                <input type="email" name="email" placeholder="Email Address" >
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="field">
+                <label for="contactNumber">Numero ng Contact *</label>
+                <div class="phone-input">
+                    <select id="contactCountry" name="contactCountry" aria-label="Country code">
+                        <option value="+63">+63</option>
+                    </select>
+                    <input type="tel" id="contactNumber" name="contactNumber" placeholder="917 555 1212" inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" required>
+                </div>
             </div>
 
             <div class="field">

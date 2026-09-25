@@ -1,9 +1,13 @@
 <?php
+require_once __DIR__ . '/env.php';
 
 function getEncryptionKey(): string
 {
-    
-    $key = 'AgriTrack-Flores-Cruz-Estrellado-D';
+    $key = env('ENCRYPTION_KEY');
+
+    if ($key === null || $key === '') {
+        throw new RuntimeException('ENCRYPTION_KEY is not set in the .env file.');
+    }
 
     return hash('sha256', $key, true);
 }

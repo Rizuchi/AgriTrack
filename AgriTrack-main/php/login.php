@@ -1,12 +1,13 @@
 <?php
 require_once 'encryption.php';
+require_once __DIR__ . '/env.php';
 
 session_start();
 
-$servername = "localhost";
-$dbUsername = "root";
-$dbPassword = "";
-$dbname = "agritrack";
+$servername = env('DB_HOST', 'localhost');
+$dbUsername = env('DB_USERNAME', 'root');
+$dbPassword = env('DB_PASSWORD', '');
+$dbname = env('DB_NAME', 'agritrack');
 
 header('Content-Type: application/json');
 

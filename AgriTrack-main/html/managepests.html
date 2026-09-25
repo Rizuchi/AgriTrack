@@ -206,14 +206,42 @@ let pests = [];
 function escapeHtml(value) {
     return String(value || "").replace(/[&<>"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
 }
-
-function openPestForm(pest = null) {
-    pestForm.reset();
+function resetPestImageState() {
+    const upload = document.querySelector(".image-upload");
     const pestPreview = document.getElementById("pestImagePreview");
+    const uploadText = upload ? upload.querySelector("span") : null;
+
+    if (!pestPreview || !upload) return;
+
     pestPreview.removeAttribute("src");
     pestPreview.hidden = true;
     pestPreview.style.display = "none";
-    pestPreview.closest(".image-upload").classList.remove("has-preview");
+    upload.classList.remove("has-preview");
+
+    if (uploadText) {
+        uploadText.textContent = "Mag-upload ng larawan ng peste o sakit.";
+    }
+}
+
+function setPestImageState(src, labelText = "") {
+    const upload = document.querySelector(".image-upload");
+    const pestPreview = document.getElementById("pestImagePreview");
+    const uploadText = upload ? upload.querySelector("span") : null;
+
+    if (!pestPreview || !upload) return;
+
+    pestPreview.src = src;
+    pestPreview.hidden = false;
+    pestPreview.style.display = "block";
+    upload.classList.add("has-preview");
+
+    if (uploadText) {
+        uploadText.textContent = labelText || "Larawan ng peste o sakit";
+    }
+}
+function openPestForm(pest = null) {
+    pestForm.reset();
+    resetPestImageState();
     document.getElementById("pestId").value = pest ? pest.PestDiseaseID : "0";
     pestModalTitle.textContent = pest ? "I-edit ang Peste o Sakit" : "Magdagdag ng Peste o Sakit";
     if (pest) {
@@ -224,6 +252,10 @@ function openPestForm(pest = null) {
         document.getElementById("symptoms").value = pest.Symptoms || "";
         document.getElementById("conditions").value = pest.Info || "";
         document.getElementById("recommendedAction").value = pest.ManagementTips || "";
+
+        if (pest.imageUrl) {
+            setPestImageState(`${pest.imageUrl}${pest.imageUrl.includes("?") ? "&" : "?"}v=${Date.now()}`, "Larawan ng peste o sakit");
+        }
     }
     pestModal.classList.add("show");
     document.body.classList.add("modal-open");
@@ -232,12 +264,13 @@ function openPestForm(pest = null) {
 function closePestForm() {
     pestModal.classList.remove("show");
     document.body.classList.remove("modal-open");
+    resetPestImageState();
 }
 
 function renderPests() {
     pestCardGrid.innerHTML = pests.map(pest => `
         <article class="pest-card">
-            <img src="${pest.imageUrl}" alt="${escapeHtml(pest.Name)}" class="pest-image">
+            <img src="${pest.imageUrl || '../images/default-pest.svg'}" alt="${escapeHtml(pest.Name)}" class="pest-image">
             <div class="pest-info">
                 <h2>${escapeHtml(pest.Name)}</h2>
                 <p class="pest-name">${escapeHtml(pest.Type)}</p>
@@ -272,16 +305,14 @@ document.addEventListener("keydown", event => {
 document.getElementById("pestImage").addEventListener("change", event => {
     const file = event.target.files[0];
     if (file) {
-        event.target.closest(".image-upload").querySelector("span").textContent = file.name;
+        const uploadText = event.target.closest(".image-upload").querySelector("span");
+        uploadText.textContent = file.name;
         const pestPreview = document.getElementById("pestImagePreview");
         const reader = new FileReader();
         reader.onload = () => {
-            pestPreview.src = reader.result;
-            pestPreview.hidden = false;
-            pestPreview.style.display = "block";
+            setPestImageState(reader.result, file.name);
         };
         reader.readAsDataURL(file);
-        pestPreview.closest(".image-upload").classList.add("has-preview");
     }
 });
 pestForm.addEventListener("submit", async event => {

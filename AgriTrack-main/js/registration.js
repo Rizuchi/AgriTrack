@@ -29,13 +29,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const formData = new FormData(form);
         const payload = Object.fromEntries(formData.entries());
+        const contactNumber = (payload.contactNumber || '').replace(/\D/g, '');
 
         const nameFields = ['fname', 'lname'];
         const namePattern = /^[A-Za-z\s]+$/;
         
-        if (!payload.fname || !payload.lname || !payload.userName || !payload.password || !payload.confirmPassword) {
+        if (!payload.fname || !payload.lname || !payload.userName || !payload.email || !contactNumber || !payload.password || !payload.confirmPassword) {
             messageBox.textContent = 'Please fill in all required fields.';
             messageBox.style.color = '#b91c1c';
+            return;
+        }
+
+        if (!/^9\d{9}$/.test(contactNumber)) {
+            messageBox.textContent = 'Enter a valid Philippine mobile number after +63.';
+            messageBox.style.color = '#b91c1c';
+            form.elements.contactNumber.focus();
+            return;
+        }
+
+        payload.contact = `${payload.contactCountry || '+63'}${contactNumber}`;
+        delete payload.contactNumber;
+        delete payload.contactCountry;
+
+        if (!form.elements.email.checkValidity()) {
+            messageBox.textContent = 'Please enter a valid email address.';
+            messageBox.style.color = '#b91c1c';
+            form.elements.email.focus();
             return;
         }
         for (const fieldName of nameFields) {
@@ -80,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageBox.textContent = result.message;
                     messageBox.style.color = '#14532d';
                     form.reset();
-                    redirectToLogin();
                 } else {
                     messageBox.textContent = result.message || 'Registration failed.';
                     messageBox.style.color = '#b91c1c';
@@ -91,12 +109,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
     });
 
-    function redirectToLogin() {
-        document.body.style.transition = 'opacity 0.5s ease-out';
-        document.body.style.opacity = '0';
-
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 500);
-    }
 });

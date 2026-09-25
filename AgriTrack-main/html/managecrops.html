@@ -341,18 +341,49 @@
         const cropCardGrid = document.getElementById("cropCardGrid");
         const modalTitle = document.getElementById("cropModalTitle");
 
+        function resetCropImageState() {
+            const upload = document.querySelector(".image-upload");
+            const cropPreview = document.getElementById("cropImagePreview");
+            const uploadText = upload ? upload.querySelector("span") : null;
+
+            if (!cropPreview || !upload) return;
+
+            cropPreview.removeAttribute("src");
+            cropPreview.hidden = true;
+            cropPreview.style.display = "none";
+            upload.classList.remove("has-preview");
+
+            if (uploadText) {
+                uploadText.textContent = "Mag-upload ng larawan ng iyong pananim.";
+            }
+        }
+
+        function setCropImageState(src, labelText = "") {
+            const upload = document.querySelector(".image-upload");
+            const cropPreview = document.getElementById("cropImagePreview");
+            const uploadText = upload ? upload.querySelector("span") : null;
+
+            if (!cropPreview || !upload) return;
+
+            cropPreview.src = src;
+            cropPreview.hidden = false;
+            cropPreview.style.display = "block";
+            upload.classList.add("has-preview");
+
+            if (uploadText) {
+                uploadText.textContent = labelText || "Larawan ng pananim";
+            }
+        }
+
         function closeCropForm() {
             cropModal.classList.remove("show");
             document.body.classList.remove("modal-open");
+            resetCropImageState();
         }
 
         function openCropForm(crop = null) {
             cropForm.reset();
-            const cropPreview = document.getElementById("cropImagePreview");
-            cropPreview.removeAttribute("src");
-            cropPreview.hidden = true;
-            cropPreview.style.display = "none";
-            cropPreview.closest(".image-upload").classList.remove("has-preview");
+            resetCropImageState();
             document.getElementById("cropId").value = crop ? crop.CropID : "0";
             modalTitle.textContent = crop ? "I-edit ang Impormasyon ng Pananim" : "Magdagdag ng Inirerekomendang Pananim";
             if (crop) {
@@ -361,6 +392,10 @@
                 document.getElementById("cropType").value = crop.CropType || "";
                 document.getElementById("plantingSeason").value = crop.SeasonID || "0";
                 document.getElementById("reason").value = crop.Reason || "";
+
+                if (crop.imageUrl) {
+                    setCropImageState(`${crop.imageUrl}${crop.imageUrl.includes("?") ? "&" : "?"}v=${Date.now()}`, "Larawan ng pananim");
+                }
             }
             cropModal.classList.add("show");
             document.body.classList.add("modal-open");
@@ -408,17 +443,14 @@
         document.getElementById("cropImage").addEventListener("change", event => {
             const file = event.target.files[0];
             if (file) {
-                document.querySelector(".image-upload span").textContent = file.name;
+                const uploadText = event.target.closest(".image-upload").querySelector("span");
+                uploadText.textContent = file.name;
                 const cropPreview = document.getElementById("cropImagePreview");
                 const reader = new FileReader();
                 reader.onload = () => {
-                    cropPreview.src = reader.result;
-                    cropPreview.hidden = false;
-                    cropPreview.style.display = "block";
+                    setCropImageState(reader.result, file.name);
                 };
                 reader.readAsDataURL(file);
-                cropPreview.hidden = false;
-                cropPreview.closest(".image-upload").classList.add("has-preview");
             }
         });
 
