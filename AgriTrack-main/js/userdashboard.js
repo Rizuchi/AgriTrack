@@ -23,6 +23,8 @@ const state = {
     selectedNoteDate: null,
     selectedPlantedCropId: null,
     plantedCrops: [],
+    scheduledTasks: [],
+    taskFilter: 'week',
 };
 
 function pad2(n) {
@@ -90,9 +92,142 @@ async function loadStats() {
         document.getElementById('statTotalCrops').textContent = String(data.totalCrops).padStart(2, '0');
         document.getElementById('statActiveMonitoring').textContent = String(data.activeMonitoring).padStart(2, '0');
         document.getElementById('statPestAlerts').textContent = String(data.pestAlerts).padStart(2, '0');
-        document.getElementById('statScheduledTasks').textContent = String(data.scheduledTasks).padStart(2, '0');
     } catch (err) {
         console.error('Failed to load stats:', err);
+    }
+}
+
+function taskDateValue(value) {
+    const [year, month, day] = String(value).slice(0, 10).split('-').map(Number);
+    return new Date(year, month - 1, day);
+}
+
+function taskDateLabel(value) {
+    return taskDateValue(value).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function taskTipsData(task) {
+    if (task.tips && typeof task.tips === 'object') return task.tips;
+    try {
+        return JSON.parse(task.tips || '{}');
+    } catch {
+        return {};
+    }
+}
+
+function visibleTasks() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const weekEnd = new Date(today);
+    weekEnd.setDate(weekEnd.getDate() + 6);
+
+    return state.scheduledTasks.filter(task => {
+        const due = taskDateValue(task.due_date);
+        const overdue = task.status === 'Overdue' || due < today;
+        if (state.taskFilter === 'overdue') return overdue && task.status !== 'Done';
+        if (state.taskFilter === 'today') return due.getTime() === today.getTime();
+        return due >= today && due <= weekEnd;
+    }).sort((a, b) => Number(b.is_urgent) - Number(a.is_urgent) || a.due_date.localeCompare(b.due_date));
+}
+
+function renderScheduledTasks() {
+    const list = document.getElementById('scheduledTaskList');
+    const tasks = visibleTasks();
+    list.innerHTML = '';
+
+    if (tasks.length === 0) {
+        const empty = document.createElement('p');
+        empty.className = 'task-empty';
+        empty.textContent = state.taskFilter === 'overdue' ? 'No overdue tasks.' : 'No tasks for this period.';
+        list.appendChild(empty);
+        return;
+    }
+
+    tasks.forEach(task => {
+        const item = document.createElement('article');
+        item.className = `scheduled-task${Number(task.is_urgent) ? ' is-urgent' : ''}${task.status === 'Done' ? ' is-done' : ''}`;
+
+        const content = document.createElement('div');
+        content.className = 'scheduled-task-main';
+        const heading = document.createElement('h3');
+        heading.textContent = task.type;
+        const crop = document.createElement('p');
+        crop.className = 'scheduled-task-crop';
+        crop.textContent = `${task.PlantLabel || task.CropName} · ${task.CropName}`;
+        const meta = document.createElement('div');
+        meta.className = 'scheduled-task-meta';
+        meta.textContent = `${taskDateLabel(task.due_date)} · ${task.status} · ${task.priority}`;
+        content.append(heading, crop, meta);
+
+        const actions = document.createElement('div');
+        actions.className = 'scheduled-task-actions';
+        const tipsButton = document.createElement('button');
+        tipsButton.type = 'button';
+        tipsButton.className = 'task-action-link';
+        tipsButton.textContent = 'View Tips';
+        tipsButton.addEventListener('click', () => openTaskTips(task));
+        actions.appendChild(tipsButton);
+
+        if (task.status !== 'Done') {
+            const doneButton = document.createElement('button');
+            doneButton.type = 'button';
+            doneButton.className = 'task-done-button';
+            doneButton.textContent = 'Mark Done';
+            doneButton.addEventListener('click', () => markTaskDone(task, doneButton));
+            actions.appendChild(doneButton);
+        }
+
+        item.append(content, actions);
+        list.appendChild(item);
+    });
+}
+
+async function loadScheduledTasks() {
+    const list = document.getElementById('scheduledTaskList');
+    const summary = document.getElementById('scheduledTaskSummary');
+    try {
+        const data = await apiGet('scheduled_tasks.php');
+        state.scheduledTasks = data.tasks || [];
+        const activeCount = state.scheduledTasks.filter(task => task.status !== 'Done').length;
+        const urgentCount = state.scheduledTasks.filter(task => Number(task.is_urgent) === 1 && task.status !== 'Done').length;
+        document.getElementById('statScheduledTasks').textContent = String(activeCount).padStart(2, '0');
+        summary.textContent = `${activeCount} active tasks · ${urgentCount} urgent`;
+        renderScheduledTasks();
+    } catch (err) {
+        summary.textContent = 'Tasks could not be loaded.';
+        list.innerHTML = '';
+        const message = document.createElement('p');
+        message.className = 'task-empty task-error';
+        message.textContent = err.message || 'Unable to load crop tasks.';
+        list.appendChild(message);
+        console.error('Failed to load scheduled tasks:', err);
+    }
+}
+
+function openTaskTips(task) {
+    const tips = taskTipsData(task);
+    document.getElementById('taskTipsCrop').textContent = `${task.PlantLabel || task.CropName} · ${task.type}`;
+    document.getElementById('taskTipsTitle').textContent = 'Task tips';
+    document.getElementById('taskTipsActionWrap').hidden = !tips.action;
+    document.getElementById('taskTipsAction').textContent = tips.action || '';
+    document.getElementById('taskTipsFix').textContent = tips.fix || 'Follow the recommended crop care for this task.';
+    document.getElementById('taskTipsPrevention').textContent = tips.prevention || 'Inspect the crop regularly and keep tools clean.';
+    document.getElementById('taskTipsFollowUp').textContent = tips.followUp || 'Re-check the crop in 3 days.';
+    document.getElementById('taskTipsModal').hidden = false;
+    document.getElementById('closeTaskTips').focus();
+}
+
+async function markTaskDone(task, button) {
+    button.disabled = true;
+    try {
+        await apiPost('scheduled_task_update.php', { taskId: Number(task.id) });
+        task.status = 'Done';
+        renderScheduledTasks();
+        const activeCount = state.scheduledTasks.filter(item => item.status !== 'Done').length;
+        document.getElementById('statScheduledTasks').textContent = String(activeCount).padStart(2, '0');
+    } catch (err) {
+        button.disabled = false;
+        console.error('Failed to complete scheduled task:', err);
     }
 }
 
@@ -497,8 +632,52 @@ async function saveNote() {
 document.addEventListener('DOMContentLoaded', () => {
     loadGreeting();
     loadStats();
+    loadScheduledTasks();
     loadPlantedCrops();
     loadMonthData(state.viewYear, state.viewMonth);
+
+    document.querySelectorAll('[data-task-filter]').forEach(button => {
+        button.addEventListener('click', () => {
+            state.taskFilter = button.dataset.taskFilter;
+            document.querySelectorAll('[data-task-filter]').forEach(filter => {
+                const active = filter === button;
+                filter.classList.toggle('is-active', active);
+                filter.setAttribute('aria-pressed', String(active));
+            });
+            renderScheduledTasks();
+        });
+    });
+
+    const scheduledTasksModal = document.getElementById('scheduledTasksModal');
+    const openScheduledTasksButton = document.getElementById('openScheduledTasks');
+    const closeScheduledTasks = () => {
+        scheduledTasksModal.hidden = true;
+        openScheduledTasksButton.focus();
+    };
+    openScheduledTasksButton.addEventListener('click', () => {
+        scheduledTasksModal.hidden = false;
+        document.getElementById('closeScheduledTasks').focus();
+    });
+    document.getElementById('closeScheduledTasks').addEventListener('click', closeScheduledTasks);
+    scheduledTasksModal.addEventListener('click', event => {
+        if (event.target === scheduledTasksModal) closeScheduledTasks();
+    });
+
+    const taskTipsModal = document.getElementById('taskTipsModal');
+    document.getElementById('closeTaskTips').addEventListener('click', () => {
+        taskTipsModal.hidden = true;
+    });
+    taskTipsModal.addEventListener('click', event => {
+        if (event.target === taskTipsModal) taskTipsModal.hidden = true;
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key !== 'Escape') return;
+        if (!taskTipsModal.hidden) {
+            taskTipsModal.hidden = true;
+        } else if (!scheduledTasksModal.hidden) {
+            closeScheduledTasks();
+        }
+    });
 
     document.getElementById('prevMonthBtn').addEventListener('click', () => goToMonth(-1));
     document.getElementById('nextMonthBtn').addEventListener('click', () => goToMonth(1));

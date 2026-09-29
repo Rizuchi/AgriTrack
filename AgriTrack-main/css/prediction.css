@@ -1,3 +1,21 @@
+:root {
+    --ink: #10281d;
+    --ink-soft: #4b5f54;
+    --ink-faint: #7d8f84;
+    --forest: #14432c;
+    --forest-deep: #0c2e1e;
+    --leaf: #2f8a52;
+    --lime: #bfe56f;
+    --lime-soft: #eef7d6;
+    --page: #f4f6f2;
+    --surface: #ffffff;
+    --line: #e2e8e1;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --shadow: 0 1px 2px rgba(16, 40, 29, 0.05), 0 8px 24px -12px rgba(16, 40, 29, 0.12);
+    --card-height: 340px; /* change this one value to make all cards taller/shorter */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,294 +23,371 @@
 }
 
 html {
+    background: var(--page);
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-html::-webkit-scrollbar {
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
     display: none;
     width: 0;
 }
 
 body {
-    background: #ffffff;
-    font-family: 'Poppins', sans-serif;
-    color: #0d241d;
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', 'Poppins', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
 
-body::-webkit-scrollbar {
-    display: none;
-    width: 0;
+:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 2px;
 }
+
+/* ---------- Layout & header ---------- */
 
 .prediction-main {
     margin-left: 300px;
-    padding: 20px 40px 50px;
+    padding: 32px 36px 56px;
     min-height: 100vh;
-    background: #ffffff;
+    background: var(--page);
 }
 
 .prediction-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    gap: 16px;
     width: 100%;
 }
 
 .prediction-header h1 {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 800;
-    color: #0d241d;
-    line-height: 1.1;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
 }
 
 .prediction-header p {
-    margin-top: 6px;
-    font-size: 16px;
-    font-weight: 400;
-    color: #0d241d;
-    line-height: 1.2;
+    max-width: 720px;
+    margin-top: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink-faint);
 }
 
 .dashboard-icons {
-    display: flex;
-    gap: 14px;
-    padding-top: 4px;
-}
-
-.dashboard-icons i {
-    font-size: 22px;
-    color: #0d241d;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.dashboard-icons i:hover {
-    transform: translateY(-1px);
-}
-
-.prediction-line {
-    width: 100%;
-    height: 1px;
-    background: #173227;
-    margin-top: 16px;
-    margin-bottom: 20px;
-}
-
-.season-section {
-    width: 100%;
-    margin-bottom: 24px;
-}
-
-.season-section h3 {
-    font-size: 22px;
-    font-weight: 800;
-    color: #0d241d;
-    line-height: 1.2;
-    margin-bottom: 8px;
-}
-
-.season-buttons {
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
+.icon-btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-btn:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
+}
+
+.icon-btn .dot {
+    position: absolute;
+    top: 11px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e5484d;
+    border: 2px solid var(--surface);
+}
+
+.prediction-line {
+    display: none;
+}
+
+/* ---------- Season filter ---------- */
+
+.season-section {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 16px;
+    margin: 24px 0 32px;
+}
+
+.season-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-soft);
+}
+
+.season-buttons {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+}
+
 .season-btn {
-    min-width: 100px;
-    height: 30px;
-    padding: 0 14px;
-    border: 1px solid #0d241d;
-    border-radius: 5px;
-    background: #ffffff;
-    color: #0d241d;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
+    min-width: 96px;
+    height: 36px;
+    padding: 0 16px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 13px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
 .season-btn:hover {
-    background: #f5f9e5;
+    background: var(--lime-soft);
+    color: var(--ink);
 }
 
 .season-btn.active {
-    background: #bfe56f;
+    background: var(--forest);
+    color: #ffffff;
 }
 
+/* ---------- Results ---------- */
+
 .prediction-title {
-    font-size: 25px;
-    font-weight: 700;
-    color: #0d241d;
-    line-height: 1.15;
     margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    color: var(--ink);
 }
 
 .prediction-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-    gap: 24px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
     width: 100%;
-    overflow: visible;
-    padding-right: 0;
+    align-items: stretch;
+    grid-auto-rows: var(--card-height); /* every row is exactly the same height */
+}
+
+.prediction-grid > p {
+    grid-column: 1 / -1;
+    padding: 40px 0;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink-faint);
 }
 
 .prediction-card {
-    width: 100%;
-    height: 330px;
-    background: #ffffff;
-    border: 1px solid #0d241d;
-    border-radius: 18px;
-    padding: 20px;
     display: flex;
-    align-items: flex-start;
-    gap: 24px;
-    overflow: hidden;
+    align-items: stretch;
+    gap: 20px;
+    width: 100%;
     min-width: 0;
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-.prediction-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(13, 36, 29, 0.08);
+    height: var(--card-height); /* fixed, no longer driven by image/content */
+    min-height: 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
 }
 
 .prediction-image {
-    width: 200px;
-    height: 280px;
-    object-fit: cover;
+    width: 180px;
+    height: 100%;              /* fills the card, never taller than it */
+    min-height: 0;
+    align-self: auto;
+    object-fit: cover;         /* crops every photo to the same box */
     border-radius: 14px;
+    background: var(--lime-soft);
     flex-shrink: 0;
 }
 
 .prediction-info {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    height: 100%;
-    padding: 0 2px 20px 0;
     min-width: 0;
-}
-
-.prediction-info h3 {
-    font-size: 28px;
-    font-weight: 700;
-    color: #0d241d;
-    line-height: 1.15;
-    margin-bottom: 4px;
+    min-height: 0;
+    padding: 4px 2px 0 0;
     overflow-wrap: anywhere;
 }
 
-.prediction-info p {
-    font-size: 14px;
-    color: #0d241d;
-    line-height: 1.4;
+.prediction-info h3 {
     margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.prediction-info p {
+    margin-bottom: 8px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--ink-soft);
 }
 
 .prediction-info p strong {
-    font-weight: 700;
+    font-weight: 600;
+    color: var(--ink);
+}
+
+/* Symptoms preview: at most four lines */
+.prediction-info p:nth-of-type(3) {
+    min-height: 0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
 }
 
 .details-btn {
-    position: absolute;
-    left: 0;
-    right: 4px;
-    bottom: 2px;
-    height: 38px;
+    width: 100%;
+    height: 42px;
+    margin-top: auto;
+    flex-shrink: 0;
     border: none;
-    border-radius: 7px;
-    background: #bfe56f;
-    color: #0d241d;
-    font-family: 'Poppins', sans-serif;
-    font-size: 12px;
+    border-radius: var(--radius-md);
+    background: var(--forest);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13.5px;
     font-weight: 700;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background 0.15s ease;
 }
 
 .details-btn:hover {
-    background: #aeda5c;
-    transform: translateY(-1px);
+    background: var(--forest-deep);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1350px) {
+    .prediction-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
 @media (max-width: 1150px) {
-    .prediction-grid {
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
-        gap: 20px;
-    }
-
-    .prediction-card {
-        width: 100%;
+    .prediction-main {
+        padding: 28px 24px 44px;
     }
 }
 
 @media (max-width: 900px) {
     .prediction-main {
         margin-left: 270px;
-        padding: 16px;
+        padding: 20px 16px 40px;
     }
 
-    .prediction-card {
-        height: auto;
+    .prediction-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (max-width: 650px) {
     .prediction-main {
         margin-left: 0;
-        padding: 20px;
+        padding: 16px 16px 36px;
+    }
+
+    .prediction-header h1 {
+        font-size: 21px;
+    }
+
+    .prediction-header p {
+        font-size: 13px;
+    }
+
+    .season-section {
+        margin: 18px 0 24px;
+    }
+
+    .season-buttons {
+        width: 100%;
+    }
+
+    .season-btn {
+        flex: 1;
+        min-width: 0;
+        padding: 0 8px;
     }
 
     .prediction-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: auto;
         gap: 12px;
     }
 
     .prediction-card {
-        width: 100%;
-        max-width: none;
-        height: auto;
-        min-height: 120px;
-        padding: 14px;
         display: block;
+        height: auto;
+        min-height: 0;
+        padding: 14px;
     }
 
     .prediction-card .prediction-image,
-    .prediction-card .prediction-info p,
-    .prediction-card .details-btn {
+    .prediction-card .prediction-info p {
         display: none;
     }
 
     .prediction-card .prediction-info {
-        display: flex;
-        flex-direction: column;
-        height: auto;
         padding: 0;
     }
 
     .prediction-card .prediction-info h3 {
-        font-size: 18px;
-        line-height: 1.15;
         margin: 0 0 12px;
+        font-size: 16px;
     }
 
     .prediction-card .details-btn {
-        display: block;
-        position: static;
-        height: 34px;
-        margin-top: auto;
-        font-size: 10px;
+        height: 36px;
+        font-size: 11px;
     }
+}
 
-    .prediction-header h1 {
-        font-size: 20px;
+@media (max-width: 420px) {
+    .prediction-grid {
+        grid-template-columns: 1fr;
     }
 }

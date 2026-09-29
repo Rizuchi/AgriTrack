@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
     toggle.setAttribute('aria-expanded', 'false');
     toggle.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
 
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'sidebar-close';
+    closeButton.setAttribute('aria-label', 'Close navigation menu');
+    closeButton.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
+
     const pageHeader = document.querySelector(
         'main > header, main > [class*="header"], '
         + '.dashboard-main > [class*="header"], .crops-main > [class*="header"], '
@@ -27,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backdrop.setAttribute('aria-label', 'Close navigation menu');
 
     pageHeader.prepend(toggle);
+    sidebar.prepend(closeButton);
     document.body.append(backdrop);
 
     const setOpen = (open) => {
@@ -38,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     toggle.addEventListener('click', () => setOpen(!sidebar.classList.contains('mobile-open')));
+    closeButton.addEventListener('click', () => setOpen(false));
     backdrop.addEventListener('click', () => setOpen(false));
     sidebar.querySelectorAll('a').forEach(link => link.addEventListener('click', () => setOpen(false)));
     window.addEventListener('resize', () => {

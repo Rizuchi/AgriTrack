@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriTrack Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/crop-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -13,20 +15,19 @@
 </head>
 <body>
 
-    
     <aside class="user-sidebar">
         <div class="overlay"></div>
         <div class="sidebar-content">
             <div class="logo">AGRITRACK</div>
             <nav class="menu">
-                <a href="userdashboard.html" class="menu-item active">
+                <a href="userdashboard.html" class="menu-item">
                     <i class="fa-solid fa-table-columns"></i>
                     <div>
                         <span class="title">Dashboard</span>
                         <span class="subtitle">Dashboard</span>
                     </div>
                 </a>
-                <a href="crops.html" class="menu-item">
+                <a href="crops.html" class="menu-item active">
                     <i class="fa-solid fa-seedling"></i>
                     <div>
                         <span class="title">Mga Pananim</span>
@@ -81,12 +82,12 @@
         </div>
     </aside>
 
-    
+
     <main class="dashboard-main">
         <header class="detail-header">
             <div class="detail-title">
                 <h1>
-                    <a href="crops.html" class="back-btn">
+                    <a href="crops.html" class="back-btn" aria-label="Bumalik sa Mga Pananim">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                     Detalye ng Pananim: <span id="detailCropName">Naglo-load...</span>
@@ -94,7 +95,10 @@
                 <p>Mga detalye ng iyong itinanim at ang kasalukuyang kalagayan nito.</p>
             </div>
             <div class="dashboard-icons">
-                <i class="fa-solid fa-bell"></i>
+                <button type="button" class="icon-btn" aria-label="Mga abiso">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="dot"></span>
+                </button>
             </div>
         </header>
 
@@ -135,22 +139,43 @@
                     detailImage.src = crop.ImageURL;
                     detailImage.alt = crop.CropName;
 
+                    const statusClass = "status-" + String(crop.Status || "").replace(/\s+/g, "-");
+
                     detailScroll.innerHTML = `
-                        <p>
-                            <strong>Pangalan ng Pananim:</strong> ${escapeHtml(crop.CropName)}<br>
-                            <strong>Uri ng Pananim:</strong> ${escapeHtml(crop.CropType || "—")}<br>
-                            <strong>Variety / Barayti:</strong> ${escapeHtml(crop.Variety || "—")}<br>
-                            <strong>Dami ng Itinanim:</strong> ${crop.Quantity ?? "—"}
-                        </p>
-                        <p>
-                            <strong>Petsa ng Pagtatanim:</strong> ${formatDate(crop.PlantingDate)}<br>
-                            <strong>Inaasahang Pag-aani:</strong> ${crop.HarvestDate ? formatDate(crop.HarvestDate) : "—"}<br>
-                            <strong>Kasalukuyang Katayuan:</strong> ${escapeHtml(crop.Status)}
-                        </p>
-                        <p>
-                            <strong>Mga Tala</strong><br>
-                            ${crop.Notes ? escapeHtml(crop.Notes) : "Walang naitalang tala."}
-                        </p>
+                        <div class="detail-grid">
+                            <div class="detail-field">
+                                <span class="detail-label">Pangalan ng Pananim</span>
+                                <span class="detail-value">${escapeHtml(crop.CropName)}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Uri ng Pananim</span>
+                                <span class="detail-value">${escapeHtml(crop.CropType || "—")}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Variety / Barayti</span>
+                                <span class="detail-value">${escapeHtml(crop.Variety || "—")}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Dami ng Itinanim</span>
+                                <span class="detail-value">${crop.Quantity ?? "—"}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Petsa ng Pagtatanim</span>
+                                <span class="detail-value">${formatDate(crop.PlantingDate)}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Inaasahang Pag-aani</span>
+                                <span class="detail-value">${crop.HarvestDate ? formatDate(crop.HarvestDate) : "—"}</span>
+                            </div>
+                            <div class="detail-field">
+                                <span class="detail-label">Kasalukuyang Katayuan</span>
+                                <span class="status-pill ${statusClass}">${escapeHtml(crop.Status)}</span>
+                            </div>
+                        </div>
+                        <div class="detail-notes">
+                            <span class="detail-label">Mga Tala</span>
+                            <p>${crop.Notes ? escapeHtml(crop.Notes) : "Walang naitalang tala."}</p>
+                        </div>
                     `;
                 })
                 .catch(err => {

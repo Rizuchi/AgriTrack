@@ -1,132 +1,191 @@
+:root {
+    --ink: #10281d;
+    --ink-soft: #4b5f54;
+    --ink-faint: #7d8f84;
+    --forest: #14432c;
+    --forest-deep: #0c2e1e;
+    --leaf: #2f8a52;
+    --lime: #bfe56f;
+    --lime-strong: #a9d24a;
+    --lime-soft: #eef7d6;
+    --amber: #f4a300;
+    --amber-soft: #fff2d6;
+    --danger: #d1453b;
+    --page: #f4f6f2;
+    --surface: #ffffff;
+    --line: #e2e8e1;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --shadow: 0 1px 2px rgba(16, 40, 29, 0.05), 0 8px 24px -12px rgba(16, 40, 29, 0.12);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    background: #ffffff;
-    font-family: 'Poppins', sans-serif;
+html {
+    background: var(--page);
 }
 
+body {
+    min-height: 100vh;
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', 'Poppins', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
 
+:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 2px;
+}
 
+/* ---------- Layout ---------- */
 
 .dashboard-main {
     margin-left: 300px;
-    padding: 20px 20px 20px;
+    padding: 32px 36px 48px;
 }
 
 .dashboard-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
 .dashboard-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 800;
-    color: #0d241d;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--ink);
+}
+
+.dashboard-date {
+    margin-top: 4px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-faint);
 }
 
 .dashboard-icons {
     display: flex;
-    gap: 16px;
+    align-items: center;
+    gap: 12px;
 }
 
-.dashboard-icons i {
-    font-size: 22px;
-    color: #0d241d;
+.icon-btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
     cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
 }
 
+.icon-btn:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
+}
 
-
+.icon-btn .dot {
+    position: absolute;
+    top: 11px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e5484d;
+    border: 2px solid var(--surface);
+}
 
 .dashboard-layout {
     display: grid;
-    grid-template-columns: 1.45fr 0.85fr;
-    gap: 20px;
-    align-items: start;
+    grid-template-columns: 1.45fr 0.95fr;
+    gap: 24px;
+    align-items: stretch; /* was: start – makes both columns end at the same bottom edge */
 }
 
 .dashboard-left {
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .dashboard-right {
     display: flex;
     flex-direction: column;
     gap: 24px;
+    min-width: 0;
 }
 
-
-
+/* ---------- Hero ---------- */
 
 .hero-card {
     position: relative;
     width: 100%;
-    height: 250px;
-
+    height: 270px;
     overflow: hidden;
-
-    border-radius: 20px;
-    border: 1px solid #163228;
-
-    background: url("../images/rice-field-farmer.jpg") center / cover no-repeat;
+    border-radius: var(--radius-lg);
+    background: var(--forest) url("../images/rice-field-farmer.jpg") center / cover no-repeat;
+    box-shadow: var(--shadow);
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-
-    background: rgba(17, 40, 23, 0.55);
+    background: linear-gradient(to top, rgba(8, 32, 20, 0.9) 0%, rgba(8, 32, 20, 0.5) 50%, rgba(8, 32, 20, 0.1) 100%);
 }
 
 .hero-content {
     position: absolute;
-
-    left: 24px;
-    right: 24px;
-    bottom: 24px;
-
+    left: 32px;
+    right: 32px;
+    bottom: 28px;
     z-index: 2;
 }
 
 .hero-content h2 {
+    max-width: 520px;
     color: #ffffff;
-
-    font-size: 19px;
-    line-height: 1.3;
+    font-size: 21px;
     font-weight: 700;
-
-    max-width: 480px;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
 }
 
-
-
+/* ---------- Section title ---------- */
 
 .section-title {
-    margin: 22px 0 14px;
+    margin: 32px 0 16px;
 }
 
 .section-title h2 {
-    font-size: 22px;
-    font-weight: 800;
-    color: #0d241d;
-    line-height: 1.1;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.3;
 }
 
 .section-title p {
+    margin-top: 2px;
     font-size: 13px;
-    color: #0d241d;
-    line-height: 1.2;
+    font-weight: 500;
+    color: var(--ink-faint);
 }
 
-
-
+/* ---------- Stat cards ---------- */
 
 .stats-grid {
     display: grid;
@@ -135,655 +194,511 @@ body {
 }
 
 .stat-card {
-    background: #ffffff;
-
-    border: 1px solid #163228;
-    border-radius: 16px;
-
-    height: 130px;
-
-    padding: 14px 20px;
-
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 20px;
+    min-height: 150px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.stat-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: var(--lime-soft);
+    color: var(--forest);
+    font-size: 16px;
+}
+
+.stat-icon--warn {
+    background: var(--amber-soft);
+    color: #a86a00;
+}
+
+.stat-label {
+    padding-right: 48px;
 }
 
 .stat-label h3 {
     font-size: 15px;
     font-weight: 700;
-    color: #0d241d;
-    line-height: 1.2;
+    color: var(--ink);
+    line-height: 1.3;
 }
 
 .stat-label p {
-    font-size: 11px;
-    color: #0d241d;
-    line-height: 1.2;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-faint);
+    line-height: 1.3;
 }
 
 .stat-number {
-    text-align: center;
-
-    font-size: 52px;
+    font-size: 44px;
     font-weight: 800;
-
-    color: #0d241d;
-
+    letter-spacing: -0.03em;
     line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
 }
 
+/* ---------- Scheduled tasks ---------- */
 
+.scheduled-tasks-card {
+    margin-top: 22px;
+    padding: 18px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow);
+}
 
+.scheduled-tasks-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.scheduled-tasks-header h2 {
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 700;
+}
+
+.scheduled-tasks-header p {
+    margin-top: 2px;
+    color: var(--ink-faint);
+    font-size: 12px;
+}
+
+.scheduled-tasks-launcher-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 38px;
+}
+
+.scheduled-task-summary {
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+
+.task-open-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 36px;
+    padding: 7px 12px;
+    border: 1px solid var(--forest);
+    border-radius: 7px;
+    background: var(--forest);
+    color: #fff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.task-open-button:hover { background: var(--forest-deep); }
+
+.task-modal[hidden] { display: none; }
+
+.task-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(12, 32, 22, 0.52);
+    backdrop-filter: blur(4px);
+}
+
+.task-modal-panel {
+    display: flex;
+    flex-direction: column;
+    width: min(760px, 100%);
+    max-height: min(760px, calc(100dvh - 32px));
+    overflow: hidden;
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: 0 24px 60px rgba(8, 32, 20, 0.3);
+}
+
+.task-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.task-modal-header h2 {
+    font-size: 19px;
+    line-height: 1.3;
+}
+
+.task-modal-header p {
+    margin-top: 3px;
+    color: var(--ink-faint);
+    font-size: 12px;
+}
+
+.task-modal-close {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.task-modal-close:hover { background: var(--lime-soft); }
+
+.task-modal .task-filters {
+    align-self: flex-start;
+    margin-bottom: 8px;
+}
+
+.task-modal .scheduled-task-list {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.task-filters {
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 3px;
+    padding: 3px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--page);
+}
+
+.task-filter {
+    min-height: 30px;
+    padding: 5px 9px;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--ink-soft);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.task-filter.is-active {
+    background: var(--forest);
+    color: #fff;
+}
+
+.scheduled-task-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.scheduled-task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+}
+
+.scheduled-task.is-urgent {
+    order: -1;
+    margin: 0 -8px;
+    padding: 12px 8px;
+    border-top-color: #f1c8c3;
+    background: #fff8f6;
+}
+
+.scheduled-task-main {
+    min-width: 0;
+}
+
+.scheduled-task-main h3 {
+    overflow-wrap: anywhere;
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.scheduled-task.is-urgent h3 {
+    color: #a4312c;
+}
+
+.scheduled-task-crop,
+.scheduled-task-meta {
+    margin-top: 3px;
+    overflow-wrap: anywhere;
+    color: var(--ink-soft);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.scheduled-task-meta {
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+}
+
+.scheduled-task.is-done .scheduled-task-main h3::after {
+    content: 'Done';
+    margin-left: 7px;
+    color: var(--leaf);
+    font-size: 10px;
+}
+
+.scheduled-task-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    gap: 8px;
+}
+
+.task-action-link,
+.task-done-button {
+    min-height: 32px;
+    padding: 6px 9px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--forest);
+    font: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.task-done-button {
+    border-color: var(--forest);
+    background: var(--forest);
+    color: #fff;
+}
+
+.task-action-link:hover { background: var(--lime-soft); }
+.task-done-button:hover { background: var(--forest-deep); }
+.task-action-link:disabled,
+.task-done-button:disabled { opacity: 0.55; cursor: wait; }
+
+.task-empty {
+    padding: 18px 4px 6px;
+    color: var(--ink-faint);
+    font-size: 12px;
+}
+
+.task-error { color: var(--danger); }
+
+.task-tips-modal[hidden] { display: none; }
+
+.task-tips-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(12, 32, 22, 0.52);
+}
+
+.task-tips-panel {
+    position: relative;
+    width: min(460px, 100%);
+    max-height: min(80vh, 620px);
+    overflow-y: auto;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    box-shadow: 0 20px 50px rgba(8, 32, 20, 0.25);
+}
+
+.task-tips-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+}
+
+.task-tips-eyebrow {
+    padding-right: 34px;
+    color: var(--leaf);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.task-tips-panel h2 {
+    margin-top: 4px;
+    font-size: 20px;
+    line-height: 1.3;
+}
+
+.task-tips-content {
+    display: grid;
+    gap: 14px;
+    margin-top: 18px;
+}
+
+.task-tips-content dt {
+    margin-bottom: 3px;
+    color: var(--ink-soft);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.task-tips-content dd {
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+/* ---------- Calendar card ---------- */
 
 .calendar-card {
-    background: #e7f5b7;
-
-    border: 1.5px solid #173227;
-    border-radius: 20px;
-
-    padding: 18px;
-
-    height: auto;
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
 }
 
 .calendar-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 16px;
 }
 
 .calendar-header h3 {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
     font-weight: 700;
-    color: #0d241d;
+    letter-spacing: -0.01em;
+    color: var(--ink);
 }
 
-.calendar-header h3 span {
-    font-size: 13px;
-    margin-left: 6px;
-    color: #0d241d;
-    opacity: 0.7;
+.calendar-header h3 > span:last-child {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.calendar-header i[role="button"] {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--ink-soft);
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-
-
+.calendar-header i[role="button"]:hover {
+    background: var(--lime-soft);
+}
 
 .calendar-month {
     display: flex;
     align-items: center;
-
     gap: 6px;
-
-    background: #c9f04c;
-
     padding: 6px 12px;
-
-    border-radius: 8px;
-
+    border-radius: 999px;
+    background: var(--lime-soft);
+    color: var(--forest);
     font-size: 12px;
     font-weight: 600;
 }
 
 .calendar-month i {
-    font-size: 13px;
+    font-size: 12px;
 }
-
-
-
 
 .calendar-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
-
     text-align: center;
-
-    margin-bottom: 4px;
+    margin-bottom: 6px;
 }
 
 .calendar-weekdays span {
     font-size: 12px;
     font-weight: 600;
-    color: #0d241d;
+    color: var(--ink-faint);
 }
-
-
-
 
 .calendar-grid {
     display: grid;
-
     grid-template-columns: repeat(7, 1fr);
-
     gap: 4px 2px;
-
     text-align: center;
 }
 
 .calendar-grid span {
-    min-height: 32px;
-
+    min-height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
-
     font-size: 14px;
-    font-weight: 600;
-
-    color: #0d241d;
+    font-weight: 500;
+    color: var(--ink);
 }
 
 .calendar-grid .date {
     cursor: pointer;
-    border-radius: 6px;
+    border-radius: 50%;
+    transition: background 0.15s ease;
 }
 
 .calendar-grid .date:hover {
-    background: rgba(201, 240, 76, 0.7);
-    border-radius: 6px;
-}
-
-
-
-
-.add-note-btn {
-    margin-top: 10px;
-
-    width: 100%;
-
-    background: #c9f04c;
-
-    border: none;
-    border-radius: 8px;
-
-    padding: 10px;
-
-    font-size: 13px;
-    font-weight: 700;
-
-    cursor: pointer;
-
-    font-family: 'Poppins', sans-serif;
-}
-
-.add-note-btn:hover {
-    background: #b9e33d;
-}
-
-
-
-
-.weather-card {
-    background: #e7f5b7;
-
-    border: 1.5px solid #173227;
-    border-radius: 20px;
-
-    padding: 18px;
-
-    height: 215px;
-}
-
-
-
-
-.weather-title {
-    margin-bottom: 12px;
-}
-
-.weather-title h3 {
-    font-size: 20px;
-    font-weight: 700;
-
-    line-height: 1;
-
-    color: #0d241d;
-}
-
-.weather-title p {
-    font-size: 12px;
-
-    color: #0d241d;
-
-    line-height: 1;
-
-    margin-top: 4px;
-}
-
-.weather-content {
-    display: grid;
-
-    grid-template-columns: repeat(3, 1fr);
-
-    gap: 10px;
-
-    height: auto;
-}
-
-
-
-
-.weather-main {
-    background: #cde87c;
-
-    border-radius: 16px;
-
-    padding: 12px;
-
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.weather-label h4 {
-    font-size: 14px;
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    color: #0d241d;
-}
-
-.weather-label span {
-    font-size: 11px;
-
-    color: #0d241d;
-
-    line-height: 1.2;
-}
-
-
-
-
-.weather-temperature {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-
-    gap: 6px;
-
-    margin-top: auto;
-    padding-left: 14px;
-}
-
-.weather-temperature i {
-    font-size: 17px;
-    color: #0d241d;
-}
-
-.weather-temperature strong {
-    font-size: 19px;
-    font-weight: 800;
-
-    color: #0d241d;
-}
-
-.weather-side {
-    display: contents;
-}
-
-.weather-box {
-    background: #cde87c;
-
-    border-radius: 16px;
-
-    padding: 12px;
-
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-
-    color: #0d241d;
-}
-
-.weather-box h4 {
-    font-size: 14px;
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    margin: 0;
-}
-
-.weather-box span {
-    font-size: 11px;
-
-    color: #0d241d;
-
-    margin-top: 3px;
-
-    line-height: 1.2;
-}
-
-.weather-box strong {
-    font-size: 20px;
-    font-weight: 800;
-
-    line-height: 1;
-
-    margin-top: 6px;
-}
-
-
-
-
-.rain-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.rain-text h4 {
-    font-size: 15px;
-
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    margin: 0;
-}
-
-.rain-text span {
-    font-size: 11px;
-
-    margin-top: 3px;
-
-    color: #0d241d;
-}
-
-
-
-
-@media (max-width: 1100px) {
-
-    .dashboard-main {
-        margin-left: 270px;
-        padding: 20px 20px 30px;
-    }
-
-    .dashboard-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .dashboard-right {
-        margin-top: 16px;
-    }
-
-    .hero-card {
-        height: 230px;
-    }
-
-    .calendar-card {
-        height: auto;
-    }
-
-    .weather-card {
-        height: auto;
-    }
-}
-
-
-@media (max-width: 768px) {
-
-    .dashboard-main {
-        margin-left: 0;
-        padding: 20px;
-    }
-
-    .dashboard-title {
-        font-size: 26px;
-    }
-
-    .dashboard-layout {
-        grid-template-columns: 1fr;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .hero-card {
-        height: 230px;
-    }
-
-    .hero-content h2 {
-        font-size: 17px;
-    }
-
-    .weather-content {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
-
-    .weather-main {
-        min-height: 140px;
-    }
-
-    .weather-side {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-
-
-
-.note-modal {
-    position: fixed;
-    inset: 0;
-
-    z-index: 9999;
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    background: rgba(0, 0, 0, 0.25);
-
-    backdrop-filter: blur(5px);
-}
-
-.note-modal.show {
-    display: flex;
-}
-
-
-
-
-.note-modal-content {
-    width: 1020px;
-    min-height: 520px;
-
-    display: grid;
-    grid-template-columns: 500px 1fr;
-
-    background: #ffffff;
-
-    border: 1px solid #173227;
-    border-radius: 18px;
-
-    overflow: hidden;
-
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.20);
-}
-
-
-
-
-.modal-calendar {
-    background: #e7f5b7;
-
-    padding: 26px;
-
-    border-right: 1px solid #173227;
-}
-
-
-
-
-.modal-calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-
-    margin-bottom: 20px;
-}
-
-.modal-calendar-header h2 {
-    font-size: 25px;
-    font-weight: 700;
-
-    color: #0d241d;
-}
-
-
-
-
-
-.modal-month {
-    display: flex;
-    align-items: center;
-
-    gap: 8px;
-
-    background: #c9f04c;
-
-    padding: 8px 15px;
-
-    border-radius: 6px;
-
-    font-size: 11px;
-    font-weight: 600;
-}
-
-.modal-month i {
-    font-size: 12px;
-}
-
-
-
-
-.modal-weekdays {
-    display: grid;
-
-    grid-template-columns: repeat(7, 1fr);
-
-    text-align: center;
-
-    margin-bottom: 7px;
-}
-
-.modal-weekdays span {
-    font-size: 12px;
-    font-weight: 600;
-
-    color: #0d241d;
-}
-
-
-
-
-.modal-calendar-grid {
-    display: grid;
-
-    grid-template-columns: repeat(7, 1fr);
-
-    row-gap: 5px;
-
-    text-align: center;
-}
-
-.modal-calendar-grid span {
-    height: 44px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 17px;
-    font-weight: 600;
-
-    color: #0d241d;
-
-    border-radius: 7px;
-
-    cursor: pointer;
-}
-
-.modal-calendar-grid span:hover {
-    background: #c9f04c;
-}
-
-
-
-
-.modal-information {
-    padding: 26px 24px;
-
-    background: #ffffff;
-
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-}
-
-.activity-section h2 {
-    font-size: 24px;
-    font-weight: 700;
-
-    color: #0d241d;
-
-    margin-bottom: 9px;
-}
-
-
-
-
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-.tag-list button {
-    border: none;
-
-    background: #c9e978;
-
-    color: #0d241d;
-
-    border-radius: 5px;
-
-    padding: 7px 12px;
-
-    font-family: 'Poppins', sans-serif;
-
-    font-size: 11px;
-    font-weight: 600;
-
-    cursor: pointer;
-
-    transition: 0.2s ease;
-}
-
-.tag-list button:hover {
-    background: #b9df5e;
-}
-
-.tag-list button.selected {
-    background: #9bcf36;
+    background: var(--lime-soft);
 }
 
 .calendar-grid .date.today {
     font-weight: 700;
-    border: 2px solid #173227;
+    border: 2px solid var(--forest);
     border-radius: 50%;
 }
 
@@ -793,65 +708,316 @@ body {
 }
 
 .calendar-grid .date.has-note {
-    background: #c9f04c;
-    color: #0d241d;
+    background: var(--lime);
+    color: var(--ink);
     border-radius: 50%;
     font-weight: 700;
 }
 
-.calendar-grid .date.today.has-entry {
-    background: rgba(155, 207, 54, 0.35);
-    border: 2px solid #173227;
+.calendar-grid .date.harvest-ready {
+    background: var(--amber);
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: 700;
 }
 
-.calendar-grid .date.today.has-note {
-    background: #c9f04c;
-    border: 2px solid #173227;
+.calendar-grid .date.today.has-entry,
+.calendar-grid .date.today.has-note,
+.calendar-grid .date.today.harvest-ready {
+    border: 2px solid var(--forest);
 }
 
-.calendar-grid .date {
+.add-note-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--forest);
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
     cursor: pointer;
+    transition: background 0.15s ease;
 }
 
-.calendar-header i[role="button"] {
-    cursor: pointer;
-    padding: 0 4px;
+.add-note-btn:hover {
+    background: var(--forest-deep);
+}
+
+/* ---------- Weather card (dark – the one standout) ---------- */
+
+.weather-card {
+    flex: 1;                     /* fills remaining height so the bottom lines up with Scheduled Tasks */
+    display: flex;
+    flex-direction: column;
+    padding: 22px;
+    background: var(--forest);
+    border-radius: var(--radius-lg);
+    color: #ffffff;
+    box-shadow: var(--shadow);
+}
+
+.weather-title {
+    margin-bottom: 16px;
+}
+
+.weather-title h3 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: #ffffff;
+}
+
+.weather-title p {
+    margin-top: 2px;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+/* Three stacked rows */
+.weather-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.weather-side {
+    display: contents;           /* rain + season boxes become rows of the same stack */
+}
+
+.weather-main,
+.weather-box {
+    flex: 1;                     /* rows share the height equally */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: 72px;
+    padding: 14px 18px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+}
+
+.weather-label h4,
+.weather-box h4,
+.rain-text h4 {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
+}
+
+.weather-label span,
+.weather-box span,
+.rain-text span {
+    display: block;
+    margin-top: 2px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.weather-temperature {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 0;
+}
+
+.weather-temperature i {
+    font-size: 24px;
+    color: var(--lime);
+}
+
+.weather-temperature strong {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+}
+
+.weather-box strong,
+.weather-box--season span {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    color: var(--lime);
+}
+
+.weather-box--season > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+.weather-box--season span {
+    text-align: right;
+}
+
+.rain-text {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---------- Note modal ---------- */
+
+.note-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(12, 32, 22, 0.45);
+    backdrop-filter: blur(6px);
+}
+
+.note-modal.show {
+    display: flex;
+}
+
+.note-modal-content {
+    width: min(1020px, 100%);
+    max-height: calc(100vh - 32px);
+    display: grid;
+    grid-template-columns: 460px 1fr;
+    background: var(--surface);
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(8, 32, 20, 0.35);
+}
+
+.modal-calendar {
+    padding: 28px;
+    background: var(--lime-soft);
+    overflow-y: auto;
+}
+
+.modal-calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-calendar-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+
+.modal-month {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--forest);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.modal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.modal-weekdays span {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faint);
+}
+
+.modal-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 4px;
+    text-align: center;
 }
 
 .modal-calendar-grid span {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--ink);
+    border-radius: 50%;
     cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.modal-calendar-grid span:hover {
+    background: var(--lime);
 }
 
 .modal-calendar-grid span.selected {
     font-weight: 700;
-    outline: 2px solid currentColor;
+    outline: 2px solid var(--forest);
     border-radius: 50%;
 }
 
+.modal-calendar-grid span.harvest-ready {
+    background: var(--amber);
+    color: #ffffff;
+    border-radius: 50%;
+    font-weight: 700;
+}
+
+.modal-calendar-grid span.harvest-ready.selected {
+    outline: 2px solid var(--forest);
+}
+
 .modal-selected-date-label {
+    margin-top: 14px;
     font-size: 0.85rem;
-    margin-top: 8px;
+    color: var(--ink-soft);
+}
+
+.modal-selected-date-label strong {
+    color: var(--ink);
 }
 
 .modal-crop-select {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 12px;
+    gap: 6px;
+    margin-top: 14px;
     font-size: 0.85rem;
     font-weight: 600;
+    color: var(--ink);
 }
 
 .modal-crop-select select {
     width: 100%;
     max-height: 156px;
     overflow-y: auto;
-    padding: 8px 10px;
-    border: 1px solid rgba(23, 50, 39, 0.25);
-    border-radius: 8px;
-    background: #ffffff;
-    color: #0d241d;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
     font: inherit;
+    font-weight: 500;
 }
 
 .modal-crop-select option {
@@ -859,7 +1025,7 @@ body {
 }
 
 .modal-existing-notes {
-    margin-top: 8px;
+    margin-top: 12px;
     font-size: 0.85rem;
 }
 
@@ -869,9 +1035,9 @@ body {
 }
 
 .note-entry {
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(23, 50, 39, 0.15);
-    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
     padding: 10px 12px;
     margin-bottom: 8px;
 }
@@ -879,7 +1045,7 @@ body {
 .note-freetext {
     font-size: 0.85rem;
     font-weight: 700;
-    color: #0d241d;
+    color: var(--ink);
     margin: 0 0 6px;
     line-height: 1.3;
 }
@@ -895,37 +1061,94 @@ body {
 .note-tag-row-label {
     font-size: 0.72rem;
     font-weight: 600;
-    color: #0d241d;
-    opacity: 0.65;
+    color: var(--ink-faint);
     margin-right: 2px;
 }
 
 .note-tag-pill {
-    background: #e7f5b7;
-    color: #0d241d;
+    background: var(--lime-soft);
+    color: var(--forest);
     border-radius: 999px;
-    padding: 2px 9px;
+    padding: 2px 10px;
     font-size: 0.72rem;
-    font-weight: 500;
+    font-weight: 600;
+}
+
+.modal-information {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px;
+    background: var(--surface);
+    overflow-y: auto;
+}
+
+.activity-section h2 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-list button {
+    padding: 8px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.tag-list button:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
+}
+
+.tag-list button.selected {
+    background: var(--forest);
+    border-color: var(--forest);
+    color: #ffffff;
 }
 
 #modalFreeText {
     width: 100%;
     resize: vertical;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--page);
+    color: var(--ink);
     font-family: inherit;
-    padding: 8px;
-    border-radius: 8px;
+    font-size: 13.5px;
+}
+
+#modalFreeText:focus {
+    outline: 2px solid var(--leaf);
+    outline-offset: 1px;
+    background: var(--surface);
 }
 
 .modal-error-text {
-    color: #d1453b;
-    font-size: 0.85rem;
     min-height: 1em;
+    color: var(--danger);
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
 #saveNoteBtn {
     width: 100%;
-    margin-top: 8px;
+    margin-top: auto;
 }
 
 #saveNoteBtn:disabled {
@@ -933,44 +1156,21 @@ body {
     cursor: not-allowed;
 }
 
-
-
-.calendar-grid .date.harvest-ready {
-    background: #f4a300;
-    color: #ffffff;
-    border-radius: 50%;
-    font-weight: 700;
-}
-
-.calendar-grid .date.today.harvest-ready {
-    background: #f4a300;
-    border: 2px solid #173227;
-}
-
-.modal-calendar-grid span.harvest-ready {
-    background: #f4a300;
-    color: #ffffff;
-    border-radius: 50%;
-    font-weight: 700;
-}
-
-.modal-calendar-grid span.harvest-ready.selected {
-    outline: 2px solid #173227;
-}
+/* ---------- Harvest banner & toast ---------- */
 
 .harvest-banner {
-    background: #fff2d6;
-    border: 1px solid #f4a300;
-    border-radius: 10px;
+    background: var(--amber-soft);
+    border: 1px solid var(--amber);
+    border-radius: 12px;
     padding: 10px 12px;
     margin-bottom: 10px;
 }
 
 .harvest-banner-item {
+    margin: 0;
     font-size: 0.85rem;
     font-weight: 700;
     color: #7a4b00;
-    margin: 0;
     line-height: 1.3;
 }
 
@@ -988,20 +1188,19 @@ body {
     gap: 10px;
     max-width: min(380px, calc(100vw - 32px));
     padding: 13px 18px;
-    border: 2px solid #c9f04c;
-    border-radius: 10px;
-    background: #173227;
+    border-radius: 12px;
+    background: var(--forest);
     color: #ffffff;
     font-size: 0.85rem;
     font-weight: 600;
-    box-shadow: 0 10px 24px rgba(13, 36, 29, 0.22);
+    box-shadow: 0 12px 28px rgba(13, 36, 29, 0.28);
     opacity: 0;
     transform: translateY(-12px);
     pointer-events: none;
 }
 
 .save-toast i {
-    color: #c9f04c;
+    color: var(--lime);
     font-size: 1.1rem;
 }
 
@@ -1010,12 +1209,160 @@ body {
 }
 
 @keyframes save-toast-in {
-    0%, 100% {
-        opacity: 0;
-        transform: translateY(-12px);
+    0%, 100% { opacity: 0; transform: translateY(-12px); }
+    10%, 88% { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Page-load reveal (single, orchestrated) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+    .stats-grid .stat-card {
+        animation: rise 0.5s cubic-bezier(0.22, 0.8, 0.3, 1) both;
     }
-    10%, 88% {
-        opacity: 1;
-        transform: translateY(0);
+    .stats-grid .stat-card:nth-child(2) { animation-delay: 0.06s; }
+    .stats-grid .stat-card:nth-child(3) { animation-delay: 0.12s; }
+    .stats-grid .stat-card:nth-child(4) { animation-delay: 0.18s; }
+
+    @keyframes rise {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: none; }
+    }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1100px) {
+    .dashboard-main {
+        margin-left: 270px;
+        padding: 24px 22px 40px;
+    }
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-card {
+        height: 240px;
+    }
+
+    .note-modal-content {
+        grid-template-columns: 400px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-main {
+        margin-left: 0;
+        padding: 16px 16px 32px;
+    }
+
+    .dashboard-title {
+        font-size: 22px;
+    }
+
+    .hero-card {
+        height: 200px;
+    }
+
+    .hero-content {
+        left: 20px;
+        right: 20px;
+        bottom: 20px;
+    }
+
+    .hero-content h2 {
+        font-size: 16px;
+    }
+
+    .section-title {
+        margin-top: 28px;
+    }
+
+    .stat-card {
+        min-height: 130px;
+        padding: 16px;
+    }
+
+    .stat-number {
+        font-size: 36px;
+    }
+
+    .calendar-card,
+    .weather-card {
+        padding: 18px;
+    }
+
+    .scheduled-tasks-card { padding: 14px; }
+
+    .scheduled-tasks-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .scheduled-tasks-launcher-row { align-items: flex-start; }
+
+    .task-filters { width: 100%; }
+
+    .task-filter {
+        flex: 1 1 0;
+        padding-right: 5px;
+        padding-left: 5px;
+    }
+
+    .scheduled-task {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .scheduled-task-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .task-tips-panel { padding: 20px; }
+
+    .task-modal { padding: 10px; }
+
+    .task-modal-panel {
+        max-height: calc(100dvh - 20px);
+        padding: 16px;
+    }
+
+    /* Weather rows already stack, so only the min-height needs resetting */
+    .weather-main,
+    .weather-box {
+        min-height: 0;
+    }
+
+    .note-modal-content {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+    }
+
+    .modal-calendar,
+    .modal-information {
+        overflow-y: visible;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 450px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        min-height: 0;
+    }
+
+    .dashboard-date {
+        display: none;
+    }
+
+    .save-toast {
+        top: 12px;
+        right: 12px;
+        left: 12px;
+        max-width: none;
     }
 }

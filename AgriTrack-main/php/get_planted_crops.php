@@ -7,13 +7,13 @@ $conn = getDbConnection();
 $userId = $_SESSION['UserID'];
 
 $stmt = $conn->prepare(
-    'SELECT pc.PlantedCropID, pc.PlantLabel, pc.CropID, pc.DateOfPlant,
+    "SELECT pc.PlantedCropID, pc.PlantLabel, pc.CropID, pc.DateOfPlant,
             pc.ExpectedHarvestDate, pc.Status,
             c.CropName, c.EnglishName, c.CropType
      FROM planted_crop pc
      JOIN crops c ON c.CropID = pc.CropID
-     WHERE pc.UserID = ?
-     ORDER BY pc.DateOfPlant DESC'
+     WHERE pc.UserID = ? AND pc.Status <> 'Archived'
+     ORDER BY pc.DateOfPlant DESC"
 );
 $stmt->bind_param('i', $userId);
 $stmt->execute();

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriTrack - Recommendation</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/recommendation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -14,99 +16,89 @@
 </head>
 <body>
 
-
-
 <aside class="user-sidebar">
     <div class="overlay"></div>
 
-<div class="sidebar-content">
+    <div class="sidebar-content">
 
-    <div class="logo">AGRITRACK</div>
+        <div class="logo">AGRITRACK</div>
 
-    <nav class="menu">
+        <nav class="menu">
 
-        
-        <a href="userdashboard.html" class="menu-item">
-            <i class="fa-solid fa-table-columns"></i>
-            <div>
-                <span class="title">Dashboard</span>
-                <span class="subtitle">Dashboard</span>
-            </div>
-        </a>
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
 
-        
-        <a href="crops.html" class="menu-item">
-            <i class="fa-solid fa-seedling"></i>
-            <div>
-                <span class="title">Mga Pananim</span>
-                <span class="subtitle">Crops</span>
-            </div>
-        </a>
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
 
-        
-        <a href="monitoring.html" class="menu-item">
-            <i class="fa-solid fa-leaf"></i>
-            <div>
-                <span class="title">Subaybayan ang Pananim</span>
-                <span class="subtitle">Crop Monitoring</span>
-            </div>
-        </a>
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
 
-        
-        <a href="recommendation.html" class="menu-item active">
-            <i class="fa-solid fa-wand-magic-sparkles"></i>
-            <div>
-                <span class="title">Rekomendasyon na Pananim</span>
-                <span class="subtitle">Crop Recommendation</span>
-            </div>
-        </a>
+            <a href="recommendation.html" class="menu-item active">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
 
-        
-        <a href="prediction.html" class="menu-item">
-            <i class="fa-solid fa-bug"></i>
-            <div>
-                <span class="title">Prediksyon sa Peste at Sakit</span>
-                <span class="subtitle">Pest and Disease Prediction</span>
-            </div>
-        </a>
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
 
-        
-        <a href="contact.html" class="menu-item">
-            <i class="fa-solid fa-phone"></i>
-            <div>
-                <span class="title">Makipag-ugnayan</span>
-                <span class="subtitle">Contact</span>
-            </div>
-        </a>
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
 
-        <a href="profile.html" class="menu-item">
-            <i class="fa-solid fa-user"></i>
-            <div>
-                <span class="title">Profile</span>
-                <span class="subtitle">Profile</span>
-            </div>
-        </a>
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
 
-    </nav>
+        </nav>
 
-    
-    <div class="logout-section">
-        <a href="login.html" class="menu-item logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
-            <div>
-                <span class="title">Mag-log Out</span>
-                <span class="subtitle">Log Out</span>
-            </div>
-        </a>
+        <div class="logout-section">
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+        </div>
+
     </div>
-
-</div>
 
 </aside>
 
 <div class="dashboard-main">
 
-    
     <div class="recommendation-header">
 
         <div>
@@ -115,7 +107,10 @@
         </div>
 
         <div class="dashboard-icons">
-            <i class="fa-solid fa-bell"></i>
+            <button type="button" class="icon-btn" aria-label="Mga abiso">
+                <i class="fa-solid fa-bell"></i>
+                <span class="dot"></span>
+            </button>
         </div>
 
     </div>
@@ -123,16 +118,15 @@
     <div class="recommendation-line"></div>
 
 
-    
     <div class="current-weather">
         <h2>
+            <i class="fa-solid fa-cloud-sun-rain"></i>
             Kasalukuyang Panahon:
             <span id="currentSeasonLabel">Ikinakarga...</span>
         </h2>
     </div>
 
 
-    
     <div class="crop-recommendation-grid" id="cropGrid">
         <p class="loading-text">Ikinakarga ang mga inirerekomendang pananim...</p>
     </div>

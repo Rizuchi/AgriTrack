@@ -1,271 +1,423 @@
+/* ==========================================================
+   AGRITRACK – Crop detail page
+   ========================================================== */
+
+:root {
+    --ink: #10281d;
+    --ink-soft: #4b5f54;
+    --ink-faint: #7d8f84;
+    --forest: #14432c;
+    --forest-deep: #0c2e1e;
+    --leaf: #2f8a52;
+    --lime: #bfe56f;
+    --lime-soft: #eef7d6;
+    --amber-soft: #fff2d6;
+    --page: #f4f6f2;
+    --surface: #ffffff;
+    --line: #e2e8e1;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --shadow: 0 1px 2px rgba(16, 40, 29, 0.05), 0 8px 24px -12px rgba(16, 40, 29, 0.12);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    background: #ffffff;
-    font-family: 'Poppins', sans-serif;
+html {
+    background: var(--page);
 }
 
+body {
+    min-height: 100vh;
+    background: var(--page);
+    color: var(--ink);
+    font-family: 'Plus Jakarta Sans', 'Poppins', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
 
+:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 2px;
+}
 
+/* ---------- Layout & header ---------- */
 
 .dashboard-main {
     margin-left: 300px;
-    padding: 20px 40px 20px;
+    padding: 32px 36px 48px;
 }
-
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.dashboard-title {
-    font-size: 32px;
-    font-weight: 800;
-    color: #0d241d;
-}
-
-.dashboard-icons {
-    display: flex;
-    gap: 16px;
-}
-
-.dashboard-icons i {
-    font-size: 22px;
-    color: #0d241d;
-    cursor: pointer;
-}
-
-
 
 .detail-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 22px;
+    gap: 16px;
+    margin-bottom: 24px;
 }
 
-.detail-title h1 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 32px;
-    font-weight: 700;
-    color: #1d2b24;
-    margin-bottom: 6px;
-}
-
-.back-btn {
-    color: #1d2b24;
-    text-decoration: none;
-    font-size: 20px;
-    transition: 0.2s;
-}
-
-.back-btn:hover {
-    color: #6f8f3b;
-}
-
-.detail-title p {
-    font-size: 16px;
-    color: #555;
-    max-width: 700px;
-}
-
-
-
-
-.crop-detail-card {
-    display: flex;
-    gap: 24px;
-    background: #ececec;
-    border: 2px solid #1d2b24;
-    border-radius: 18px;
-    padding: 18px;
-    height: 560px;
-}
-
-
-
-.detail-image {
-    flex: 0 0 330px;
-}
-
-.detail-image img {
-    width: 500px;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 14px;
-    display: block;
-}
-
-
-
-.detail-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.detail-title {
     min-width: 0;
 }
 
-.detail-content h2 {
+.detail-title h1 {
+    display: block;
+    margin-bottom: 6px;
     font-size: 28px;
-    font-weight: 700;
-    color: #1d2b24;
-    margin-bottom: 16px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--ink);
 }
 
+.back-btn {
+    display: inline-grid;
+    place-items: center;
+    vertical-align: middle;
+    margin-right: 12px;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    text-decoration: none;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
 
+.back-btn:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
+}
+
+.detail-title p {
+    max-width: 700px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--ink-faint);
+}
+
+.dashboard-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icon-btn {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.icon-btn:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
+}
+
+.icon-btn .dot {
+    position: absolute;
+    top: 11px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #e5484d;
+    border: 2px solid var(--surface);
+}
+
+/* ---------- Detail card ---------- */
+
+.crop-detail-card {
+    display: grid;
+    grid-template-columns: 380px minmax(0, 1fr);
+    gap: 32px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.detail-image {
+    min-height: 440px;
+    border-radius: 14px;
+    background: var(--lime-soft);
+    overflow: hidden;
+}
+
+.detail-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 440px;
+    object-fit: cover;
+}
+
+.detail-image img[src=""] {
+    display: none;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 8px 8px 8px 0;
+}
+
+.detail-content h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+}
 
 .detail-scroll {
     flex: 1;
     overflow-y: auto;
-    padding-right: 12px;
+    padding-right: 4px;
 }
 
-.detail-scroll p {
-    font-size: 16[x];
-    color: #444;
+.detail-scroll > p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+}
+
+/* Structured fields */
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--page);
+    min-width: 0;
+}
+
+.detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-faint);
+}
+
+.detail-value {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+}
+
+.detail-notes {
+    margin-top: 12px;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+}
+
+.detail-notes p {
+    margin-top: 6px;
+    font-size: 14px;
     line-height: 1.65;
-    margin-bottom: 18px;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+    white-space: pre-line;
 }
 
-.detail-scroll strong {
-    color: #1d2b24;
+/* Status pill (same class names as the crops page) */
+.status-pill {
+    align-self: flex-start;
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: var(--lime-soft);
+    color: var(--forest);
+    font-size: 13px;
     font-weight: 700;
 }
 
-.detail-scroll ul {
-    margin: 8px 0 18px 22px;
-    color: #444;
+.status-Growing {
+    background: #e6f4ea;
+    color: #1e7e34;
 }
 
-.detail-scroll li {
-    margin-bottom: 8px;
-    line-height: 1.5;
+.status-Ready-to-Harvest {
+    background: var(--amber-soft);
+    color: #8a5a00;
 }
 
-
+.status-Harvested {
+    background: #e8eaf0;
+    color: #444a5a;
+}
 
 .detail-scroll::-webkit-scrollbar {
     width: 8px;
 }
 
 .detail-scroll::-webkit-scrollbar-track {
-    background: #d9d9d9;
-    border-radius: 10px;
+    background: transparent;
 }
 
 .detail-scroll::-webkit-scrollbar-thumb {
-    background: #6f8f3b;
+    background: #c3d3bf;
     border-radius: 10px;
 }
 
 .detail-scroll::-webkit-scrollbar-thumb:hover {
-    background: #5c7731;
+    background: var(--leaf);
 }
 
+/* ---------- Pest & disease list (recommendation detail) ---------- */
 
+.detail-subheading {
+    margin: 24px 0 12px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+}
+
+.pest-list {
+    display: grid;
+    gap: 12px;
+    list-style: none;
+}
+
+.pest-item {
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+}
+
+.pest-item-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.pest-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.pest-type {
+    padding: 2px 10px;
+    border-radius: 999px;
+    background: #fdecec;
+    color: #b3261e;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.pest-type--disease {
+    background: var(--amber-soft);
+    color: #8a5a00;
+}
+
+.pest-row {
+    margin-top: 6px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+}
+
+.pest-row strong {
+    font-weight: 700;
+    color: var(--ink);
+}
+
+/* ---------- Responsive ---------- */
 
 @media (max-width: 1100px) {
-
     .dashboard-main {
         margin-left: 0;
-        padding: 20px;
+        padding: 24px 20px 40px;
     }
 
     .crop-detail-card {
-        flex-direction: column;
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .detail-image,
+    .detail-image img {
+        min-height: 0;
     }
 
     .detail-image {
-        flex: none;
-        width: 100%;
         height: 320px;
     }
 
-    .detail-header {
-        flex-direction: column;
-        gap: 16px;
-    }
-
-    .dashboard-icons {
-        align-self: flex-end;
+    .detail-content {
+        padding: 0 4px 4px;
     }
 }
 
 @media (max-width: 760px) {
     .dashboard-main {
         width: 100%;
-        margin-left: 0;
-        padding: 12px;
+        padding: 16px 14px 32px;
     }
 
     .detail-header {
-        gap: 12px;
         margin-bottom: 16px;
-    }
-
-    .detail-title {
-        min-width: 0;
     }
 
     .detail-title h1 {
         align-items: flex-start;
-        font-size: clamp(22px, 7vw, 30px);
-        line-height: 1.15;
+        font-size: clamp(20px, 6vw, 26px);
         overflow-wrap: anywhere;
     }
 
     .detail-title p {
         font-size: 13px;
-        line-height: 1.4;
     }
 
     .crop-detail-card {
-        width: 100%;
-        height: auto;
-        min-height: 0;
         padding: 12px;
-        gap: 14px;
-        overflow: visible;
     }
 
     .detail-image {
-        width: 100%;
-        height: 180px;
-        flex: none;
-    }
-
-    .detail-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .detail-content {
-        width: 100%;
+        height: 200px;
     }
 
     .detail-content h2 {
-        font-size: 22px;
-        line-height: 1.2;
-        overflow-wrap: anywhere;
+        font-size: 18px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
     }
 
     .detail-scroll {
         overflow: visible;
-        padding-right: 0;
-    }
-
-    .detail-scroll p,
-    .detail-scroll li {
-        font-size: 14px;
-        overflow-wrap: anywhere;
     }
 }

@@ -53,6 +53,7 @@ $plantedCropId = (int) ($input['plantedCropId'] ?? 0);
 $condition = trim($input['condition'] ?? '');
 $pest = trim($input['pest'] ?? 'Wala');
 $additionalNote = trim($input['additionalNote'] ?? '');
+$markHarvested = !empty($input['markHarvested']);
 $userId = (int) ($_SESSION['UserID'] ?? 0);
 
 if ($plantedCropId <= 0 || $condition === '') {
@@ -80,7 +81,8 @@ if ($elapsed < MONITORING_COOLDOWN_SECONDS) {
 
 $conn = getDbConnection();
 $verifyStmt = $conn->prepare(
-    'SELECT PlantedCropID FROM planted_crop WHERE PlantedCropID = ? AND UserID = ?'
+    "SELECT PlantedCropID FROM planted_crop
+     WHERE PlantedCropID = ? AND UserID = ? AND Status <> 'Archived'"
 );
 $verifyStmt->bind_param('ii', $plantedCropId, $userId);
 $verifyStmt->execute();
@@ -102,6 +104,7 @@ if ($additionalNote !== '') {
     $parts[] = 'Tala: ' . $additionalNote;
 }
 $message = implode(' | ', $parts);
+$conn->begin_transaction();
 
 $todayStmt = $conn->prepare(
     'SELECT NotesID, Message FROM notes
@@ -125,6 +128,7 @@ if ($todayNote) {
 }
 
 if (!$saveStmt->execute()) {
+    $conn->rollback();
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Failed to save monitoring update.']);
     $saveStmt->close();
@@ -133,6 +137,27 @@ if (!$saveStmt->execute()) {
 }
 
 $saveStmt->close();
+
+if ($markHarvested) {
+    $statusStmt = $conn->prepare(
+        "UPDATE planted_crop
+         SET Status = 'Harvested'
+         WHERE PlantedCropID = ? AND UserID = ?
+           AND Status <> 'Harvested'"
+    );
+    $statusStmt->bind_param('ii', $plantedCropId, $userId);
+    if (!$statusStmt->execute()) {
+        $statusStmt->close();
+        $conn->rollback();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Failed to update harvest status.']);
+        $conn->close();
+        exit;
+    }
+    $statusStmt->close();
+}
+
+$conn->commit();
 $conn->close();
 
 $_SESSION['lastMonitoringSave'][$plantedCropId] = time();

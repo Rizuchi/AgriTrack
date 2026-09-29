@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriTrack - Crop Monitoring</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/monitoring.css">
@@ -100,7 +102,10 @@
         </div>
 
         <div class="dashboard-icons">
-            <i class="fa-solid fa-bell"></i>
+            <button type="button" class="icon-btn" aria-label="Mga abiso">
+                <i class="fa-solid fa-bell"></i>
+                <span class="dot"></span>
+            </button>
         </div>
     </div>
 
@@ -113,6 +118,7 @@
         </div>
 
         <button class="category-btn" type="button">
+            <i class="fa-solid fa-sliders"></i>
             Mga Kategorya
         </button>
     </div>
@@ -158,7 +164,49 @@
         </div>
     </section>
 
+    <section class="ready-harvest-section">
+        <h2>Mga Ani na Handa nang Anihin</h2>
+        <p class="section-description">
+            Tingnan ang mga pananim na maaari nang anihin.
+        </p>
+
+        <div class="panel">
+            <div class="ready-harvest-grid" id="readyHarvestGrid">
+                <p>Naglo-load ng datos...</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="harvested-section">
+        <h2>Mga Ani na Naani na</h2>
+        <p class="section-description">
+            Tingnan ang mga pananim na naitala nang anihin.
+        </p>
+
+        <div class="panel">
+            <div class="ready-harvest-grid" id="harvestedGrid">
+                <p>Naglo-load ng datos...</p>
+            </div>
+        </div>
+    </section>
+
 </main>
+
+<div class="archive-confirm-backdrop" id="archiveConfirmModal" hidden>
+    <section class="archive-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="archiveConfirmTitle" aria-describedby="archiveConfirmDescription">
+        <div class="archive-confirm-icon" aria-hidden="true">
+            <i class="fa-solid fa-box-archive"></i>
+        </div>
+        <div class="archive-confirm-copy">
+            <h2 id="archiveConfirmTitle">I-archive ang pananim?</h2>
+            <p id="archiveConfirmDescription">Sigurado ka ba?</p>
+        </div>
+        <div class="archive-confirm-actions">
+            <button class="archive-cancel-button" id="cancelArchiveButton" type="button">Kanselahin</button>
+            <button class="archive-confirm-button" id="confirmArchiveButton" type="button">I-archive</button>
+        </div>
+    </section>
+</div>
 
 <script src="../js/toast.js"></script>
 
@@ -167,6 +215,13 @@ const monitoringSearch = document.getElementById("monitoringSearch");
 const cropTable = document.getElementById("cropTable");
 const cropTableBody = document.getElementById("cropTableBody");
 const gaugeGrid = document.getElementById("harvestGaugeGrid");
+const readyHarvestGrid = document.getElementById("readyHarvestGrid");
+const harvestedGrid = document.getElementById("harvestedGrid");
+const archiveConfirmModal = document.getElementById('archiveConfirmModal');
+const cancelArchiveButton = document.getElementById('cancelArchiveButton');
+const confirmArchiveButton = document.getElementById('confirmArchiveButton');
+let monitoringCrops = [];
+let pendingArchive = null;
 
 function escapeHtml(str) {
     const div = document.createElement('div');
@@ -175,14 +230,13 @@ function escapeHtml(str) {
 }
 
 function gaugeColor(pct) {
-    if (pct >= 100) return '#173227';
-    if (pct >= 60)  return '#6f8f3b';
-    if (pct >= 30)  return '#c9a227';
-    return '#c1652f';
+    if (pct >= 100) return '#14432c';
+    if (pct >= 60)  return '#2f8a52';
+    if (pct >= 30)  return '#e0a422';
+    return '#d9622b';
 }
 
-// Classifies a Kalagayan / Peste-Sakit value into a pill style so the table
-// reads at a glance instead of as plain text.
+
 function statusPillClass(text) {
     const value = (text || '').toLowerCase();
 
@@ -204,6 +258,10 @@ function statusPillClass(text) {
 function statusPill(text) {
     const label = text && text.trim() !== '' ? text : 'Wala';
     return `<span class="status-pill ${statusPillClass(label)}">${escapeHtml(label)}</span>`;
+}
+
+function archiveButton(crop) {
+    return `<button class="archive-crop-btn" type="button" aria-label="I-archive ang ${escapeHtml(crop.CropName)}" title="I-archive ang pananim" onclick="archiveCrop(${crop.PlantedCropID}, this)"><i class="fa-solid fa-box-archive" aria-hidden="true"></i></button>`;
 }
 
 function daysUntil(dateStr) {
@@ -234,18 +292,23 @@ function renderTable(crops) {
                     <span>${crop.Progress}%</span>
                 </div>
             </td>
-            <td><button class="view-btn" type="button" onclick="window.location.href='monitoring-details.html?id=${crop.PlantedCropID}'"><i class="fa-solid fa-pen-to-square"></i><span>Aksyon</span></button></td>
+            <td>
+                <button class="view-btn" type="button" onclick="window.location.href='monitoring-details.html?id=${crop.PlantedCropID}'"><i class="fa-solid fa-pen-to-square"></i><span>Aksyon</span></button>
+                ${archiveButton(crop)}
+            </td>
         </tr>
     `).join('');
 }
 
 function renderGauges(crops) {
-    if (!crops.length) {
+    const growingCrops = crops.filter(crop => Number(crop.Progress) < 100);
+
+    if (!growingCrops.length) {
         gaugeGrid.innerHTML = '<p>Wala pang itinanim na pananim.</p>';
         return;
     }
 
-    gaugeGrid.innerHTML = crops.map(crop => {
+    gaugeGrid.innerHTML = growingCrops.map(crop => {
         const remaining = daysUntil(crop.ExpectedHarvestDate);
         const daysLabel = crop.Progress >= 100
             ? 'Handa na'
@@ -253,6 +316,7 @@ function renderGauges(crops) {
 
         return `
             <div class="harvest-gauge-card" data-crop-name="${escapeHtml(crop.CropName).toLowerCase()}">
+                ${archiveButton(crop)}
                 <div class="harvest-gauge" style="--pct: ${crop.Progress}; --gauge-color: ${gaugeColor(crop.Progress)};">
                     <div class="harvest-gauge-inner">
                         <span class="gauge-percent">${crop.Progress}%</span>
@@ -266,35 +330,180 @@ function renderGauges(crops) {
     }).join('');
 }
 
+function isReadyOrHarvested(crop) {
+    const status = (crop.Status || '').toLowerCase();
+    return status === 'harvested' || status === 'ready to harvest' || crop.Progress >= 100;
+}
+
+function renderHarvestCards(crops, grid, emptyMessage, harvested) {
+    if (!crops.length) {
+        grid.innerHTML = `<p>${emptyMessage}</p>`;
+        return;
+    }
+
+    grid.innerHTML = crops.map(crop => {
+        const label = harvested ? 'Naani na' : 'Handa nang anihin';
+        const icon = harvested ? 'fa-check' : 'fa-wheat-awn';
+
+        return `
+            <article class="ready-harvest-card">
+                ${archiveButton(crop)}
+                <div class="ready-harvest-icon" aria-hidden="true">
+                    <i class="fa-solid ${icon}"></i>
+                </div>
+                <div class="ready-harvest-content">
+                    <h3>${escapeHtml(crop.CropName)}</h3>
+                    <span class="ready-harvest-status ${harvested ? 'harvested' : ''}">${label}</span>
+                    <p>${escapeHtml(crop.GrowthStage)}</p>
+                </div>
+                <div class="ready-harvest-actions">
+                    <button class="view-btn" type="button" onclick="window.location.href='monitoring-details.html?id=${crop.PlantedCropID}'">
+                        <i class="fa-solid fa-arrow-right"></i><span>Tingnan</span>
+                    </button>
+                    ${harvested ? '' : `<button class="harvest-card-btn" type="button" onclick="markHarvested(${crop.PlantedCropID}, this)"><i class="fa-solid fa-wheat-awn"></i><span>Inani na</span></button>`}
+                </div>
+            </article>
+        `;
+    }).join('');
+}
+
+function renderReadyHarvested(crops) {
+    const readyCrops = crops.filter(crop => isReadyOrHarvested(crop) && (crop.Status || '').toLowerCase() !== 'harvested');
+    const harvestedCrops = crops.filter(crop => (crop.Status || '').toLowerCase() === 'harvested');
+
+    renderHarvestCards(readyCrops, readyHarvestGrid, 'Wala pang ani na handa nang anihin.', false);
+    renderHarvestCards(harvestedCrops, harvestedGrid, 'Wala pang naaning pananim.', true);
+}
+
+async function markHarvested(plantedCropId, button) {
+    const crop = monitoringCrops.find(item => Number(item.PlantedCropID) === Number(plantedCropId));
+    if (!crop || button.disabled) return;
+
+    button.disabled = true;
+    try {
+        const response = await fetch('../php/update_monitoring.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                plantedCropId,
+                condition: crop.Condition || 'Handa nang Anihin',
+                pest: crop.PestOrDisease || 'Wala',
+                additionalNote: '',
+                markHarvested: true
+            })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || 'Hindi na-update ang status ng ani.');
+
+        crop.Status = 'Harvested';
+        renderReadyHarvested(monitoringCrops);
+        showPageToast('Nailipat na sa mga naaning pananim.');
+    } catch (error) {
+        button.disabled = false;
+        showPageToast(error.message);
+    }
+}
+
+function archiveCrop(plantedCropId, button) {
+    const crop = monitoringCrops.find(item => Number(item.PlantedCropID) === Number(plantedCropId));
+    if (!crop || button.disabled) return;
+    pendingArchive = { plantedCropId, button };
+    archiveConfirmModal.hidden = false;
+    cancelArchiveButton.focus();
+}
+
+function closeArchiveConfirm(restoreFocus = true) {
+    const returnTarget = pendingArchive?.button;
+    archiveConfirmModal.hidden = true;
+    confirmArchiveButton.disabled = false;
+    pendingArchive = null;
+    if (restoreFocus && returnTarget?.isConnected) returnTarget.focus();
+}
+
+cancelArchiveButton.addEventListener('click', () => closeArchiveConfirm());
+
+archiveConfirmModal.addEventListener('click', (event) => {
+    if (event.target === archiveConfirmModal) closeArchiveConfirm();
+});
+
+archiveConfirmModal.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        closeArchiveConfirm();
+    } else if (event.key === 'Tab') {
+        event.preventDefault();
+        (document.activeElement === cancelArchiveButton ? confirmArchiveButton : cancelArchiveButton).focus();
+    }
+});
+
+confirmArchiveButton.addEventListener('click', async () => {
+    if (!pendingArchive) return;
+
+    const { plantedCropId, button } = pendingArchive;
+    button.disabled = true;
+    confirmArchiveButton.disabled = true;
+    try {
+        const response = await fetch('../php/archive_harvested_crop.php', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ plantedCropId })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || 'Hindi na-archive ang ani.');
+
+        monitoringCrops = monitoringCrops.filter(item => Number(item.PlantedCropID) !== Number(plantedCropId));
+        renderTable(monitoringCrops);
+        renderGauges(monitoringCrops);
+        renderReadyHarvested(monitoringCrops);
+        applyMonitoringSearch();
+        closeArchiveConfirm(false);
+        monitoringSearch.focus();
+    } catch (error) {
+        button.disabled = false;
+        confirmArchiveButton.disabled = false;
+        showPageToast(error.message);
+    }
+});
+
+function applyMonitoringSearch() {
+    const searchValue = monitoringSearch.value.toLowerCase().trim();
+
+    cropTable.querySelectorAll("tbody tr").forEach(row => {
+        const cropName = row.cells[0].textContent.toLowerCase();
+        row.style.display = cropName.includes(searchValue) ? "" : "none";
+    });
+
+    document.querySelectorAll(".harvest-gauge-card, .ready-harvest-card").forEach(card => {
+        const cropName = card.dataset.cropName || card.querySelector("h3, h4").textContent.toLowerCase();
+        card.style.display = cropName.includes(searchValue) ? "" : "none";
+    });
+}
+
 fetch('../php/get_monitoring.php')
     .then(res => res.json())
     .then(json => {
         if (!json.success) {
             cropTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</td></tr>`;
             gaugeGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
+            readyHarvestGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
+            harvestedGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
             return;
         }
 
-        renderTable(json.data);
-        renderGauges(json.data);
+        monitoringCrops = json.data;
+        renderTable(monitoringCrops);
+        renderGauges(monitoringCrops);
+        renderReadyHarvested(monitoringCrops);
 
-        monitoringSearch.addEventListener("input", function () {
-            const searchValue = monitoringSearch.value.toLowerCase().trim();
-
-            cropTable.querySelectorAll("tbody tr").forEach(row => {
-                const cropName = row.cells[0].textContent.toLowerCase();
-                row.style.display = cropName.includes(searchValue) ? "" : "none";
-            });
-
-            gaugeGrid.querySelectorAll(".harvest-gauge-card").forEach(card => {
-                const cropName = card.dataset.cropName;
-                card.style.display = cropName.includes(searchValue) ? "" : "none";
-            });
-        });
+        monitoringSearch.addEventListener("input", applyMonitoringSearch);
     })
     .catch(err => {
         cropTableBody.innerHTML = '<tr><td colspan="6">Hindi makonekta sa server.</td></tr>';
         gaugeGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';
+        readyHarvestGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';
+        harvestedGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';
         console.error(err);
     });
 </script>

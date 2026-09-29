@@ -30,6 +30,7 @@ $fname = trim($input['fname'] ?? '');
 $lname = trim($input['lname'] ?? '');
 $userName = trim($input['userName'] ?? '');
 $email = trim($input['email'] ?? '');
+$barangay = trim($input['barangay'] ?? '');
 $contact = trim($input['contact'] ?? '');
 $password = $input['password'] ?? '';
 $confirmPassword = $input['confirmPassword'] ?? '';
@@ -46,6 +47,21 @@ if (!$isAdminRequest && !preg_match('/^\+639\d{9}$/', $contact)) {
     echo json_encode(['success' => false, 'message' => 'Invalid Philippine mobile number.']);
     exit;
 }
+
+$allowedBarangays = [
+    'Apollo', 'Bagong Paraiso', 'Balut', 'Bayan', 'Calero', 'Centro I', 'Centro II',
+    'Doña', 'Kaparangan', 'Maria Fe', 'Masantol', 'Mulawin', 'Paking-Carbonero',
+    'Palihan', 'Parang Parang', 'Puksuan', 'Silahis', 'Tagumpay', 'Talimundoc',
+    'Tapulao', 'Tenejero', 'Tugatog', 'Wawa'
+];
+
+if (!$isAdminRequest && !in_array($barangay, $allowedBarangays, true)) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Select a valid barangay from the list.']);
+    exit;
+}
+
+$address = $isAdminRequest ? null : $barangay . ', Orani, Bataan';
 
 if (strlen($password) < 8) {
     http_response_code(400);
@@ -95,17 +111,18 @@ $encryptedLname = encryptData($lname);
 $encryptedFname = encryptData($fname);
 $encryptedEmail = encryptData($email);
 $encryptedContact = encryptData($contact);
+$encryptedAddress = $address === null ? null : encryptData($address);
 
 $verificationToken = $isAdminRequest ? null : bin2hex(random_bytes(32));
 $verificationHash = $verificationToken === null ? null : hash('sha256', $verificationToken);
 $verificationExpires = $verificationToken === null ? null : gmdate('Y-m-d H:i:s', time() + 86400);
 
 if ($isAdminRequest) {
-    $insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, contact, role, accStatus, sessionStatus, isActive) VALUES (?, ?, ?, ?, ?, ?, 'User', 'Active', TRUE, TRUE)");
-    $insertStmt->bind_param('ssssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail, $encryptedContact);
+    $insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, contact, address, role, accStatus, sessionStatus, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, 'User', 'Active', TRUE, TRUE)");
+    $insertStmt->bind_param('sssssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail, $encryptedContact, $encryptedAddress);
 } else {
-    $insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, contact, role, accStatus, sessionStatus, isActive, email_verification_token_hash, email_verification_expires_at) VALUES (?, ?, ?, ?, ?, ?, 'User', 'Inactive', TRUE, FALSE, ?, ?)");
-    $insertStmt->bind_param('ssssssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail, $encryptedContact, $verificationHash, $verificationExpires);
+    $insertStmt = $conn->prepare("INSERT INTO users (lname, fname, userName, password, email, contact, address, role, accStatus, sessionStatus, isActive, email_verification_token_hash, email_verification_expires_at) VALUES (?, ?, ?, ?, ?, ?, ?, 'User', 'Inactive', TRUE, FALSE, ?, ?)");
+    $insertStmt->bind_param('sssssssss', $encryptedLname, $encryptedFname, $encryptedUserName, $hashedPassword, $encryptedEmail, $encryptedContact, $encryptedAddress, $verificationHash, $verificationExpires);
 }
 
 if ($insertStmt->execute()) {

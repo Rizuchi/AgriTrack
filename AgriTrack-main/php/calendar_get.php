@@ -60,7 +60,7 @@ $stmt = $conn->prepare(
      FROM planted_crop pc
      JOIN crops c ON c.CropID = pc.CropID
      WHERE pc.UserID = ? AND pc.ExpectedHarvestDate BETWEEN ? AND ?
-       AND pc.Status != 'Harvested'
+    AND pc.Status NOT IN ('Harvested', 'Archived')
      ORDER BY pc.ExpectedHarvestDate ASC"
 );
 $stmt->bind_param('iss', $userId, $monthStart, $monthEnd);

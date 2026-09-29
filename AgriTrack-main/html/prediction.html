@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriTrack - Pest and Disease Prediction</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/prediction.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -98,7 +100,10 @@
         </div>
 
         <div class="dashboard-icons">
-            <i class="fa-solid fa-bell"></i>
+            <button type="button" class="icon-btn" aria-label="Mga abiso">
+                <i class="fa-solid fa-bell"></i>
+                <span class="dot"></span>
+            </button>
         </div>
     </div>
 
@@ -158,7 +163,7 @@ function renderPests(pests) {
         <div class="prediction-card" data-season="${escapeHtml(pest.SeasonType || '')}">
             <img src="../php/pest_image.php?id=${pest.PestDiseaseID}" alt="${escapeHtml(pest.Name)}" class="prediction-image">
             <div class="prediction-info">
-                <h3>${escapeHtml(pest.Name)}</h3>
+                <h3 title="${escapeHtml(pest.Name)}">${escapeHtml(pest.Name)}</h3>
                 <p><strong>Uri:</strong> ${escapeHtml(pest.Type)}</p>
                 <p><strong>Panahon:</strong> ${escapeHtml(seasonLabel(pest.SeasonType))}</p>
                 <p><strong>Sintomas:</strong> ${escapeHtml(preview(pest.Symptoms))}</p>

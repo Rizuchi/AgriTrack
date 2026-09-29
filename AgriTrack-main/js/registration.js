@@ -6,6 +6,123 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    const barangayInput = form.elements.barangay;
+    const barangayOptions = document.getElementById('barangayOptions');
+    const barangays = [
+        'Apollo', 'Bagong Paraiso', 'Balut', 'Bayan', 'Calero', 'Centro I', 'Centro II',
+        'Doña', 'Kaparangan', 'Maria Fe', 'Masantol', 'Mulawin', 'Paking-Carbonero',
+        'Palihan', 'Parang Parang', 'Puksuan', 'Silahis', 'Tagumpay', 'Talimundoc',
+        'Tapulao', 'Tenejero', 'Tugatog', 'Wawa'
+    ];
+    let selectedBarangay = '';
+    let activeOption = -1;
+
+    const normalizeBarangay = (value) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const closeBarangayOptions = () => {
+        barangayOptions.hidden = true;
+        barangayInput.setAttribute('aria-expanded', 'false');
+        barangayInput.removeAttribute('aria-activedescendant');
+        activeOption = -1;
+    };
+
+    const chooseBarangay = (value) => {
+        barangayInput.value = value;
+        selectedBarangay = value;
+        closeBarangayOptions();
+    };
+
+    const renderBarangayOptions = () => {
+        const query = normalizeBarangay(barangayInput.value.trim());
+        barangayOptions.replaceChildren();
+        activeOption = -1;
+
+        const matches = barangays.filter((name) => normalizeBarangay(name).includes(query));
+        if (matches.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.className = 'barangay-empty';
+            emptyMessage.textContent = 'No matching barangay.';
+            barangayOptions.append(emptyMessage);
+        } else {
+            matches.forEach((name, index) => {
+                const option = document.createElement('button');
+                option.type = 'button';
+                option.id = `barangay-option-${index}`;
+                option.className = 'barangay-option';
+                option.setAttribute('role', 'option');
+                option.setAttribute('aria-selected', 'false');
+                option.tabIndex = -1;
+                option.textContent = name;
+                option.addEventListener('click', () => chooseBarangay(name));
+                barangayOptions.append(option);
+            });
+        }
+
+        barangayOptions.hidden = false;
+        barangayInput.setAttribute('aria-expanded', 'true');
+    };
+
+    const setActiveOption = (index) => {
+        const options = barangayOptions.querySelectorAll('[role="option"]');
+        if (options.length === 0) {
+            return;
+        }
+
+        activeOption = (index + options.length) % options.length;
+        options.forEach((option, optionIndex) => {
+            option.setAttribute('aria-selected', String(optionIndex === activeOption));
+        });
+        barangayInput.setAttribute('aria-activedescendant', options[activeOption].id);
+        options[activeOption].scrollIntoView({ block: 'nearest' });
+    };
+
+    barangayInput.addEventListener('input', () => {
+        selectedBarangay = '';
+        renderBarangayOptions();
+    });
+
+    barangayInput.addEventListener('focus', renderBarangayOptions);
+
+    barangayInput.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' && !barangayOptions.hidden) {
+            event.preventDefault();
+            setActiveOption(activeOption + 1);
+        } else if (event.key === 'ArrowUp' && !barangayOptions.hidden) {
+            event.preventDefault();
+            setActiveOption(activeOption < 0 ? 0 : activeOption - 1);
+        } else if (event.key === 'Enter' && activeOption >= 0 && !barangayOptions.hidden) {
+            event.preventDefault();
+            const active = barangayOptions.querySelectorAll('[role="option"]')[activeOption];
+            if (active) {
+                chooseBarangay(active.textContent);
+            }
+        } else if (event.key === 'Escape') {
+            closeBarangayOptions();
+        }
+    });
+
+    barangayInput.addEventListener('blur', () => {
+        window.setTimeout(() => {
+            if (!barangayOptions.contains(document.activeElement)) {
+                closeBarangayOptions();
+            }
+        }, 150);
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.barangay-picker')) {
+            closeBarangayOptions();
+        }
+    });
+
+    form.addEventListener('paste', (event) => event.preventDefault(), true);
+    form.addEventListener('drop', (event) => event.preventDefault(), true);
+    form.addEventListener('beforeinput', (event) => {
+        if (event.inputType === 'insertFromPaste' || event.inputType === 'insertFromDrop') {
+            event.preventDefault();
+        }
+    }, true);
+
     document.querySelectorAll('.toggle-password').forEach((button) => {
         button.addEventListener('click', () => {
             const targetName = button.getAttribute('data-target');
@@ -34,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nameFields = ['fname', 'lname'];
         const namePattern = /^[A-Za-z\s]+$/;
         
-        if (!payload.fname || !payload.lname || !payload.userName || !payload.email || !contactNumber || !payload.password || !payload.confirmPassword) {
+        if (!payload.fname || !payload.lname || !payload.userName || !payload.email || !payload.barangay || !contactNumber || !payload.password || !payload.confirmPassword) {
             messageBox.textContent = 'Please fill in all required fields.';
             messageBox.style.color = '#b91c1c';
             return;
@@ -55,6 +172,13 @@ document.addEventListener('DOMContentLoaded', () => {
             messageBox.textContent = 'Please enter a valid email address.';
             messageBox.style.color = '#b91c1c';
             form.elements.email.focus();
+            return;
+        }
+
+        if (!selectedBarangay || payload.barangay !== selectedBarangay) {
+            messageBox.textContent = 'Please select a barangay from the list.';
+            messageBox.style.color = '#b91c1c';
+            barangayInput.focus();
             return;
         }
         for (const fieldName of nameFields) {
@@ -99,6 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     messageBox.textContent = result.message;
                     messageBox.style.color = '#14532d';
                     form.reset();
+                    selectedBarangay = '';
+                    closeBarangayOptions();
                 } else {
                     messageBox.textContent = result.message || 'Registration failed.';
                     messageBox.style.color = '#b91c1c';

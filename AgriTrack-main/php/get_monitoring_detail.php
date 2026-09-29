@@ -21,7 +21,7 @@ $stmt = $conn->prepare(
             c.CropType
      FROM planted_crop pc
      JOIN crops c ON c.CropID = pc.CropID
-     WHERE pc.PlantedCropID = ? AND pc.UserID = ?"
+    WHERE pc.PlantedCropID = ? AND pc.UserID = ? AND pc.Status <> 'Archived'"
 );
 $stmt->bind_param('ii', $plantedCropId, $userId);
 $stmt->execute();

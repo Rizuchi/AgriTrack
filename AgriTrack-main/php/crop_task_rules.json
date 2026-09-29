@@ -1,0 +1,67 @@
+{
+  "generateAheadDays": 30,
+  "defaults": {
+    "wateringDaysByStage": {
+      "seedling": 2,
+      "growth": 3,
+      "flowering": 2,
+      "fruiting": 2
+    },
+    "fertilizerStartDays": 14,
+    "fertilizerIntervalDays": 30,
+    "weedingStartDays": 10,
+    "weedingIntervalDays": 14,
+    "pruningStartDays": 21,
+    "pruningIntervalDays": 21
+  },
+  "cropTypes": {
+    "Root Crop": {
+      "wateringDaysByStage": { "seedling": 2, "growth": 3, "flowering": 4, "fruiting": 4 },
+      "fertilizerIntervalDays": 35
+    },
+    "Cereal / Grain": {
+      "wateringDaysByStage": { "seedling": 2, "growth": 4, "flowering": 3, "fruiting": 4 },
+      "fertilizerIntervalDays": 30,
+      "pruningIntervalDays": 0
+    }
+  },
+  "crops": {},
+  "pests": {
+    "aphid": {
+      "action": "Tanggalin ang mga dahong sobrang apektado at gumamit ng aprubadong insecticidal soap.",
+      "fix": "Banlawan ang maliliit na grupo ng aphid sa dahon; tanggalin ang mga bahaging sobrang apektado at gumamit ng aprubadong insecticidal soap ayon sa nakasulat sa label.",
+      "prevention": "Tingnan ang ilalim ng mga dahon kada linggo, kontrolin ang mga damo, at iwasan ang sobrang nitrogen na pataba.",
+      "followUp": "Suriin ulit pagkatapos ng 3 araw."
+    },
+    "powdery mildew": {
+      "action": "Tanggalin ang mga dahong may sakit at gamutin ang halaman gamit ang aprubadong fungicide.",
+      "fix": "Putulin at itapon ang mga dahong may sakit; maglagay ng aprubadong fungicide ayon sa label.",
+      "prevention": "Siguraduhing may sapat na hangin, magdilig sa may lupa (hindi sa dahon), at iwasan ang sobrang siksik na tanim.",
+      "followUp": "Suriin ulit pagkatapos ng 3 araw."
+    },
+    "leaf spot": {
+      "action": "Tanggalin ang mga apektadong dahon at gumamit ng aprubadong gamot sa sakit ng halaman.",
+      "fix": "Tanggalin ang mga dahong may batik at huwag itong gawing compost; gumamit ng aprubadong gamot ayon sa label.",
+      "prevention": "Panatilihing tuyo ang mga dahon, linisin ang mga gamit, at magpalit-palit ng tanim kung posible.",
+      "followUp": "Suriin ulit pagkatapos ng 3 araw."
+    },
+    "blight": {
+      "action": "Ihiwalay ang apektadong halaman at tanggalin ang mga bahaging may sakit; maglagay ng aprubadong gamot.",
+      "fix": "Ihiwalay ang halaman, tanggalin ang mga dahon o tangkay na may sakit, at gumamit ng gamot na angkop sa tanim ayon sa label.",
+      "prevention": "Disimpektahin ang mga gamit, iwasan ang pagdilig mula sa itaas, at alisin ang mga tirang bahagi ng tanim.",
+      "followUp": "Suriin ulit pagkatapos ng 3 araw."
+    },
+    "cutworm": {
+      "action": "Protektahan ang puno ng halaman at kunin ang mga cutworm sa paligid nito, lalo na sa gabi.",
+      "fix": "Tingnan ang paligid ng puno ng halaman pagkatapos lumubog ang araw, kunin ang mga nakikitang uod, at lagyan ng harang (collar) ang mga batang halaman.",
+      "prevention": "Linisin ang mga damo at tirang tanim bago magtanim; regular na tingnan ang mga punla.",
+      "followUp": "Tingnan ulit ang puno ng halaman pagkatapos ng 3 araw."
+    },
+    "default": {
+      "action": "Ihiwalay ang apektadong halaman at tanggalin ang mga dahong halatang apektado; tiyakin muna ang sakit bago gamutin.",
+      "fix": "Ihiwalay ang halaman kung kaya, tanggalin ang mga apektadong dahon, at gumamit lang ng gamot na para sa tanim at problemang ito.",
+      "prevention": "Linisin ang mga gamit, iwasang mabasa ang mga dahon, at tingnan ang mga kalapit na halaman kung may parehong sintomas.",
+      "followUp": "Suriin ulit pagkatapos ng 3 araw."
+    }
+  }
+}

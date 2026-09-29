@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $userId = $_SESSION['UserID'];
 $conn = getDbConnection();
-$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM planted_crop WHERE UserID = ?");
+$stmt = $conn->prepare("SELECT COUNT(*) AS total FROM planted_crop WHERE UserID = ? AND Status <> 'Archived'");
 $stmt->bind_param('i', $userId);
 $stmt->execute();
 $totalCrops = (int) $stmt->get_result()->fetch_assoc()['total'];
@@ -18,7 +18,7 @@ $stmt->close();
 $stmt = $conn->prepare(
         "SELECT COUNT(*) AS total
          FROM planted_crop
-         WHERE UserID = ? AND (Status IS NULL OR Status <> 'Harvested')"
+         WHERE UserID = ? AND (Status IS NULL OR Status NOT IN ('Harvested', 'Archived'))"
 );
 $stmt->bind_param('i', $userId);
 $stmt->execute();

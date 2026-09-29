@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriTrack Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/crop-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -13,7 +15,6 @@
 </head>
 <body>
 
-    
     <aside class="user-sidebar">
         <div class="overlay"></div>
         <div class="sidebar-content">
@@ -81,12 +82,12 @@
         </div>
     </aside>
 
-    
+
     <main class="dashboard-main">
         <header class="detail-header">
             <div class="detail-title">
                 <h1>
-                    <a href="recommendation.html" class="back-btn">
+                    <a href="recommendation.html" class="back-btn" aria-label="Bumalik sa Rekomendasyon">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
                     Detalye ng Pananim: <span id="detailCropName">Naglo-load...</span>
@@ -94,7 +95,10 @@
                 <p>Impormasyon tungkol sa pananim na ito at ang mga peste o sakit na dapat bantayan.</p>
             </div>
             <div class="dashboard-icons">
-                <i class="fa-solid fa-bell"></i>
+                <button type="button" class="icon-btn" aria-label="Mga abiso">
+                    <i class="fa-solid fa-bell"></i>
+                    <span class="dot"></span>
+                </button>
             </div>
         </header>
 
@@ -146,44 +150,67 @@
             detailImage.src = crop.imageUrl;
             detailImage.alt = crop.cropName;
 
+            const harvestDays = (crop.minDaysToHarvest && crop.maxDaysToHarvest)
+                ? `${crop.minDaysToHarvest}–${crop.maxDaysToHarvest} araw`
+                : "—";
+
             let html = `
-                <p>
-                    <strong>Pangalan ng Pananim:</strong> ${escapeHtml(crop.cropName)}<br>
-                    <strong>English Name:</strong> ${escapeHtml(crop.englishName || "—")}<br>
-                    <strong>Uri ng Pananim:</strong> ${escapeHtml(crop.cropType || "—")}
-                </p>
-                <p>
-                    <strong>Angkop na Itanim:</strong> ${escapeHtml(crop.plantingPeriod)}<br>
-                    <strong>Tagal Bago Anihin:</strong> ${crop.minDaysToHarvest}–${crop.maxDaysToHarvest} araw
-                </p>
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Pangalan ng Pananim</span>
+                        <span class="detail-value">${escapeHtml(crop.cropName)}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">English Name</span>
+                        <span class="detail-value">${escapeHtml(crop.englishName || "—")}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Uri ng Pananim</span>
+                        <span class="detail-value">${escapeHtml(crop.cropType || "—")}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tagal Bago Anihin</span>
+                        <span class="detail-value">${harvestDays}</span>
+                    </div>
+                    <div class="detail-field" style="grid-column: 1 / -1;">
+                        <span class="detail-label">Angkop na Itanim</span>
+                        <span class="detail-value">${escapeHtml(crop.plantingPeriod)}</span>
+                    </div>
+                </div>
             `;
 
             if (crop.reason) {
                 html += `
-                    <p>
-                        <strong>Bakit Inirerekomenda</strong><br>
-                        ${escapeHtml(crop.reason)}
-                    </p>
+                    <div class="detail-notes">
+                        <span class="detail-label">Bakit Inirerekomenda</span>
+                        <p>${escapeHtml(crop.reason)}</p>
+                    </div>
                 `;
             }
 
-            if (crop.pestsAndDiseases && crop.pestsAndDiseases.length > 0) {
-                const pestItems = crop.pestsAndDiseases.map(p => `
-                    <li>
-                        <strong>${escapeHtml(p.name)}</strong> (${p.type === 'Disease' ? 'Sakit' : 'Peste'})<br>
-                        ${p.symptoms ? `<em>Sintomas:</em> ${escapeHtml(p.symptoms)}<br>` : ''}
-                        ${p.managementTips ? `<em>Pamamahala:</em> ${escapeHtml(p.managementTips)}` : ''}
-                    </li>
-                `).join('');
+            html += `<h3 class="detail-subheading">Mga Peste at Sakit na Dapat Bantayan</h3>`;
 
-                html += `
-                    <p><strong>Mga Peste at Sakit na Dapat Bantayan</strong></p>
-                    <ul>${pestItems}</ul>
-                `;
+            if (crop.pestsAndDiseases && crop.pestsAndDiseases.length > 0) {
+                const pestItems = crop.pestsAndDiseases.map(p => {
+                    const isDisease = p.type === 'Disease';
+                    return `
+                        <li class="pest-item">
+                            <div class="pest-item-head">
+                                <span class="pest-name">${escapeHtml(p.name)}</span>
+                                <span class="pest-type ${isDisease ? 'pest-type--disease' : ''}">${isDisease ? 'Sakit' : 'Peste'}</span>
+                            </div>
+                            ${p.symptoms ? `<p class="pest-row"><strong>Sintomas:</strong> ${escapeHtml(p.symptoms)}</p>` : ''}
+                            ${p.managementTips ? `<p class="pest-row"><strong>Pamamahala:</strong> ${escapeHtml(p.managementTips)}</p>` : ''}
+                        </li>
+                    `;
+                }).join('');
+
+                html += `<ul class="pest-list">${pestItems}</ul>`;
             } else {
                 html += `
-                    <p><strong>Mga Peste at Sakit na Dapat Bantayan</strong><br>
-                    Walang naitalang partikular na peste o sakit para sa pananim na ito.</p>
+                    <div class="detail-notes" style="margin-top: 0;">
+                        <p style="margin-top: 0;">Walang naitalang partikular na peste o sakit para sa pananim na ito.</p>
+                    </div>
                 `;
             }
 

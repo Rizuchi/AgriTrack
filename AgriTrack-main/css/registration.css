@@ -140,6 +140,60 @@ body {
     border-radius: 10px; 
 }
 
+.barangay-picker {
+    position: relative;
+}
+
+.barangay-picker input {
+    width: 100%;
+    height: 44px;
+    padding: 0 12px;
+    border: 1px solid #7d8a84;
+    background: #f4f4f4;
+    border-radius: 10px;
+    color: #143933;
+    font-size: 14px;
+    outline: none;
+}
+
+.barangay-options {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: 0;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    border: 1px solid #7d8a84;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.14);
+}
+
+.barangay-option {
+    display: block;
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    background: #fff;
+    color: #143933;
+    font: inherit;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.barangay-option:hover,
+.barangay-option[aria-selected="true"] {
+    background: #e8f1d1;
+}
+
+.barangay-empty {
+    padding: 9px 12px;
+    color: #58645e;
+    font-size: 13px;
+}
+
 .phone-input {
     display: flex;
     width: 100%;

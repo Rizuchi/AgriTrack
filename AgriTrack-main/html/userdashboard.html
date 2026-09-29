@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AgriTrack Dashboard</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
     <link rel="stylesheet" href="../css/userdashboard.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css?v=2">
+    <link rel="stylesheet" href="../css/responsive.css?v=3">
     <script src="../js/responsive.js" defer></script>
 </head>
 <body>
@@ -100,12 +102,18 @@
 
     <div class="dashboard-header">
 
-        <h1 class="dashboard-title" id="welcomeTitle">
-            Welcome!
-        </h1>
+        <div class="dashboard-heading">
+            <h1 class="dashboard-title" id="welcomeTitle">
+                Welcome!
+            </h1>
+            <p class="dashboard-date" id="todayDate"></p>
+        </div>
 
         <div class="dashboard-icons">
-            <i class="fa-solid fa-bell"></i>
+            <button type="button" class="icon-btn" aria-label="Mga abiso">
+                <i class="fa-solid fa-bell"></i>
+                <span class="dot"></span>
+            </button>
         </div>
 
     </div>
@@ -113,141 +121,89 @@
 
     <div class="dashboard-layout">
 
-        
+        <!-- Left column -->
         <section class="dashboard-left">
 
-            
             <section class="hero-card">
-
                 <div class="hero-overlay"></div>
-
                 <div class="hero-content">
-
                     <h2>
                         Maligayang pagdating sa AgriTrack.
                         Narito ang pangkalahatang impormasyon
                         tungkol sa iyong sakahan at pananim.
                     </h2>
-
                 </div>
-
             </section>
 
 
-            
             <section class="section-title">
-
-                <h2>
-                    Pangkalahatang Kalagayan ng Sakahan
-                </h2>
-
-                <p>
-                    General Farm Information
-                </p>
-
+                <h2>Pangkalahatang Kalagayan ng Sakahan</h2>
+                <p>General Farm Information</p>
             </section>
 
 
-            
             <section class="stats-grid">
 
-                
                 <div class="stat-card">
-
+                    <div class="stat-icon"><i class="fa-solid fa-seedling"></i></div>
                     <div class="stat-label">
-
-                        <h3>
-                            Kabuuang Pananim
-                        </h3>
-
-                        <p>
-                            Total Crops
-                        </p>
-
+                        <h3>Kabuuang Pananim</h3>
+                        <p>Total Crops</p>
                     </div>
-
-                    <div class="stat-number" id="statTotalCrops">
-                        &ndash;
-                    </div>
-
+                    <div class="stat-number" id="statTotalCrops">&ndash;</div>
                 </div>
 
-
-                
                 <div class="stat-card">
-
+                    <div class="stat-icon"><i class="fa-solid fa-leaf"></i></div>
                     <div class="stat-label">
-
-                        <h3>
-                            Mga Aktibong Pagsubaybay
-                        </h3>
-
-                        <p>
-                            Active Monitoring
-                        </p>
-
+                        <h3>Mga Aktibong Pagsubaybay</h3>
+                        <p>Active Monitoring</p>
                     </div>
-
-                    <div class="stat-number" id="statActiveMonitoring">
-                        &ndash;
-                    </div>
-
+                    <div class="stat-number" id="statActiveMonitoring">&ndash;</div>
                 </div>
 
-
-                
                 <div class="stat-card">
-
+                    <div class="stat-icon stat-icon--warn"><i class="fa-solid fa-bug"></i></div>
                     <div class="stat-label">
-
-                        <h3>
-                            Mga Babala sa Peste
-                        </h3>
-
-                        <p>
-                            Pest Alerts
-                        </p>
-
+                        <h3>Mga Babala sa Peste</h3>
+                        <p>Pest Alerts</p>
                     </div>
-
-                    <div class="stat-number" id="statPestAlerts">
-                        &ndash;
-                    </div>
-
+                    <div class="stat-number" id="statPestAlerts">&ndash;</div>
                 </div>
 
-
-                
                 <div class="stat-card">
-
+                    <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
                     <div class="stat-label">
-
-                        <h3>
-                            Mga Nakaiskedyul na Gawain
-                        </h3>
-
-                        <p>
-                            Scheduled Tasks
-                        </p>
-
+                        <h3>Mga Nakaiskedyul na Gawain</h3>
+                        <p>Scheduled Tasks</p>
                     </div>
-
-                    <div class="stat-number" id="statScheduledTasks">
-                        &ndash;
-                    </div>
-
+                    <div class="stat-number" id="statScheduledTasks">&ndash;</div>
                 </div>
 
+            </section>
+
+            <section class="scheduled-tasks-card" aria-labelledby="scheduledTasksTitle">
+                <div class="scheduled-tasks-header">
+                    <div>
+                        <h2 id="scheduledTasksTitle">Scheduled Tasks</h2>
+                        <p>Crop care reminders</p>
+                    </div>
+                </div>
+                <div class="scheduled-tasks-launcher-row">
+                    <p id="scheduledTaskSummary" class="scheduled-task-summary">Loading crop tasks...</p>
+                    <button type="button" class="task-open-button" id="openScheduledTasks">
+                        <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+                        View Tasks
+                    </button>
+                </div>
             </section>
 
         </section>
 
 
-
-        
+        <!-- Right column -->
         <section class="dashboard-right">
 
-            
             <div class="calendar-card">
 
                 <div class="calendar-header">
@@ -255,27 +211,20 @@
                     <h3>
                         <span id="calendarMonthYear">August 2026</span>
                         <span>
-                            <i class="fa-solid fa-chevron-left" id="prevMonthBtn" role="button" aria-label="Previous month"></i>
-                            <i class="fa-solid fa-chevron-right" id="nextMonthBtn" role="button" aria-label="Next month"></i>
+                            <i class="fa-solid fa-chevron-left" id="prevMonthBtn" role="button" tabindex="0" aria-label="Previous month"></i>
+                            <i class="fa-solid fa-chevron-right" id="nextMonthBtn" role="button" tabindex="0" aria-label="Next month"></i>
                         </span>
                     </h3>
 
                     <div class="calendar-month">
-
                         <i class="fa-solid fa-calendar-days"></i>
-
-                        <span id="calendarMonthLabel">
-                            August
-                        </span>
-
+                        <span id="calendarMonthLabel">August</span>
                     </div>
 
                 </div>
 
 
-                
                 <div class="calendar-weekdays">
-
                     <span>Sun</span>
                     <span>Mon</span>
                     <span>Tue</span>
@@ -283,16 +232,13 @@
                     <span>Thu</span>
                     <span>Fri</span>
                     <span>Sat</span>
-
                 </div>
 
 
-                
                 <div class="calendar-grid" id="calendarGrid">
                 </div>
 
 
-                
                 <button class="add-note-btn" id="openNoteModal">
                     + Magdagdag ng Tala
                 </button>
@@ -300,91 +246,48 @@
             </div>
 
 
-
-            
             <div class="weather-card">
 
                 <div class="weather-title">
-
-                    <h3>
-                        Panahon Ngayon
-                    </h3>
-
-                    <p>
-                        Current Weather
-                    </p>
-
+                    <h3>Panahon Ngayon</h3>
+                    <p>Current Weather</p>
                 </div>
-
 
                 <div class="weather-content">
 
-                    
                     <div class="weather-main">
 
                         <div class="weather-label">
-
-                            <h4>
-                                Bahagyang Maulap
-                            </h4>
-
-                            <span>
-                                Partly Cloudy
-                            </span>
-
+                            <h4>Bahagyang Maulap</h4>
+                            <span>Partly Cloudy</span>
                         </div>
 
-
                         <div class="weather-temperature">
-
                             <i class="fa-solid fa-cloud-sun"></i>
-
-                            <strong>
-                                27°C
-                            </strong>
-
+                            <strong>27°C</strong>
                         </div>
 
                     </div>
 
 
-                    
                     <div class="weather-side">
 
-                        
                         <div class="weather-box">
-
                             <div class="rain-text">
-
-                                <h4>
-                                    Tsansa ng Ulan
-                                </h4>
-
-                                <span>
-                                    Chance of Rain
-                                </span>
-
+                                <h4>Tsansa ng Ulan</h4>
+                                <span>Chance of Rain</span>
                             </div>
-
-                            <strong>
-                                60%
-                            </strong>
-
+                            <strong>60%</strong>
                         </div>
 
-
-                        
-                        <div class="weather-box">
-
-                            <h4>
-                                Panahon ng<br>
-                                Tag-ulan
-                            </h4>
-
-                            <span>
-                                Wet Season
-                            </span>
-
+                        <div class="weather-box weather-box--season">
+                            <div>
+                                <h4>
+                                    Panahon ng<br>
+                                    Tag-ulan
+                                </h4>
+                                <span>Wet Season</span>
+                            </div>
                         </div>
 
                     </div>
@@ -397,13 +300,48 @@
 
     </div>
 
-    
+    <div class="task-modal" id="scheduledTasksModal" role="dialog" aria-modal="true" aria-labelledby="scheduledTasksModalTitle" hidden>
+        <section class="task-modal-panel">
+            <header class="task-modal-header">
+                <div>
+                    <h2 id="scheduledTasksModalTitle">Scheduled Tasks</h2>
+                    <p>Crop care reminders</p>
+                </div>
+                <button type="button" class="task-modal-close" id="closeScheduledTasks" aria-label="Close scheduled tasks">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </header>
+            <div class="task-filters" role="group" aria-label="Filter scheduled tasks">
+                <button type="button" class="task-filter" data-task-filter="today" aria-pressed="false">Today</button>
+                <button type="button" class="task-filter is-active" data-task-filter="week" aria-pressed="true">This Week</button>
+                <button type="button" class="task-filter" data-task-filter="overdue" aria-pressed="false">Overdue</button>
+            </div>
+            <div class="scheduled-task-list" id="scheduledTaskList" aria-live="polite">
+                <p class="task-empty">Loading crop tasks...</p>
+            </div>
+        </section>
+    </div>
 
+    <div class="task-tips-modal" id="taskTipsModal" role="dialog" aria-modal="true" aria-labelledby="taskTipsTitle" hidden>
+        <div class="task-tips-panel">
+            <button type="button" class="task-tips-close" id="closeTaskTips" aria-label="Close tips"><i class="fa-solid fa-xmark"></i></button>
+            <p class="task-tips-eyebrow" id="taskTipsCrop">Crop care</p>
+            <h2 id="taskTipsTitle">Task tips</h2>
+            <dl class="task-tips-content">
+                <div id="taskTipsActionWrap" hidden><dt>Recommended action</dt><dd id="taskTipsAction"></dd></div>
+                <div><dt>Fix</dt><dd id="taskTipsFix"></dd></div>
+                <div><dt>Prevention</dt><dd id="taskTipsPrevention"></dd></div>
+                <div><dt>Follow-up</dt><dd id="taskTipsFollowUp"></dd></div>
+            </dl>
+        </div>
+    </div>
+
+
+    <!-- Note modal -->
     <div class="note-modal" id="noteModal">
 
         <div class="note-modal-content">
 
-            
             <div class="modal-calendar">
 
                 <div class="modal-calendar-header">
@@ -450,7 +388,6 @@
             </div>
 
 
-            
             <div class="modal-information">
 
                 <section class="activity-section">
@@ -458,7 +395,6 @@
                     <h2>Crop Activities</h2>
 
                     <div class="tag-list" data-group="activity">
-
                         <button type="button">Nagtanim</button>
                         <button type="button">Nagdilig</button>
                         <button type="button">Nagbunot ng Damo</button>
@@ -467,19 +403,16 @@
                         <button type="button">Naglagay ng Pataba</button>
                         <button type="button">Nag-ani</button>
                         <button type="button">Nagtanim ng Panibago</button>
-
                     </div>
 
                 </section>
 
 
-                
                 <section class="activity-section">
 
                     <h2>Crop Condition</h2>
 
                     <div class="tag-list" data-group="condition">
-
                         <button type="button">Malusog ang Pananim</button>
                         <button type="button">Naninilaw ang Dahon</button>
                         <button type="button">May Peste</button>
@@ -489,30 +422,26 @@
                         <button type="button">Handa nang Anihin</button>
                         <button type="button">Nabaha</button>
                         <button type="button">Natuyuan</button>
-
                     </div>
 
                 </section>
 
 
-                
                 <section class="activity-section">
 
                     <h2>Weather</h2>
 
                     <div class="tag-list" data-group="weather">
-
                         <button type="button">Maaraw</button>
                         <button type="button">Maulap</button>
                         <button type="button">Umuulan</button>
                         <button type="button">Mahangin</button>
                         <button type="button">Malakas na Ulan</button>
-
                     </div>
 
                 </section>
 
-                
+
                 <section class="activity-section">
 
                     <h2>Karagdagang Tala / Additional Note</h2>
@@ -539,6 +468,11 @@
     </div>
 
     <script src="../js/userdashboard.js"></script>
+    <script>
+        // Today's date under the welcome title
+        document.getElementById('todayDate').textContent =
+            new Date().toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    </script>
 
 </main>
 

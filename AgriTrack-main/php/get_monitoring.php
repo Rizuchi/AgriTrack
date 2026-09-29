@@ -21,7 +21,7 @@ $stmt = $conn->prepare("
            c.CropName, c.EnglishName
     FROM planted_crop pc
     JOIN crops c ON pc.CropID = c.CropID
-    WHERE pc.UserID = ?
+    WHERE pc.UserID = ? AND pc.Status <> 'Archived'
     ORDER BY pc.DateOfPlant DESC
 ");
 $stmt->bind_param("i", $userId);
