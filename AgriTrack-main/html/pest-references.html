@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriTrack - Mga Sanggunian</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/references.css">
+    <link rel="stylesheet" href="../css/pest-references.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
+    <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="user-sidebar">
+
+    <div class="overlay"></div>
+
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item">
+                <i class="fa-solid fa-table-columns"></i>
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+            </a>
+
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item">
+                <i class="fa-solid fa-seedling"></i>
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+            </a>
+
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+                <i class="fa-solid fa-leaf"></i>
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+            </a>
+
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+            </a>
+
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+                <i class="fa-solid fa-bug"></i>
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+            </a>
+
+            <!-- REFERENCES -->
+            <a href="references.html" class="menu-item active">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+                <i class="fa-solid fa-phone"></i>
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+
+        </nav>
+
+        <!-- LOG OUT -->
+
+        <div class="logout-section">
+
+            <a href="login.html" class="menu-item logout">
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="dashboard-main references-main pest-references-main">
+
+    <!-- HEADER -->
+
+    <div class="pest-references-header">
+
+        <div>
+
+            <div class="pest-header-title">
+
+                <a href="references.html" class="back-button" title="Bumalik">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+
+                <h1>Mga Sanggunian</h1>
+
+            </div>
+
+            <p>
+                Mga mapagkakatiwalaang sanggunian na ginagamit ng AgriTrack bilang batayan
+                ng impormasyon at rekomendasyon sa pagsasaka.
+            </p>
+
+        </div>
+
+        <div class="dashboard-icons">
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- LINE -->
+
+    <div class="pest-references-line"></div>
+
+
+    <!-- PEST REFERENCE HEADING -->
+
+    <div class="pest-reference-heading">
+
+        <div class="pest-reference-title">
+
+            <i class="fa-solid fa-bug"></i>
+
+            <h2>Pamamahala ng Peste</h2>
+
+        </div>
+
+        <p>
+            Mga sanggunian para sa pagkilala sa mga peste at wastong paraan
+            ng pagkontrol sa mga ito.
+        </p>
+
+    </div>
+
+
+    <!-- REFERENCE LIST -->
+
+    <div class="reference-list">
+
+
+        <!-- 1 -->
+
+        <div class="reference-item">
+
+            <p>
+                Bureau of Plant Industry. (n.d.).
+                <em>Aphids.</em>
+                Department of Agriculture.
+
+                <a
+                    href="https://cpd.da.gov.ph/pages/pests-diseases"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://cpd.da.gov.ph/pages/pests-diseases
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 2 -->
+
+        <div class="reference-item">
+
+            <p>
+                Bureau of Plant Industry. (2024, October 8).
+                <em>Information on mango pests and diseases.</em>
+                Crop Pest Management Division, Department of Agriculture.
+
+                <a
+                    href="https://cpdmb.da.gov.ph/2024/10/08/cpmdnew0925272024lx/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://cpdmb.da.gov.ph/2024/10/08/cpmdnew0925272024lx/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 3 -->
+
+        <div class="reference-item">
+
+            <p>
+                CABI. (n.d.).
+                <em>Downy mildew.</em>
+                CABI Digital Library.
+
+                <a
+                    href="https://www.cabidigitallibrary.org/doi/abs/10.1079/cabicompendium.44646"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.cabidigitallibrary.org/doi/abs/10.1079/cabicompendium.44646
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 4 -->
+
+        <div class="reference-item">
+
+            <p>
+                CABI. (n.d.).
+                <em>Yam beetle.</em>
+                CABI Digital Library.
+
+                <a
+                    href="https://www.cabidigitallibrary.org/doi/full/10.1079/cabicompendium.19296"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.cabidigitallibrary.org/doi/full/10.1079/cabicompendium.19296
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 5 -->
+
+        <div class="reference-item">
+
+            <p>
+                Deang, R. T. (n.d.).
+                <em>[Cucumber beetle].</em>
+                The Philippine Entomologist.
+
+                <a
+                    href="https://thephilippineentomologist.org/wp-content/uploads/2022/04/Deang.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://thephilippineentomologist.org/wp-content/uploads/2022/04/Deang.pdf
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 6 -->
+
+        <div class="reference-item">
+
+            <p>
+                Food and Agriculture Organization of the United Nations. (n.d.).
+                <em>Tomato fruitworm.</em>
+                AGRIS.
+
+                <a
+                    href="https://agris.fao.org/search/ar/records/6474810b425ec3c088f8bad50"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://agris.fao.org/search/ar/records/6474810b425ec3c088f8bad50
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 7 -->
+
+        <div class="reference-item">
+
+            <p>
+                FMC Corporation. (n.d.).
+                <em>Cutworm.</em>
+                FMC Philippines.
+
+                <a
+                    href="https://ag.fmc.com/ph/fil/pests-diseases/insect-control/cutworm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://ag.fmc.com/ph/fil/pests-diseases/insect-control/cutworm
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 8 -->
+
+        <div class="reference-item">
+
+            <p>
+                FMC Corporation. (n.d.).
+                <em>Pod borer.</em>
+                FMC Philippines.
+
+                <a
+                    href="https://ag.fmc.com/ph/fil/pests-diseases/insect-control/pod-borer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://ag.fmc.com/ph/fil/pests-diseases/insect-control/pod-borer
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 9 -->
+
+        <div class="reference-item">
+
+            <p>
+                FMC Corporation. (n.d.).
+                <em>Sugarcane borer.</em>
+                FMC Philippines.
+
+                <a
+                    href="https://ag.fmc.com/ph/fil/pests-diseases/insect-control/sugarcane-borer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://ag.fmc.com/ph/fil/pests-diseases/insect-control/sugarcane-borer
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 10 -->
+
+        <div class="reference-item">
+
+            <p>
+                International Plant Protection Convention. (2019).
+                <em>
+                    Report of first detection of fall armyworm (FAW) in the
+                    Republic of the Philippines.
+                </em>
+
+                <a
+                    href="https://www.ippc.int/en/countries/Philippines/reports/2019/10/report-of-first-detection-of-fall-army-worm-faw-in-the-republic-of-the-Philippines/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ippc.int/en/countries/Philippines/reports/2019/10/report-of-first-detection-of-fall-army-worm-faw-in-the-republic-of-the-Philippines/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 11 -->
+
+        <div class="reference-item">
+
+            <p>
+                International Rice Research Institute. (n.d.).
+                <em>Stem borer.</em>
+                Rice Knowledge Bank.
+
+                <a
+                    href="http://www.knowledgebank.irri.org/training/fact-sheets/pest-management/insects/item/stem-borer"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    http://www.knowledgebank.irri.org/training/fact-sheets/pest-management/insects/item/stem-borer
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 12 -->
+
+        <div class="reference-item">
+
+            <p>
+                Philippine Information Agency. (n.d.).
+                <em>
+                    PhilRice urges early community-based action vs. rice field rat damage.
+                </em>
+
+                <a
+                    href="https://pia.gov.ph/news/luzon/calabarzon/philrice-urges-early-community-based-action-vs-rice-field-rat-damage"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://pia.gov.ph/news/luzon/calabarzon/philrice-urges-early-community-based-action-vs-rice-field-rat-damage
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 13 -->
+
+        <div class="reference-item">
+
+            <p>
+                Philippine News Agency. (n.d.).
+                <em>Rice black bug information.</em>
+
+                <a
+                    href="https://www.pna.gov.ph/articles/1160796"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.pna.gov.ph/articles/1160796
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 14 -->
+
+        <div class="reference-item">
+
+            <p>
+                Philippine Rice Research Institute. (n.d.).
+                <em>Kuhol: Farmer's friend.</em>
+
+                <a
+                    href="https://www.philrice.gov.ph/kuhol-farmers-friend/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.philrice.gov.ph/kuhol-farmers-friend/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 15 -->
+
+        <div class="reference-item">
+
+            <p>
+                Philippine Rice Research Institute. (n.d.).
+                <em>
+                    PhilRice alerts rice farmers of increased pest threats during rainy season.
+                </em>
+
+                <a
+                    href="https://www.philrice.gov.ph/philrice-alerts-rice-farmers-of-increased-pest-threats-during-rainy-season/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.philrice.gov.ph/philrice-alerts-rice-farmers-of-increased-pest-threats-during-rainy-season/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 16 -->
+
+        <div class="reference-item">
+
+            <p>
+                Philippine Star. (2010, July 11).
+                <em>Worms invade Bataan farms.</em>
+
+                <a
+                    href="https://www.philstar.com/nation/2010/07/11/597778/worms-invade-bataan-farms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.philstar.com/nation/2010/07/11/597778/worms-invade-bataan-farms
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 17 -->
+
+        <div class="reference-item">
+
+            <p>
+                ResearchGate. (n.d.).
+                <em>
+                    Inventory of Philippine thrips (Insecta: Order Thysanoptera).
+                </em>
+
+                <a
+                    href="https://www.researchgate.net/publication/324580822_Inventory_of_Philippine_Thrips_Insecta_Order_Thysanoptera"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.researchgate.net/publication/324580822_Inventory_of_Philippine_Thrips_Insecta_Order_Thysanoptera
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 18 -->
+
+        <div class="reference-item">
+
+            <p>
+                ResearchGate. (n.d.).
+                <em>
+                    Current status of the golden apple snail in the Ifugao Rice Terraces, Philippines.
+                </em>
+
+                <a
+                    href="https://www.researchgate.net/publication/254371533_Current_Status_of_the_Golden_Apple_Snail_in_the_Ifugao_Rice_Terraces_Philippines"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.researchgate.net/publication/254371533_Current_Status_of_the_Golden_Apple_Snail_in_the_Ifugao_Rice_Terraces_Philippines
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 19 -->
+
+        <div class="reference-item">
+
+            <p>
+                ResearchGate. (n.d.).
+                <em>
+                    Philippine Plant Disease Bulletin: Diseases of taro
+                    (Colocasia esculenta L.) in the Philippines.
+                </em>
+
+                <a
+                    href="https://www.researchgate.net/publication/353105381_Philippine_Plant_Disease_Bulletin_Diseases_of_taro_Colocasia_esculenta_L_in_the_Philippines"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.researchgate.net/publication/353105381_Philippine_Plant_Disease_Bulletin_Diseases_of_taro_Colocasia_esculenta_L_in_the_Philippines
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 20 -->
+
+        <div class="reference-item">
+
+            <p>
+                Syngenta Philippines. (n.d.).
+                <em>Anthracnose.</em>
+
+                <a
+                    href="https://www.syngenta.com.ph/disease/anthracnose"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.syngenta.com.ph/disease/anthracnose
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 21 -->
+
+        <div class="reference-item">
+
+            <p>
+                Syngenta Philippines. (n.d.).
+                <em>Corn earworm.</em>
+
+                <a
+                    href="https://www.syngenta.com.ph/insects/corn-earworm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.syngenta.com.ph/insects/corn-earworm
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 22 -->
+
+        <div class="reference-item">
+
+            <p>
+                Syngenta Philippines. (n.d.).
+                <em>Leafminers.</em>
+
+                <a
+                    href="https://www.syngenta.com.ph/insects/leafminers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.syngenta.com.ph/insects/leafminers
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 23 -->
+
+        <div class="reference-item">
+
+            <p>
+                Syngenta Philippines. (n.d.).
+                <em>Powdery mildew.</em>
+
+                <a
+                    href="https://www.syngenta.com.ph/disease/powdery-mildew"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.syngenta.com.ph/disease/powdery-mildew
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 24 -->
+
+        <div class="reference-item">
+
+            <p>
+                Syngenta Philippines. (n.d.).
+                <em>Red spider mite.</em>
+
+                <a
+                    href="https://www.syngenta.com.ph/insects/red-spider-mite"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.syngenta.com.ph/insects/red-spider-mite
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 25 -->
+
+        <div class="reference-item">
+
+            <p>
+                University of the Philippines Los Baños. (n.d.).
+                <em>Fruit fly research article.</em>
+                UPLB Knowledge Repository.
+
+                <a
+                    href="https://www.ukdr.uplb.edu.ph/journal_articles/5652/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ukdr.uplb.edu.ph/journal_articles/5652/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 26 -->
+
+        <div class="reference-item">
+
+            <p>
+                University of the Philippines Los Baños. (n.d.).
+                <em>Root-knot nematodes research article.</em>
+                UPLB Knowledge Repository.
+
+                <a
+                    href="https://www.ukdr.uplb.edu.ph/journal_articles/3303/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ukdr.uplb.edu.ph/journal_articles/3303/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 27 -->
+
+        <div class="reference-item">
+
+            <p>
+                University of the Philippines Los Baños. (n.d.).
+                <em>Squash beetle research article.</em>
+                UPLB Knowledge Repository.
+
+                <a
+                    href="https://www.ukdr.uplb.edu.ph/viewcontent.cgi?article=6638&context=journal-articles"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ukdr.uplb.edu.ph/viewcontent.cgi?article=6638&context=journal-articles
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 28 -->
+
+        <div class="reference-item">
+
+            <p>
+                University of the Philippines Los Baños. (n.d.).
+                <em>Sweet potato weevil research article.</em>
+                UPLB Knowledge Repository.
+
+                <a
+                    href="https://www.ukdr.uplb.edu.ph/etd_undergrad/8628/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ukdr.uplb.edu.ph/etd_undergrad/8628/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 29 -->
+
+        <div class="reference-item">
+
+            <p>
+                University of the Philippines Los Baños. (n.d.).
+                <em>White rust research thesis.</em>
+                UPLB Knowledge Repository.
+
+                <a
+                    href="https://www.ukdr.uplb.edu.ph/etd_undergrad/1088/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://www.ukdr.uplb.edu.ph/etd_undergrad/1088/
+                </a>
+            </p>
+
+        </div>
+
+
+        <!-- 30 -->
+
+        <div class="reference-item">
+
+            <p>
+                Rueda, L. M., &amp; Calilung, V. J. (n.d.).
+                <em>Woolly aphid research.</em>
+                The Philippine Entomologist.
+
+                <a
+                    href="https://thephilippineentomologist.org/wp-content/uploads/2022/04/Rueda-and-Calilung.pdf"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    https://thephilippineentomologist.org/wp-content/uploads/2022/04/Rueda-and-Calilung.pdf
+                </a>
+            </p>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite"></div>
+    </section>
+</div>
+
+</body>
+</html>

@@ -9,10 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
-    <link rel="stylesheet" href="../css/recommendation.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/recommendation.css?v=3">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=10">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
 </head>
 <body>
 
@@ -65,6 +69,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -107,9 +119,9 @@
         </div>
 
         <div class="dashboard-icons">
-            <button type="button" class="icon-btn" aria-label="Mga abiso">
-                <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
             </button>
         </div>
 
@@ -122,19 +134,72 @@
         <h2>
             <i class="fa-solid fa-cloud-sun-rain"></i>
             Kasalukuyang Panahon:
-            <span id="currentSeasonLabel">Ikinakarga...</span>
+            <span id="currentSeasonLabel" class="skeleton-inline" role="status" aria-label="Ikinakarga"><span class="skeleton-bar" aria-hidden="true"></span></span>
         </h2>
     </div>
 
 
+    <div class="results-toolbar">
+        <div class="view-toggle" role="group" aria-label="Ayos ng mga resulta">
+            <button type="button" class="view-toggle-btn" data-view="list" aria-label="List view" title="List view" aria-pressed="false">
+                <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="view-toggle-btn" data-view="gallery" aria-label="Gallery view" title="Gallery view" aria-pressed="true">
+                <i class="fa-solid fa-grip" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
     <div class="crop-recommendation-grid" id="cropGrid">
-        <p class="loading-text">Ikinakarga ang mga inirerekomendang pananim...</p>
+        <div class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Ikinakarga ang mga inirerekomendang pananim" aria-busy="true">
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+        </div>
     </div>
 
 </div>
 
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite">
+            <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true"><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
+        </div>
+    </section>
+</div>
+
 <script>
-document.addEventListener('DOMContentLoaded', loadRecommendedCrops);
+document.addEventListener('DOMContentLoaded', () => {
+    setupViewToggle();
+    loadRecommendedCrops();
+});
+
+function setupViewToggle() {
+    const grid = document.getElementById('cropGrid');
+    const buttons = document.querySelectorAll('.view-toggle-btn');
+    const savedView = localStorage.getItem('agritrack-results-view');
+
+    function setView(view) {
+        const selectedView = view === 'list' ? 'list' : 'gallery';
+        grid.classList.toggle('is-list-view', selectedView === 'list');
+        grid.classList.toggle('is-gallery-view', selectedView === 'gallery');
+        buttons.forEach(button => {
+            const isActive = button.dataset.view === selectedView;
+            button.classList.toggle('active', isActive);
+            button.setAttribute('aria-pressed', String(isActive));
+        });
+        localStorage.setItem('agritrack-results-view', selectedView);
+    }
+
+    buttons.forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+    setView(savedView || 'gallery');
+}
 
 async function loadRecommendedCrops() {
     const grid = document.getElementById('cropGrid');

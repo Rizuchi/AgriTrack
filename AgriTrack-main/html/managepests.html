@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/managepests.css?v=3">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/managepests.css?v=9">
+    <link rel="stylesheet" href="../css/responsive.css?v=8">
     <link rel="stylesheet" href="../css/admin-theme.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -52,14 +52,6 @@
                 </div>
             </a>
 
-            <a href="reports.html" class="menu-item">
-                <i class="fa-regular fa-clipboard"></i>
-                <div class="menu-text">
-                    <span class="title">Mga Ulat</span>
-                    <span class="subtitle">Reports</span>
-                </div>
-            </a>
-
             <a href="admincontact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div class="menu-text">
@@ -97,17 +89,31 @@
     <div class="pests-toolbar">
         <div class="search-area">
             <input type="text" id="searchPest" placeholder="Maghanap ng peste o sakit...">
-            <i class="fa-solid fa-magnifying-glass"></i>
+            <button type="button" class="search-button" id="searchPestButton" aria-label="Maghanap ng peste o sakit">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            </button>
         </div>
 
         <button type="button" class="add-pest-btn" id="openPestModal">
             <i class="fa-solid fa-plus"></i>
             Magdagdag ng Peste
         </button>
+
+        <div class="view-toggle" role="group" aria-label="Ayos ng mga peste at sakit">
+            <button type="button" class="view-toggle-btn" data-view="list" aria-label="List view" title="List view" aria-pressed="false">
+                <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="view-toggle-btn" data-view="gallery" aria-label="Gallery view" title="Gallery view" aria-pressed="true">
+                <i class="fa-solid fa-grip" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 
     <section class="pest-card-grid" id="pestCardGrid">
-        <p>Naglo-load ang mga peste at sakit...</p>
+        <div class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Naglo-load ang mga peste at sakit" aria-busy="true">
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+        </div>
     </section>
 </main>
 
@@ -143,9 +149,12 @@
                 </select>
             </div>
 
-            <div class="pest-form-group">
-                <label for="affectedCrop">Apektadong Pananim</label>
-                <input type="text" id="affectedCrop" name="affectedCrop" placeholder="Halimbawa: Palay" required>
+            <div class="pest-form-group relationship-group">
+                <label for="cropSearch">Mga Apektadong Pananim</label>
+                <p class="relationship-help">Piliin ang lahat ng pananim na maaaring maapektuhan.</p>
+                <input type="search" id="cropSearch" class="relationship-search" placeholder="Maghanap ng pananim..." autocomplete="off">
+                <div class="relationship-selection-count" id="cropSelectionCount" aria-live="polite"></div>
+                <div class="relationship-options" id="cropOptions" role="group" aria-label="Mga pananim"></div>
             </div>
 
             <div class="pest-form-group">
@@ -182,17 +191,17 @@
                 </label>
             </div>
 
-            <div class="pest-modal-footer">
-                <button type="button" class="cancel-pest-btn" id="cancelPestModal">
-                    Kanselahin
-                </button>
-
-                <button type="submit" class="save-pest-btn">
-                    I-save ang Peste
-                </button>
-            </div>
-
         </form>
+
+        <div class="pest-modal-footer">
+            <button type="button" class="cancel-pest-btn" id="cancelPestModal">
+                Kanselahin
+            </button>
+
+            <button type="submit" class="save-pest-btn" form="pestForm">
+                I-save ang Peste
+            </button>
+        </div>
     </div>
 </div>
 
@@ -202,7 +211,25 @@ const pestModal = document.getElementById("pestModal");
 const pestForm = document.getElementById("pestForm");
 const pestCardGrid = document.getElementById("pestCardGrid");
 const pestModalTitle = document.querySelector(".pest-modal-title h2");
+const viewButtons = document.querySelectorAll(".view-toggle-btn");
 let pests = [];
+let availableCrops = [];
+let selectedCropIds = new Set();
+
+function setPestView(view) {
+    const selectedView = view === "list" ? "list" : "gallery";
+    pestCardGrid.classList.toggle("is-list-view", selectedView === "list");
+    pestCardGrid.classList.toggle("is-gallery-view", selectedView === "gallery");
+    viewButtons.forEach(button => {
+        const isActive = button.dataset.view === selectedView;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+    });
+    localStorage.setItem("agritrack-admin-management-view", selectedView);
+}
+
+viewButtons.forEach(button => button.addEventListener("click", () => setPestView(button.dataset.view)));
+setPestView(localStorage.getItem("agritrack-admin-management-view") || "gallery");
 
 function escapeHtml(value) {
     return String(value || "").replace(/[&<>"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
@@ -243,12 +270,14 @@ function setPestImageState(src, labelText = "") {
 function openPestForm(pest = null) {
     pestForm.reset();
     resetPestImageState();
+    selectedCropIds = new Set((pest?.affectedCrops || []).map(crop => String(crop.id)));
+    document.getElementById("cropSearch").value = "";
+    renderCropOptions();
     document.getElementById("pestId").value = pest ? pest.PestDiseaseID : "0";
     pestModalTitle.textContent = pest ? "I-edit ang Peste o Sakit" : "Magdagdag ng Peste o Sakit";
     if (pest) {
         document.getElementById("pestName").value = pest.Name || "";
         document.getElementById("pestType").value = pest.Type || "";
-        document.getElementById("affectedCrop").value = pest.AffectedCrop || "";
         document.getElementById("season").value = pest.SeasonType || "";
         document.getElementById("symptoms").value = pest.Symptoms || "";
         document.getElementById("conditions").value = pest.Info || "";
@@ -286,17 +315,39 @@ function renderPests() {
     });
 }
 
+function renderCropOptions() {
+    const search = document.getElementById("cropSearch").value.trim().toLowerCase();
+    const options = document.getElementById("cropOptions");
+    const filteredCrops = availableCrops.filter(crop => `${crop.name} ${crop.englishName || ""}`.toLowerCase().includes(search));
+    options.innerHTML = filteredCrops.length ? filteredCrops.map(crop => `
+        <label class="relationship-option">
+            <input type="checkbox" name="cropIds[]" value="${crop.id}" ${selectedCropIds.has(String(crop.id)) ? "checked" : ""}>
+            <span>${escapeHtml(crop.name)}</span>
+            ${crop.englishName ? `<small>${escapeHtml(crop.englishName)}</small>` : ""}
+        </label>
+    `).join("") : `<p class="relationship-empty">${availableCrops.length ? "Walang tugmang pananim." : "Wala pang naidagdag na pananim."}</p>`;
+    document.getElementById("cropSelectionCount").textContent = `${selectedCropIds.size} napili`;
+}
+
 async function loadPests() {
     const response = await fetch(pestApiUrl);
     const data = await response.json();
     if (!data.success) throw new Error(data.message);
     pests = data.pests;
+    availableCrops = data.crops || [];
     renderPests();
 }
 
 document.getElementById("openPestModal").addEventListener("click", () => openPestForm());
 document.getElementById("cancelPestModal").addEventListener("click", closePestForm);
 document.getElementById("closePestModal").addEventListener("click", closePestForm);
+document.getElementById("cropSearch").addEventListener("input", renderCropOptions);
+document.getElementById("cropOptions").addEventListener("change", event => {
+    const checkbox = event.target.closest('input[name="cropIds[]"]');
+    if (!checkbox) return;
+    checkbox.checked ? selectedCropIds.add(checkbox.value) : selectedCropIds.delete(checkbox.value);
+    renderCropOptions();
+});
 pestModal.addEventListener("click", event => {
     if (event.target === pestModal) closePestForm();
 });
@@ -321,7 +372,10 @@ pestForm.addEventListener("submit", async event => {
     const saveButton = document.querySelector(".save-pest-btn");
     saveButton.disabled = true;
     try {
-        const response = await fetch(pestApiUrl, { method: "POST", body: new FormData(pestForm) });
+        const formData = new FormData(pestForm);
+        formData.delete("cropIds[]");
+        selectedCropIds.forEach(id => formData.append("cropIds[]", id));
+        const response = await fetch(pestApiUrl, { method: "POST", body: formData });
         const data = await response.json();
         if (!data.success) throw new Error(data.message);
         closePestForm();
@@ -332,12 +386,15 @@ pestForm.addEventListener("submit", async event => {
         saveButton.disabled = false;
     }
 });
-document.getElementById("searchPest").addEventListener("input", event => {
-    const search = event.target.value.toLowerCase();
+const searchPest = document.getElementById("searchPest");
+function filterPests() {
+    const search = searchPest.value.trim().toLowerCase();
     document.querySelectorAll(".pest-card").forEach(card => {
         card.hidden = !card.textContent.toLowerCase().includes(search);
     });
-});
+}
+searchPest.addEventListener("input", filterPests);
+document.getElementById("searchPestButton").addEventListener("click", filterPests);
 loadPests().catch(error => {
     pestCardGrid.innerHTML = `<p>Hindi ma-load ang mga peste: ${escapeHtml(error.message)}</p>`;
 });

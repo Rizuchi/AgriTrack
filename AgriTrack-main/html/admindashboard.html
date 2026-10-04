@@ -10,10 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
     <link rel="stylesheet" href="../css/admindashboard.css">
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <link rel="stylesheet" href="../css/admin-theme.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -56,14 +57,6 @@
                 <div class="menu-text">
                     <span class="title">Pamamahala ng Peste at Sakit</span>
                     <span class="subtitle">Manage Pests and Diseases</span>
-                </div>
-            </a>
-
-            <a href="reports.html" class="menu-item">
-                <i class="fa-regular fa-clipboard"></i>
-                <div class="menu-text">
-                    <span class="title">Mga Ulat</span>
-                    <span class="subtitle">Reports</span>
                 </div>
             </a>
 
@@ -113,53 +106,70 @@
         </div>
     </section>
 
-    <h2 class="section-title">
-        Pangkalahatang kalagayan ng Agritrack system
-    </h2>
+    <div class="dashboard-overview">
+        <div>
+            <p class="eyebrow">Operations summary</p>
+            <h2 class="section-title compact-title">System overview</h2>
+        </div>
+    </div>
 
     <section class="statistics">
 
         <article class="stat-card">
             <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
             <div class="stat-body">
-                <span class="stat-title">Kabuuang User</span>
+                <span class="stat-title">Registered users</span>
                 <span class="stat-number" id="totalUsers">0</span>
+            </div>
+        </article>
+
+        <article class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+            <div class="stat-body">
+                <span class="stat-title">Active users</span>
+                <span class="stat-number" id="activeUsers">0</span>
             </div>
         </article>
 
         <article class="stat-card">
             <div class="stat-icon"><i class="fa-solid fa-seedling"></i></div>
             <div class="stat-body">
-                <span class="stat-title">Kabuuang Pananim</span>
+                <span class="stat-title">Crop varieties</span>
                 <span class="stat-number" id="totalCrops">0</span>
             </div>
         </article>
 
         <article class="stat-card">
-            <div class="stat-icon"><i class="fa-regular fa-clipboard"></i></div>
+            <div class="stat-icon"><i class="fa-solid fa-bug"></i></div>
             <div class="stat-body">
-                <span class="stat-title">Kabuuang Crop Records</span>
-                <span class="stat-number" id="totalPlantedCrops">0</span>
+                <span class="stat-title">Total pests</span>
+                <span class="stat-number" id="totalPests">0</span>
             </div>
         </article>
 
-        <article class="stat-card stat-card--highlight">
-            <div class="stat-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+        <article class="stat-card">
+            <div class="stat-icon"><i class="fa-solid fa-envelope"></i></div>
             <div class="stat-body">
-                <span class="stat-title">Malapit sa Ani</span>
-                <span class="stat-number" id="readyToHarvest">0</span>
+                <span class="stat-title">Messages</span>
+                <span class="stat-number" id="unreadMessages">0</span>
             </div>
         </article>
 
     </section>
 
-    <h2 class="section-title chart-title">
-        Ulat at Estadistika ng mga Pananim
-    </h2>
+    <section class="reports-grid">
+        <div class="report-panel">
+            <h3>Ulat ng mga Pananim</h3>
+            <div class="chart-area doughnut-area">
+                <canvas id="cropReportChart"></canvas>
+            </div>
+        </div>
 
-    <section class="chart-card">
-        <div class="chart-container">
-            <canvas id="cropChart"></canvas>
+        <div class="report-panel">
+            <h3>Katayuan ng mga Gumagamit</h3>
+            <div class="chart-area doughnut-area">
+                <canvas id="userStatusChart"></canvas>
+            </div>
         </div>
     </section>
 
@@ -167,7 +177,6 @@
 
 <script>
 const statsApiUrl = '../Admin/admin_stats.php';
-const ctx = document.getElementById('cropChart');
 
 document.getElementById('todayDate').textContent =
     new Date().toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
@@ -190,96 +199,115 @@ function countUp(id, target) {
     requestAnimationFrame(tick);
 }
 
-function lineSeries(label, values, color, fill) {
-    return {
-        label,
-        data: values,
-        borderColor: color,
-        backgroundColor: fill ? color + '1f' : 'transparent',
-        fill: !!fill,
-        borderWidth: 2.5,
-        tension: 0.38,
-        pointRadius: 0,
-        pointHoverRadius: 5,
-        pointHoverBackgroundColor: color,
-        pointHoverBorderColor: '#ffffff',
-        pointHoverBorderWidth: 2
-    };
-}
-
 async function loadDashboard() {
     const response = await fetch(statsApiUrl, { credentials: 'include' });
     const data = await response.json();
     if (!response.ok || !data.success) throw new Error(data.message || 'Unable to load dashboard data.');
 
     countUp('totalUsers', data.summary.users);
+    countUp('activeUsers', data.summary.activeUsers);
     countUp('totalCrops', data.summary.crops);
-    countUp('totalPlantedCrops', data.summary.plantedCrops);
-    countUp('readyToHarvest', data.summary.readyToHarvest);
+    countUp('totalPests', data.summary.pests);
+    countUp('unreadMessages', data.summary.unreadMessages);
 
-    Chart.defaults.font.family = "'Plus Jakarta Sans', 'Poppins', sans-serif";
-    Chart.defaults.color = '#7d8f84';
+    const cropLabels = Array.isArray(data.cropDistribution?.labels) ? data.cropDistribution.labels : [];
+    const cropData = Array.isArray(data.cropDistribution?.data) ? data.cropDistribution.data : [];
+    const filteredCropEntries = cropLabels
+        .map((label, index) => ({ label, value: Number(cropData[index] || 0) }))
+        .filter(({ value }) => value > 0);
+    const userStatusData = data.userStatus || { Active: 0, Inactive: 0 };
 
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Ene', 'Peb', 'Mar', 'Abr', 'May', 'Hun', 'Hul', 'Ago', 'Set', 'Okt', 'Nob', 'Dis'],
-            datasets: [
-                lineSeries('Kabuuang Crop Records', data.monthly.map(m => m.planted), '#14432c', true),
-                lineSeries('Mga Bagong Pananim', data.monthly.map(m => m.tasks), '#2f8a52'),
-                lineSeries('Mga Na-update na Record', data.monthly.map(m => m.notes), '#e0a422'),
-                lineSeries('Mga Ulat na Nabuo', data.monthly.map(m => m.planted + m.tasks + m.notes), '#8fbf2f')
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            interaction: { intersect: false, mode: 'index' },
-            plugins: {
-                legend: {
-                    position: 'top',
-                    align: 'start',
-                    labels: {
-                        font: { size: 12, weight: 600 },
-                        color: '#4b5f54',
-                        boxWidth: 8,
-                        boxHeight: 8,
-                        padding: 18,
-                        usePointStyle: true,
-                        pointStyle: 'circle'
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#10281d',
-                    padding: 12,
-                    cornerRadius: 10,
-                    titleFont: { weight: 700 },
-                    boxPadding: 4,
-                    usePointStyle: true
-                }
+    const cropChart = document.getElementById('cropReportChart');
+    if (cropChart) {
+        const palette = filteredCropEntries.map((_, index) => {
+            const colors = ['#14432c', '#2f8a52', '#bfe56f', '#8fa6e8', '#e0a422', '#d97706', '#4c7c59', '#9ad0c2', '#2c7a7b', '#c084fc'];
+            return colors[index % colors.length];
+        });
+
+        new Chart(cropChart, {
+            type: 'pie',
+            data: {
+                labels: filteredCropEntries.map(item => item.label),
+                datasets: [{
+                    data: filteredCropEntries.map(item => item.value),
+                    backgroundColor: palette,
+                    borderWidth: 0
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { precision: 0, font: { size: 11 }, padding: 8 },
-                    grid: { color: '#edf1ec' },
-                    border: { display: false }
-                },
-                x: {
-                    ticks: { font: { size: 11 }, padding: 6 },
-                    grid: { display: false },
-                    border: { display: false }
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: 0,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            color: '#4b5f54',
+                            boxWidth: 10,
+                            boxHeight: 10,
+                            padding: 14,
+                            font: { size: 11, weight: 600 }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#10281d',
+                        padding: 12,
+                        cornerRadius: 10,
+                        displayColors: true
+                    },
+                    datalabels: {
+                        color: '#ffffff',
+                        font: { family: 'Poppins', size: 10, weight: '700' },
+                        formatter: (value) => value > 0 ? value : '',
+                        anchor: 'center',
+                        align: 'center',
+                        clamp: true
+                    }
                 }
             }
-        }
-    });
+        });
+    }
+
+    const userChart = document.getElementById('userStatusChart');
+    if (userChart) {
+        new Chart(userChart, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aktibo', 'Hindi Aktibo'],
+                datasets: [{
+                    data: [userStatusData.Active || 0, userStatusData.Inactive || 0],
+                    backgroundColor: ['#2f8a52', '#8fa6e8'],
+                    borderWidth: 0
+                }]
+            },
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '60%',
+                plugins: {
+                    legend: { display: false },
+                    datalabels: {
+                        color: '#10281d',
+                        font: { family: 'Poppins', size: 11, weight: '700' },
+                        formatter: (value, context) => `${context.chart.data.labels[context.dataIndex]}\n${value}`,
+                        anchor: 'end',
+                        align: 'end',
+                        offset: 8,
+                        clamp: true
+                    }
+                }
+            }
+        });
+    }
 }
 
 loadDashboard().catch(error => {
-    document.querySelector('.chart-card').insertAdjacentHTML(
-        'beforeend',
-        `<p class="chart-error">${error.message}</p>`
-    );
+    const message = document.createElement('p');
+    message.className = 'chart-error';
+    message.textContent = error.message;
+    document.querySelector('.reports-grid')?.after(message);
 });
 </script>
 

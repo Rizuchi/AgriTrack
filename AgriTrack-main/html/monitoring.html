@@ -10,10 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/usersidebar.css">
-    <link rel="stylesheet" href="../css/monitoring.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/monitoring.css?v=2">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="../css/toast.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=14">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
 </head>
 
 <body>
@@ -64,6 +68,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -102,9 +114,9 @@
         </div>
 
         <div class="dashboard-icons">
-            <button type="button" class="icon-btn" aria-label="Mga abiso">
-                <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
             </button>
         </div>
     </div>
@@ -116,11 +128,6 @@
             <input type="text" id="monitoringSearch" placeholder="Maghanap ng pananim...">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-
-        <button class="category-btn" type="button">
-            <i class="fa-solid fa-sliders"></i>
-            Mga Kategorya
-        </button>
     </div>
 
     <section class="monitoring-section">
@@ -143,8 +150,10 @@
                         </tr>
                     </thead>
 
-                    <tbody id="cropTableBody">
-                        <tr><td colspan="6">Naglo-load ng datos...</td></tr>
+                    <tbody id="cropTableBody" aria-busy="true">
+                        <tr class="skeleton-monitoring-row" aria-hidden="true"><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td></tr>
+                        <tr class="skeleton-monitoring-row" aria-hidden="true"><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td></tr>
+                        <tr class="skeleton-monitoring-row" aria-hidden="true"><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td><td><span class="skeleton-bar"></span></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -154,12 +163,12 @@
     <section class="progress-section">
         <h2>Progreso ng Ani</h2>
         <p class="section-description">
-            Bawat pananim ay may sariling gauge na nagpapakita kung gaano na kalapit sa inaasahang petsa ng anihan.
+            Kapag may iniulat na yugto, 60% ng tantya ay mula sa petsa at 40% sa obserbasyon. Kung wala pa, petsa lang ang batayan at hindi ito kusang aabot sa 100%. Markahan lamang na handa kapag nasuri mo na ang pananim.
         </p>
 
         <div class="panel">
             <div class="harvest-gauge-grid" id="harvestGaugeGrid">
-                <p>Naglo-load ng datos...</p>
+                <div class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Naglo-load ng datos" aria-busy="true"><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
             </div>
         </div>
     </section>
@@ -172,7 +181,7 @@
 
         <div class="panel">
             <div class="ready-harvest-grid" id="readyHarvestGrid">
-                <p>Naglo-load ng datos...</p>
+                <div class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Naglo-load ng datos" aria-busy="true"><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
             </div>
         </div>
     </section>
@@ -185,7 +194,7 @@
 
         <div class="panel">
             <div class="ready-harvest-grid" id="harvestedGrid">
-                <p>Naglo-load ng datos...</p>
+                <div class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Naglo-load ng datos" aria-busy="true"><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
             </div>
         </div>
     </section>
@@ -204,6 +213,20 @@
         <div class="archive-confirm-actions">
             <button class="archive-cancel-button" id="cancelArchiveButton" type="button">Kanselahin</button>
             <button class="archive-confirm-button" id="confirmArchiveButton" type="button">I-archive</button>
+        </div>
+    </section>
+</div>
+
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite">
+            <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true"><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
         </div>
     </section>
 </div>
@@ -273,6 +296,7 @@ function daysUntil(dateStr) {
 }
 
 function renderTable(crops) {
+    cropTableBody.setAttribute("aria-busy", "false");
     if (!crops.length) {
         cropTableBody.innerHTML = '<tr><td colspan="6">Wala pang itinanim na pananim.</td></tr>';
         return;
@@ -280,19 +304,19 @@ function renderTable(crops) {
 
     cropTableBody.innerHTML = crops.map(crop => `
         <tr>
-            <td>${escapeHtml(crop.CropName)}</td>
-            <td>${escapeHtml(crop.GrowthStage)}</td>
-            <td>${statusPill(crop.Condition)}</td>
-            <td>${statusPill(crop.PestOrDisease)}</td>
-            <td>
-                <div class="progress-cell">
+            <td data-label="Pananim">${escapeHtml(crop.CropName)}</td>
+            <td data-label="Yugto ng Paglago">${escapeHtml(crop.GrowthStage)}</td>
+            <td data-label="Kalagayan">${statusPill(crop.Condition)}</td>
+            <td data-label="Peste o Sakit">${statusPill(crop.PestOrDisease)}</td>
+            <td data-label="Progreso">
+                <div class="progress-cell" title="${escapeHtml(crop.ProgressMethod)}">
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${crop.Progress}%;"></div>
                     </div>
                     <span>${crop.Progress}%</span>
                 </div>
             </td>
-            <td>
+            <td data-label="Aksyon">
                 <button class="view-btn" type="button" onclick="window.location.href='monitoring-details.html?id=${crop.PlantedCropID}'"><i class="fa-solid fa-pen-to-square"></i><span>Aksyon</span></button>
                 ${archiveButton(crop)}
             </td>
@@ -317,7 +341,7 @@ function renderGauges(crops) {
         return `
             <div class="harvest-gauge-card" data-crop-name="${escapeHtml(crop.CropName).toLowerCase()}">
                 ${archiveButton(crop)}
-                <div class="harvest-gauge" style="--pct: ${crop.Progress}; --gauge-color: ${gaugeColor(crop.Progress)};">
+                <div class="harvest-gauge" title="${escapeHtml(crop.ProgressMethod)}" style="--pct: ${crop.Progress}; --gauge-color: ${gaugeColor(crop.Progress)};">
                     <div class="harvest-gauge-inner">
                         <span class="gauge-percent">${crop.Progress}%</span>
                         <span class="gauge-days">${escapeHtml(daysLabel)}</span>
@@ -388,6 +412,7 @@ async function markHarvested(plantedCropId, button) {
             body: JSON.stringify({
                 plantedCropId,
                 condition: crop.Condition || 'Handa nang Anihin',
+                growthStage: crop.GrowthStageCode || 'ready',
                 pest: crop.PestOrDisease || 'Wala',
                 additionalNote: '',
                 markHarvested: true
@@ -485,6 +510,7 @@ fetch('../php/get_monitoring.php')
     .then(res => res.json())
     .then(json => {
         if (!json.success) {
+            cropTableBody.setAttribute("aria-busy", "false");
             cropTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</td></tr>`;
             gaugeGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
             readyHarvestGrid.innerHTML = `<p>${escapeHtml(json.message || 'Error sa pagkuha ng datos.')}</p>`;
@@ -500,6 +526,7 @@ fetch('../php/get_monitoring.php')
         monitoringSearch.addEventListener("input", applyMonitoringSearch);
     })
     .catch(err => {
+        cropTableBody.setAttribute("aria-busy", "false");
         cropTableBody.innerHTML = '<tr><td colspan="6">Hindi makonekta sa server.</td></tr>';
         gaugeGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';
         readyHarvestGrid.innerHTML = '<p>Hindi makonekta sa server.</p>';

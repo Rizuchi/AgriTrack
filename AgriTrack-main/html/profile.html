@@ -10,13 +10,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="../css/toast.css">
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
 </head>
 
 <body>
@@ -68,6 +72,14 @@
                 </div>
             </a>
             
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -121,7 +133,10 @@
 
             <div class="header-icons">
 
-                <i class="fa-solid fa-bell"></i>
+                <button type="button" class="notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                    <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                    <span class="notification-count" id="notificationCount" hidden></span>
+                </button>
 
 
             </div>
@@ -149,39 +164,18 @@
 
 
 
-<div class="profile-info">
-
-    <h2 id="profileFullName">
-        Ikinakarga...
-    </h2>
-
-    
-
-    <p id="profileEmailDisplay">
-        &nbsp;
-    </p>
-
-    <p id="profileContactDisplay">
-        &nbsp;
-    </p>
-
-
-    
-
-    <div class="profile-update">
-
-        <p>
-            <strong>Huling Pag-update:</strong>
-            <span id="lastUpdateDate">Wala pa</span>
-        </p>
-
-        <button type="button" id="updateInfoBtn">
-            I-update
-        </button>
-
-    </div>
-
-</div>
+            <div class="profile-info">
+                <h2 id="profileFullName">
+                    <span class="skeleton-inline" role="status" aria-label="Ikinakarga"><span class="skeleton-bar" aria-hidden="true"></span></span>
+                </h2>
+                <div class="profile-update">
+                    <p>
+                        <strong>Huling Pag-update:</strong>
+                        <span id="lastUpdateDate">Wala pa</span>
+                    </p>
+                    <button type="button" id="updateInfoBtn">I-update</button>
+                </div>
+            </div>
 
         </section>
 
@@ -189,187 +183,66 @@
         
 
         <section class="account-card">
-
             <div class="account-heading">
-
-                <h2>
-                    Impormasyon ng Account
-                </h2>
-
+                <h2>Impormasyon ng Account</h2>
             </div>
 
             <p id="profileFormMessage" class="form-message" style="display:none;"></p>
 
             <form id="profileForm">
 
-                
-
                 <div class="form-row">
-
-                    
-
                     <div class="form-group">
-
                         <label for="firstName">
-
                             Unang Pangalan
-
-                            <span>
-                                First Name
-                            </span>
-
+                            <span>First Name</span>
                         </label>
-
                         <input
                             type="text"
                             id="firstName"
                             name="firstName"
-                            value=""
                             required
                         >
-
                     </div>
-
-
-                    
-
                     <div class="form-group">
-
                         <label for="lastName">
-
                             Apelyido
-
-                            <span>
-                                Last Name
-                            </span>
-
+                            <span>Last Name</span>
                         </label>
-
                         <input
                             type="text"
                             id="lastName"
                             name="lastName"
-                            value=""
                             required
                         >
-
                     </div>
-
                 </div>
-
-
-                
-
-                <div class="form-row">
-
-                    
-
-                    <div class="form-group">
-
-                        <label for="email">
-
-                            Email Address
-
-                            <span>
-                                Email Address
-                            </span>
-
-                        </label>
-
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value=""
-                        >
-
-                    </div>
-
-
-                    
-
-                    <div class="form-group">
-
-                        <label for="contact">
-
-                            Numero ng Contact
-
-                            <span>
-                                Contact
-                            </span>
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="contact"
-                            name="contact"
-                            value=""
-                            placeholder=" Hal. +63917-123-4567"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                
-
-                <div class="form-row last-row">
-
-                    
-
-                    <div class="form-group">
-
-                        <label for="username">
-
-                            Username
-
-                            <span>
-                                Username
-                            </span>
-
-                        </label>
-
-                        <input
-                            type="text"
-                            id="username"
-                            name="username"
-                            value=""
-                            required
-                        >
-
-                    </div>
-
-
-                    
-
-                    <div class="form-group empty-group">
-
-                    </div>
-
-                </div>
-
-
-                
-
                 <div class="form-submit">
-
-                    <button type="submit" id="profileSaveBtn">
-                        I-save ang Mga Pagbabago
-                    </button>
-
+                    <button type="submit" id="profileSaveBtn">I-save ang Mga Pagbabago</button>
                 </div>
-
             </form>
 
         </section>
+
+        <div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+            <section class="notification-panel">
+                <header class="notification-panel-header">
+                    <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+                    <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </header>
+                <div class="notification-panel-body" id="notificationList" aria-live="polite">
+                    <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true"><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
+                </div>
+            </section>
+        </div>
 
     </main>
 
     <script src="../js/toast.js"></script>
     <script>
-
+        let profileAccountData = null;
         const FILIPINO_MONTHS = [
             "Enero", "Pebrero", "Marso", "Abril", "Mayo", "Hunyo",
             "Hulyo", "Agosto", "Setyembre", "Oktubre", "Nobyembre", "Disyembre"
@@ -392,19 +265,18 @@
         }
 
         function applyProfileData(data) {
+            profileAccountData = {
+                email: data.email || "",
+                contact: data.contact || "",
+                username: data.userName || ""
+            };
             document.getElementById("profileFullName").textContent =
                 `${data.firstName} ${data.lastName}`.trim() || "Walang Pangalan";
 
-            // document.getElementById("profileRole").textContent = data.role || "User";
-            document.getElementById("profileEmailDisplay").textContent = data.email || "Walang email na naitala";
-            document.getElementById("profileContactDisplay").textContent = data.contact || "Walang numero na naitala";
             document.getElementById("lastUpdateDate").textContent = formatFilipinoDate(data.updatedAt);
 
             document.getElementById("firstName").value = data.firstName || "";
             document.getElementById("lastName").value = data.lastName || "";
-            document.getElementById("email").value = data.email || "";
-            document.getElementById("contact").value = data.contact || "";
-            document.getElementById("username").value = data.userName || "";
         }
 
         async function loadProfile() {
@@ -438,9 +310,9 @@
                 const payload = {
                     firstName: document.getElementById("firstName").value.trim(),
                     lastName: document.getElementById("lastName").value.trim(),
-                    email: document.getElementById("email").value.trim(),
-                    contact: document.getElementById("contact").value.trim(),
-                    username: document.getElementById("username").value.trim()
+                    email: profileAccountData?.email || "",
+                    contact: profileAccountData?.contact || "",
+                    username: profileAccountData?.username || ""
                 };
 
                 try {
@@ -461,8 +333,6 @@
                     showPageToast("Na-update ang impormasyon ng profile.");
                     document.getElementById("profileFullName").textContent =
                         `${payload.firstName} ${payload.lastName}`.trim();
-                    document.getElementById("profileEmailDisplay").textContent = payload.email || "Walang email na naitala";
-                    document.getElementById("profileContactDisplay").textContent = payload.contact || "Walang numero na naitala";
                     document.getElementById("lastUpdateDate").textContent = formatFilipinoDate(result.updatedAt);
                 } catch (err) {
                     showFormMessage("Hindi makakonekta sa server.", true);

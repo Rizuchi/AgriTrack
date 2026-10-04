@@ -8,12 +8,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
-    <link rel="stylesheet" href="../css/crops.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/crops.css?v=2">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="../css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=13">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
 </head>
 <body>
 
@@ -64,6 +68,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -102,9 +114,9 @@
             <p>I-record at subaybayan ang kalagayan ng iyong mga pananim.</p>
         </div>
         <div class="dashboard-icons">
-            <button type="button" class="icon-btn" aria-label="Mga abiso">
-                <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
             </button>
         </div>
     </div>
@@ -117,10 +129,14 @@
             <input type="text" id="cropSearch" placeholder="Maghanap ng pananim...">
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <button class="category-btn" type="button">
-            <i class="fa-solid fa-sliders"></i>
-            Mga Kategorya
-        </button>
+        <div class="view-toggle" role="group" aria-label="Ayos ng mga pananim">
+            <button type="button" class="view-toggle-btn" data-view="list" aria-label="List view" title="List view" aria-pressed="false">
+                <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="view-toggle-btn" data-view="gallery" aria-label="Gallery view" title="Gallery view" aria-pressed="true">
+                <i class="fa-solid fa-grip" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 
 
@@ -159,7 +175,7 @@
                         <input
                             type="text"
                             id="cropSearchInput"
-                            placeholder="Naglo-load ng listahan..."
+                            placeholder="Maghanap ng pananim..."
                             autocomplete="off"
                             disabled
                             required
@@ -206,6 +222,24 @@
     </div>
 </div>
 
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite">
+            <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true">
+                <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+                <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+                <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            </div>
+        </div>
+    </section>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script>
 <script src="../js/toast.js"></script>
 <script>
@@ -216,6 +250,24 @@ const cancelCropModal = document.getElementById("cancelCropModal");
 const cropForm = document.getElementById("cropForm");
 const cropGrid = document.getElementById("cropGrid");
 const addCropCard = document.getElementById("openCropModal");
+const cropViewButtons = document.querySelectorAll(".view-toggle-btn");
+
+function setCropView(view) {
+    const selectedView = view === "list" ? "list" : "gallery";
+    cropGrid.classList.toggle("is-list-view", selectedView === "list");
+    cropGrid.classList.toggle("is-gallery-view", selectedView === "gallery");
+    cropViewButtons.forEach(button => {
+        const isActive = button.dataset.view === selectedView;
+        button.classList.toggle("active", isActive);
+        button.setAttribute("aria-pressed", String(isActive));
+    });
+    localStorage.setItem("agritrack-results-view", selectedView);
+}
+
+cropViewButtons.forEach(button => {
+    button.addEventListener("click", () => setCropView(button.dataset.view));
+});
+setCropView(localStorage.getItem("agritrack-results-view") || "gallery");
 
 const cropSearchInput = document.getElementById("cropSearchInput");
 const cropIdInput = document.getElementById("cropId");
@@ -271,7 +323,7 @@ function loadCropCatalog() {
     cropLoadError.classList.remove("show");
     cropSearchInput.disabled = true;
     cropSearchInput.value = "";
-    cropSearchInput.placeholder = "Naglo-load ng listahan...";
+    cropSearchInput.placeholder = "Maghanap ng pananim...";
     cropIdInput.value = "";
     cropCatalog = {};
     cropList = [];
@@ -480,7 +532,9 @@ cropForm.addEventListener("submit", function(event) {
 
 
 function loadPlantedCrops() {
-    fetch("../php/get_planted_crops.php")
+    cropGrid.querySelector(".crop-load-error")?.remove();
+
+    fetch("../php/get_planted_crops.php", { credentials: "same-origin" })
         .then(res => res.text().then(text => ({ status: res.status, ok: res.ok, text })))
         .then(({ status, ok, text }) => {
             let crops;
@@ -505,7 +559,23 @@ function loadPlantedCrops() {
 
             cropGrid.appendChild(addCropCard);
         })
-        .catch(err => console.error("Hindi ma-load ang mga pananim:", err));
+        .catch(err => {
+            console.error("Hindi ma-load ang mga pananim:", err);
+
+            const error = document.createElement("p");
+            error.className = "crop-load-error";
+            error.setAttribute("role", "status");
+            error.append(document.createTextNode(`Hindi ma-load ang mga pananim: ${err.message} `));
+
+            const retryButton = document.createElement("button");
+            retryButton.type = "button";
+            retryButton.className = "field-retry-btn";
+            retryButton.textContent = "Subukan ulit";
+            retryButton.addEventListener("click", loadPlantedCrops);
+            error.appendChild(retryButton);
+
+            cropGrid.insertBefore(error, addCropCard);
+        });
 }
 
 function buildCropCard(crop) {

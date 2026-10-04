@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="../css/adminsidebar.css">
     <link rel="stylesheet" href="../css/admincontact.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <link rel="stylesheet" href="../css/admin-theme.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -64,15 +64,6 @@
                 </a>
 
 
-                <a href="reports.html" class="menu-item">
-                    <i class="fa-regular fa-clipboard"></i>
-                    <div class="menu-text">
-                        <span class="title">Mga Ulat</span>
-                        <span class="subtitle">Reports</span>
-                    </div>
-                </a>
-
-
                 <a href="admincontact.html" class="menu-item active">
                     <i class="fa-solid fa-phone"></i>
                     <div class="menu-text">
@@ -102,7 +93,7 @@
         <header class="contact-header">
             <div class="header-text">
                 <h1>Makipag-ugnayan</h1>
-                <p>Makipag-ugnayan sa mga rehistradong magsasaka.</p>
+                <p>Mga mensaheng ipinadala ng mga gumagamit ng AgriTrack.</p>
             </div>
 
             <div class="header-icons">
@@ -115,85 +106,403 @@
 
         <div class="contact-toolbar">
             <div class="search-area">
-                <input type="text" id="searchMessage" placeholder="Maghanap ng user...">
+                <input type="text" id="searchMessage" placeholder="Maghanap ng mensahe..." aria-label="Maghanap ng mensahe">
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
 
-            <button type="button" class="new-message-btn">
+            <button type="button" class="new-message-btn" id="sortMessagesBtn" aria-pressed="false">
                 Pinakabago
             </button>
         </div>
 
+        <div class="message-status-tabs" role="tablist" aria-label="I-filter ang mga mensahe">
+            <button type="button" class="message-status-tab is-active" id="unreadMessagesTab" role="tab" aria-controls="messageTablePanel" aria-selected="true" data-status="unread">
+                Hindi pa nababasa <span class="message-status-count" id="unreadMessageCount">0</span>
+            </button>
+            <button type="button" class="message-status-tab" id="readMessagesTab" role="tab" aria-controls="messageTablePanel" aria-selected="false" data-status="read">
+                Nabasa na <span class="message-status-count" id="readMessageCount">0</span>
+            </button>
+        </div>
 
-        <section class="message-section">
-            <h2>Mga Rehistradong User</h2>
+        <section class="message-section" id="messageTablePanel" role="tabpanel" tabindex="0" aria-labelledby="unreadMessagesTab">
+            <h2 id="messageSectionTitle">Mga Hindi pa nababasang Mensahe</h2>
 
 
             <div class="message-table-wrapper">
                 <table class="message-table">
                     <thead>
                         <tr>
-                            <th>Unang Pangalan</th>
-                            <th>Apelyido</th>
+                            <th>Nagpadala</th>
                             <th>Email</th>
-                            <th>Petsa</th>
-                            <th>Katayuan</th>
+                            <th>Mensahe</th>
+                            <th>Natanggap</th>
                             <th>Aksyon</th>
                         </tr>
                     </thead>
 
                     <tbody id="contactTableBody">
                         <tr>
-                            <td colspan="6">Naglo-load ang mga user...</td>
+                            <td colspan="5">
+                                <div class="skeleton-loader skeleton-loader--table" role="status" aria-label="Naglo-load ang mga user" aria-busy="true">
+                                    <span class="skeleton-bar" aria-hidden="true"></span>
+                                    <span class="skeleton-bar" aria-hidden="true"></span>
+                                    <span class="skeleton-bar" aria-hidden="true"></span>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <div class="message-pagination" aria-label="Pagina ng mga mensahe">
+                <label for="messagePageSize">Bawat pahina
+                    <select id="messagePageSize">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                    </select>
+                </label>
+                <p id="messagePageSummary" aria-live="polite"></p>
+                <div class="message-page-actions">
+                    <button type="button" id="previousMessagePage" aria-label="Nakaraang pahina" title="Nakaraang pahina">
+                        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" id="nextMessagePage" aria-label="Susunod na pahina" title="Susunod na pahina">
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
         </section>
     </main>
+
+    <div class="contact-message-overlay" id="contactMessageOverlay" hidden>
+        <section class="contact-message-dialog" role="dialog" aria-modal="true" aria-labelledby="contactMessageTitle">
+            <header>
+                <div>
+                    <h2 id="contactMessageTitle">Mensahe</h2>
+                    <p id="contactMessageSender"></p>
+                </div>
+                <button type="button" id="closeContactMessage" aria-label="Isara ang mensahe"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </header>
+            <p class="contact-message-email" id="contactMessageEmail"></p>
+            <p class="contact-message-date" id="contactMessageDate"></p>
+            <div class="contact-message-content" id="contactMessageContent"></div>
+            <section class="contact-message-replies" aria-labelledby="contactRepliesTitle">
+                <h3 id="contactRepliesTitle">Mga sagot</h3>
+                <div id="contactReplyHistory" aria-live="polite"></div>
+            </section>
+            <form class="contact-reply-form" id="contactReplyForm">
+                <label for="contactReplyText">Isulat ang iyong sagot</label>
+                <textarea id="contactReplyText" maxlength="10000" required></textarea>
+                <div class="contact-reply-actions">
+                    <p id="contactReplyStatus" role="status" aria-live="polite"></p>
+                    <button type="submit" id="sendContactReply"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i> Ipadala ang sagot</button>
+                </div>
+            </form>
+        </section>
+    </div>
 
     <script>
         const contactTableBody = document.getElementById('contactTableBody');
         const searchMessage = document.getElementById('searchMessage');
-        let contacts = [];
+        const sortMessagesBtn = document.getElementById('sortMessagesBtn');
+        const messageOverlay = document.getElementById('contactMessageOverlay');
+        const replyForm = document.getElementById('contactReplyForm');
+        const replyText = document.getElementById('contactReplyText');
+        const replyHistory = document.getElementById('contactReplyHistory');
+        const replyStatus = document.getElementById('contactReplyStatus');
+        const messagePageSize = document.getElementById('messagePageSize');
+        const messagePageSummary = document.getElementById('messagePageSummary');
+        const previousMessagePage = document.getElementById('previousMessagePage');
+        const nextMessagePage = document.getElementById('nextMessagePage');
+        const unreadMessageCount = document.getElementById('unreadMessageCount');
+        const readMessageCount = document.getElementById('readMessageCount');
+        const messageSectionTitle = document.getElementById('messageSectionTitle');
+        const messageStatusTabs = document.querySelector('.message-status-tabs');
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestedUserId = (() => {
+            const rawUserId = urlParams.get('userId');
+            if (rawUserId === null || rawUserId === '') return null;
+            const parsed = Number(rawUserId);
+            return Number.isFinite(parsed) && parsed > 0 ? parsed : null;
+        })();
+
+        let messages = [];
+        let activeMessage = null;
+        let activeMessageStatus = 'unread';
+        let oldestFirst = false;
+        let activeContactId = 0;
+        let replyInProgress = false;
+        let currentPage = 1;
+        let pageSize = Number(messagePageSize.value);
+        let totalMessages = 0;
+        let totalPages = 1;
+        let searchTimer;
+        let messageRequestId = 0;
+
+        async function fetchContactApi(url, options) {
+            const response = await fetch(url, { credentials: 'include', ...options });
+            let data;
+            try {
+                data = await response.json();
+            } catch (error) {
+                console.error('Contact API returned an invalid response:', error);
+                throw new Error('Hindi mabasa ang tugon ng server. Tingnan ang PHP error log.');
+            }
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Hindi nakumpleto ang kahilingan.');
+            }
+            return data;
+        }
 
         function escapeHtml(value) {
             return String(value || '').replace(/[&<>\"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;' }[character]));
         }
 
         function formatDate(value) {
-            if (!value) return 'Walang aktibidad';
-            return new Date(value.replace(' ', 'T')).toLocaleDateString('fil-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+            if (!value) return 'Walang petsa';
+            return new Date(value.replace(' ', 'T')).toLocaleString('fil-PH', { dateStyle: 'medium', timeStyle: 'short' });
         }
 
-        function renderContacts() {
-            const search = searchMessage.value.trim().toLowerCase();
-            const filtered = contacts.filter(user =>
-                `${user.firstName} ${user.lastName} ${user.email} ${user.contact}`.toLowerCase().includes(search)
-            );
-            contactTableBody.innerHTML = filtered.length ? filtered.map(user => `
+        function renderReplyHistory(replies) {
+            replyHistory.replaceChildren();
+            if (!replies.length) {
+                const empty = document.createElement('p');
+                empty.className = 'contact-reply-empty';
+                empty.textContent = 'Wala pang naisusulat na sagot.';
+                replyHistory.append(empty);
+                return;
+            }
+
+            replies.forEach(reply => {
+                const item = document.createElement('article');
+                item.className = 'contact-reply-item';
+
+                const heading = document.createElement('div');
+                heading.className = 'contact-reply-heading';
+                const author = document.createElement('strong');
+                author.textContent = 'AgriTrack Support';
+                const date = document.createElement('time');
+                date.textContent = formatDate(reply.createdAt);
+                heading.append(author, date);
+
+                const body = document.createElement('p');
+                body.className = 'contact-reply-body';
+                body.textContent = reply.reply;
+                item.append(heading, body);
+
+                const delivery = document.createElement('div');
+                delivery.className = `contact-reply-delivery${reply.emailSent ? '' : ' is-pending'}`;
+                const deliveryText = document.createElement('span');
+                deliveryText.textContent = reply.emailSent ? 'Naipadala sa email' : 'Hindi naipadala sa email';
+                delivery.append(deliveryText);
+                if (!reply.emailSent) {
+                    const retry = document.createElement('button');
+                    retry.type = 'button';
+                    retry.className = 'contact-reply-retry';
+                    retry.dataset.retryReplyId = reply.replyId;
+                    retry.textContent = 'Subukang ipadala muli';
+                    delivery.append(retry);
+                }
+                item.append(delivery);
+                replyHistory.append(item);
+            });
+        }
+
+        async function openMessage(messageId) {
+            const message = messages.find(item => item.contactId === Number(messageId));
+            if (!message) return;
+            activeMessage = message;
+            activeContactId = message.contactId;
+            document.getElementById('contactMessageSender').textContent = `${message.firstName} ${message.lastName}`;
+            document.getElementById('contactMessageEmail').textContent = message.email;
+            document.getElementById('contactMessageDate').textContent = formatDate(message.createdAt);
+            document.getElementById('contactMessageContent').textContent = message.message;
+            replyForm.reset();
+            replyStatus.textContent = '';
+            replyStatus.classList.remove('is-error');
+            renderReplyHistory(message.replies || []);
+            messageOverlay.hidden = false;
+            document.getElementById('closeContactMessage').focus();
+
+            if (!message.isRead) {
+                try {
+                    await fetchContactApi('../Admin/mark_contact_message_read.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify({ contactId: message.contactId }),
+                    });
+                    message.isRead = true;
+                    await loadMessages();
+                } catch (error) {
+                    replyStatus.textContent = error.message || 'Hindi na-update ang status ng mensahe.';
+                    replyStatus.classList.add('is-error');
+                }
+            }
+        }
+
+        function renderMessages() {
+            contactTableBody.innerHTML = messages.length ? messages.map(message => `
         <tr>
-            <td>${escapeHtml(user.firstName)}</td>
-            <td>${escapeHtml(user.lastName)}</td>
-            <td>${escapeHtml(user.email || 'Walang email')}</td>
-            <td>${formatDate(user.updatedAt)}</td>
-            <td>${escapeHtml(user.status)}</td>
-            <td>${user.email ? `<a class="message-action reply" href="mailto:${escapeHtml(user.email)}">Mag-email</a>` : '<span>Walang email</span>'}</td>
+            <td>${escapeHtml(message.firstName)} ${escapeHtml(message.lastName)}</td>
+            <td>${escapeHtml(message.email)}</td>
+            <td class="contact-message-preview">${escapeHtml(message.message)}</td>
+            <td>${escapeHtml(formatDate(message.createdAt))}</td>
+            <td><button class="message-action" type="button" data-message-id="${message.contactId}">Tingnan</button></td>
         </tr>
-    `).join('') : '<tr><td colspan="6">Walang user na nakita.</td></tr>';
+    `).join('') : '<tr><td colspan="5">Walang mensaheng nakita.</td></tr>';
+            const firstMessage = totalMessages ? ((currentPage - 1) * pageSize) + 1 : 0;
+            const lastMessage = Math.min(currentPage * pageSize, totalMessages);
+            messagePageSummary.textContent = `${firstMessage}–${lastMessage} sa ${totalMessages}`;
+            previousMessagePage.disabled = currentPage <= 1;
+            nextMessagePage.disabled = currentPage >= totalPages;
         }
 
-        async function loadContacts() {
-            const response = await fetch('../Admin/manageusers.php', { credentials: 'include' });
-            const data = await response.json();
-            if (!response.ok || !data.success) throw new Error(data.message || 'Hindi ma-load ang mga user.');
-            contacts = data.users;
-            renderContacts();
+        async function loadMessages() {
+            const requestId = ++messageRequestId;
+            const params = new URLSearchParams({
+                page: String(currentPage),
+                pageSize: String(pageSize),
+                search: searchMessage.value.trim(),
+                sort: oldestFirst ? 'oldest' : 'newest',
+                status: activeMessageStatus,
+            });
+            if (requestedUserId !== null) {
+                params.set('userId', String(requestedUserId));
+            }
+            const data = await fetchContactApi(`../Admin/get_contact_messages.php?${params}`);
+            if (requestId !== messageRequestId) return;
+            messages = data.messages || [];
+            currentPage = Number(data.page) || 1;
+            pageSize = Number(data.pageSize) || pageSize;
+            totalMessages = Number(data.total) || 0;
+            totalPages = Number(data.totalPages) || 1;
+            unreadMessageCount.textContent = String(Number(data.unreadTotal) || 0);
+            readMessageCount.textContent = String(Number(data.readTotal) || 0);
+            renderMessages();
         }
 
-        searchMessage.addEventListener('input', renderContacts);
-        loadContacts().catch(error => {
-            contactTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+        function reportMessageLoadError(error) {
+            messages = [];
+            contactTableBody.innerHTML = `<tr><td colspan="5">${escapeHtml(error.message)}</td></tr>`;
+            console.error('Failed to load contact messages:', error);
+            totalMessages = 0;
+            totalPages = 1;
+            messagePageSummary.textContent = '0 sa 0';
+            previousMessagePage.disabled = true;
+            nextMessagePage.disabled = true;
+        }
+
+        async function sendContactReply(payload) {
+            if (replyInProgress) return;
+            replyInProgress = true;
+            document.getElementById('sendContactReply').disabled = true;
+            replyStatus.textContent = 'Ipinapadala ang sagot...';
+            replyStatus.classList.remove('is-error');
+
+            try {
+                const data = await fetchContactApi('../Admin/reply_contact_message.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (payload.replyId) {
+                    const existingReply = (activeMessage?.replies || []).find(reply => reply.replyId === Number(payload.replyId));
+                    if (existingReply) existingReply.emailSent = Boolean(data.emailSent);
+                } else if (activeMessage) {
+                    activeMessage.replies = activeMessage.replies || [];
+                    const now = new Date();
+                    const localCreatedAt = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                    activeMessage.replies.push({
+                        replyId: Number(data.replyId),
+                        reply: payload.reply,
+                        emailSent: Boolean(data.emailSent),
+                        createdAt: localCreatedAt,
+                    });
+                    replyText.value = '';
+                }
+                await loadMessages();
+                renderReplyHistory(activeMessage?.replies || []);
+                replyStatus.textContent = data.message;
+                replyStatus.classList.toggle('is-error', !data.emailSent);
+            } catch (error) {
+                replyStatus.textContent = error.message;
+                replyStatus.classList.add('is-error');
+            } finally {
+                replyInProgress = false;
+                document.getElementById('sendContactReply').disabled = false;
+            }
+        }
+
+        searchMessage.addEventListener('input', () => {
+            currentPage = 1;
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => loadMessages().catch(reportMessageLoadError), 250);
+        });
+        sortMessagesBtn.addEventListener('click', () => {
+            oldestFirst = !oldestFirst;
+            sortMessagesBtn.textContent = oldestFirst ? 'Pinakaluma' : 'Pinakabago';
+            sortMessagesBtn.setAttribute('aria-pressed', String(oldestFirst));
+            currentPage = 1;
+            loadMessages().catch(reportMessageLoadError);
+        });
+        messageStatusTabs.addEventListener('click', event => {
+            const tab = event.target.closest('[data-status]');
+            if (!tab || tab.dataset.status === activeMessageStatus) return;
+            activeMessageStatus = tab.dataset.status;
+            messageStatusTabs.querySelectorAll('[data-status]').forEach(item => {
+                const selected = item === tab;
+                item.classList.toggle('is-active', selected);
+                item.setAttribute('aria-selected', String(selected));
+            });
+            document.getElementById('messageTablePanel').setAttribute(
+                'aria-labelledby',
+                activeMessageStatus === 'unread' ? 'unreadMessagesTab' : 'readMessagesTab',
+            );
+            messageSectionTitle.textContent = activeMessageStatus === 'unread'
+                ? 'Mga Hindi pa nababasang Mensahe'
+                : 'Mga Nababasang Mensahe';
+            currentPage = 1;
+            loadMessages().catch(reportMessageLoadError);
+        });
+        messagePageSize.addEventListener('change', () => {
+            pageSize = Number(messagePageSize.value);
+            currentPage = 1;
+            loadMessages().catch(reportMessageLoadError);
+        });
+        previousMessagePage.addEventListener('click', () => {
+            if (currentPage <= 1) return;
+            currentPage -= 1;
+            loadMessages().catch(reportMessageLoadError);
+        });
+        nextMessagePage.addEventListener('click', () => {
+            if (currentPage >= totalPages) return;
+            currentPage += 1;
+            loadMessages().catch(reportMessageLoadError);
+        });
+        contactTableBody.addEventListener('click', event => {
+            const button = event.target.closest('[data-message-id]');
+            if (button) openMessage(button.dataset.messageId);
+        });
+        replyForm.addEventListener('submit', event => {
+            event.preventDefault();
+            if (!activeContactId || !replyText.value.trim()) return;
+            sendContactReply({ contactId: activeContactId, reply: replyText.value.trim() });
+        });
+        replyHistory.addEventListener('click', event => {
+            const retry = event.target.closest('[data-retry-reply-id]');
+            if (retry) sendContactReply({ replyId: Number(retry.dataset.retryReplyId) });
+        });
+        document.getElementById('closeContactMessage').addEventListener('click', () => { messageOverlay.hidden = true; });
+        messageOverlay.addEventListener('click', event => {
+            if (event.target === messageOverlay) messageOverlay.hidden = true;
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && !messageOverlay.hidden) messageOverlay.hidden = true;
+        });
+        loadMessages().catch(error => {
+            reportMessageLoadError(error);
         });
     </script>
 

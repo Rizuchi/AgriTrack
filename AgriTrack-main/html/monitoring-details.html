@@ -8,11 +8,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/monitoring-details.css">
     <link rel="stylesheet" href="../css/toast.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
 </head>
 <body>
 <aside class="user-sidebar">
@@ -25,6 +27,7 @@
             <a href="monitoring.html" class="menu-item active"><i class="fa-solid fa-leaf"></i><div><span class="title">Subaybayan ang Pananim</span><span class="subtitle">Crop Monitoring</span></div></a>
             <a href="recommendation.html" class="menu-item"><i class="fa-solid fa-wand-magic-sparkles"></i><div><span class="title">Rekomendasyon na Pananim</span><span class="subtitle">Crop Recommendation</span></div></a>
             <a href="prediction.html" class="menu-item"><i class="fa-solid fa-bug"></i><div><span class="title">Prediksyon sa Peste at Sakit</span><span class="subtitle">Pest and Disease Prediction</span></div></a>
+            <a href="references.html" class="menu-item"><i class="fa-solid fa-book"></i><div><span class="title">Mga Sanggunian</span><span class="subtitle">References</span></div></a>
             <a href="contact.html" class="menu-item"><i class="fa-solid fa-phone"></i><div><span class="title">Makipag-ugnayan</span><span class="subtitle">Contact</span></div></a>
             <a href="profile.html" class="menu-item"><i class="fa-solid fa-user"></i><div><span class="title">Profile</span><span class="subtitle">Profile</span></div></a>
         </nav>
@@ -35,8 +38,8 @@
 <main class="dashboard-main">
     <header class="detail-header">
         <div class="detail-title">
-            <h1><a href="monitoring.html" class="back-btn" aria-label="Bumalik sa monitoring"><i class="fa-solid fa-arrow-left"></i></a>Detalye ng Pagsubaybay: <span id="detailCropName">Naglo-load...</span></h1>
-            <p>I-update ang kalagayan at peste o sakit ng iyong pananim.</p>
+            <h1><a href="monitoring.html" class="back-btn" aria-label="Bumalik sa monitoring"><i class="fa-solid fa-arrow-left"></i></a>Detalye ng Pagsubaybay: <span id="detailCropName" class="skeleton-inline" role="status" aria-label="Naglo-load"><span class="skeleton-bar" aria-hidden="true"></span></span></h1>
+            <p>Iulat ang yugto ng paglago, kalagayan, at peste o sakit ng iyong pananim.</p>
         </div>
         <div class="dashboard-icons">
             <button type="button" class="icon-btn" aria-label="Mga abiso">
@@ -56,7 +59,7 @@
                 </button>
             </div>
             <div class="detail-scroll">
-                <div id="cropSummary"><p>Naglo-load ang detalye ng pananim...</p></div>
+                <div id="cropSummary"><div class="skeleton-loader skeleton-loader--lines" role="status" aria-label="Naglo-load ang detalye ng pananim" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div></div>
                 <form id="monitoringForm" class="monitoring-form">
                     <label for="condition">Kalagayan / Condition
                         <select id="condition" required>
@@ -68,6 +71,16 @@
                             <option value="May Sakit">May Sakit</option>
                             <option value="Nabaha">Nabaha</option>
                             <option value="Natuyuan">Natuyuan</option>
+                        </select>
+                    </label>
+                    <label for="growthStage">Yugto ng Paglago / Growth Stage
+                        <select id="growthStage" required>
+                            <option value="" disabled selected>Piliin ang kasalukuyang yugto</option>
+                            <option value="seedling">Punla</option>
+                            <option value="growth">Paglaki ng halaman</option>
+                            <option value="flowering">Pamumulaklak</option>
+                            <option value="fruiting">Pamumunga / Pagbuo ng ani</option>
+                            <option value="ready">Handa nang anihin</option>
                         </select>
                     </label>
                     <label for="pest">Peste / Sakit
@@ -97,7 +110,7 @@
                 </button>
             </div>
             <div class="history-panel-body" id="historyList">
-                <p>Naglo-load ang kasaysayan...</p>
+                <div class="skeleton-loader skeleton-loader--lines" role="status" aria-label="Naglo-load ang kasaysayan" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div>
             </div>
         </div>
     </div>
@@ -110,6 +123,7 @@ const detailCropName = document.getElementById('detailCropName');
 const detailImage = document.getElementById('detailImage');
 const cropSummary = document.getElementById('cropSummary');
 const conditionSelect = document.getElementById('condition');
+const growthStageSelect = document.getElementById('growthStage');
 const pestSelect = document.getElementById('pest');
 const tipPanel = document.getElementById('tipPanel');
 const message = document.getElementById('monitoringMessage');
@@ -121,14 +135,7 @@ const SAVE_BUTTON_LABEL = '<i class="fa-solid fa-floppy-disk"></i> I-save ang Up
 let cooldownTimer = null;
 
 function isReadyToHarvest(crop) {
-    if (String(crop.Status || '').toLowerCase() === 'harvested') return false;
-    if (String(crop.Status || '').toLowerCase() === 'ready to harvest') return true;
-    if (!crop.ExpectedHarvestDate) return false;
-
-    const today = new Date();
-    const expected = new Date(`${crop.ExpectedHarvestDate}T00:00:00`);
-    today.setHours(0, 0, 0, 0);
-    return expected <= today;
+    return String(crop.Status || '').toLowerCase() === 'ready to harvest';
 }
 
 function escapeHtml(value) {
@@ -220,6 +227,7 @@ function loadDetail() {
             const savedCondition = crop.Condition === 'Walang Tala' ? 'Malusog ang Pananim' : crop.Condition;
             const conditionOption = Array.from(conditionSelect.options).find(option => option.value.toLowerCase() === savedCondition.toLowerCase());
             conditionSelect.value = conditionOption ? conditionOption.value : 'Malusog ang Pananim';
+            growthStageSelect.value = crop.GrowthStageCode || '';
 
             populatePestOptions(data.availablePests, crop.PestOrDisease);
             renderTips(data.selectedPest);
@@ -234,8 +242,18 @@ function renderHistory(history) {
 
     historyList.innerHTML = history.map(entry => {
         const rows = [];
+        const stageLabels = {
+            seedling: 'Punla',
+            growth: 'Paglaki ng halaman',
+            flowering: 'Pamumulaklak',
+            fruiting: 'Pamumunga / Pagbuo ng ani',
+            ready: 'Handa nang anihin'
+        };
         if (entry.condition) {
             rows.push(`<div class="history-entry-row"><strong>Kalagayan:</strong> ${escapeHtml(entry.condition)}</div>`);
+        }
+        if (entry.growthStage) {
+            rows.push(`<div class="history-entry-row"><strong>Yugto:</strong> ${escapeHtml(stageLabels[entry.growthStage] || entry.growthStage)}</div>`);
         }
         if (entry.pest) {
             rows.push(`<div class="history-entry-row"><strong>Peste/Sakit:</strong> ${escapeHtml(entry.pest)}</div>`);
@@ -256,7 +274,7 @@ function renderHistory(history) {
 }
 
 function loadHistory() {
-    historyList.innerHTML = '<p>Naglo-load ang kasaysayan...</p>';
+    historyList.innerHTML = '<div class="skeleton-loader skeleton-loader--lines" role="status" aria-label="Naglo-load ang kasaysayan" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div>';
     return fetch(`../php/get_monitoring_history.php?id=${encodeURIComponent(cropId)}`)
         .then(response => response.json().then(data => ({ ok: response.ok, data })))
         .then(({ ok, data }) => {
@@ -312,6 +330,7 @@ document.getElementById('monitoringForm').addEventListener('submit', async event
             body: JSON.stringify({
                 plantedCropId: cropId,
                 condition: conditionSelect.value,
+                growthStage: growthStageSelect.value,
                 pest: pestSelect.value,
                 additionalNote: document.getElementById('additionalNote').value.trim(),
                 markHarvested

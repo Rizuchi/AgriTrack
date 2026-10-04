@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <link rel="stylesheet" href="../css/adminsidebar.css">
-    <link rel="stylesheet" href="../css/managecrops.css?v=3">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/managecrops.css?v=9">
+    <link rel="stylesheet" href="../css/responsive.css?v=8">
     <link rel="stylesheet" href="../css/admin-theme.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -57,14 +57,6 @@
                     <div class="menu-text">
                         <span class="title">Pamamahala ng Peste at Sakit</span>
                         <span class="subtitle">Manage Pests and Diseases</span>
-                    </div>
-                </a>
-
-                <a href="reports.html" class="menu-item">
-                    <i class="fa-regular fa-clipboard"></i>
-                    <div class="menu-text">
-                        <span class="title">Mga Ulat</span>
-                        <span class="subtitle">Reports</span>
                     </div>
                 </a>
 
@@ -124,7 +116,9 @@
                     placeholder="Maghanap ng pananim..."
                 >
 
-                <i class="fa-solid fa-magnifying-glass"></i>
+                <button type="button" class="search-button" id="searchCropButton" aria-label="Maghanap ng pananim">
+                    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                </button>
 
             </div>
 
@@ -137,6 +131,14 @@
                 Magdagdag ng Pananim
             </button>
 
+            <div class="view-toggle" role="group" aria-label="Ayos ng mga pananim">
+                <button type="button" class="view-toggle-btn" data-view="list" aria-label="List view" title="List view" aria-pressed="false">
+                    <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="view-toggle-btn" data-view="gallery" aria-label="Gallery view" title="Gallery view" aria-pressed="true">
+                    <i class="fa-solid fa-grip" aria-hidden="true"></i>
+                </button>
+            </div>
         </div>
 
         <section class="crop-card-grid" id="cropCardGrid"></section>
@@ -166,6 +168,7 @@
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
+
 
             </div>
 
@@ -248,6 +251,14 @@
                         placeholder="Halimbawa: Ang kamatis ay mabilis sa tag-ulan..."
                     ></textarea>
 
+                </div>
+
+                <div class="crop-form-group relationship-group">
+                    <label for="pestSearch">Mga Kaugnay na Peste at Sakit</label>
+                    <p class="relationship-help">Piliin ang mga peste o sakit na maaaring makaapekto sa pananim na ito.</p>
+                    <input type="search" id="pestSearch" class="relationship-search" placeholder="Maghanap ng peste o sakit..." autocomplete="off">
+                    <div class="relationship-selection-count" id="pestSelectionCount" aria-live="polite"></div>
+                    <div class="relationship-options" id="pestOptions" role="group" aria-label="Mga peste at sakit"></div>
                 </div>
 
                 <div class="crop-form-group">
@@ -341,6 +352,24 @@
         const cropForm = document.getElementById("cropForm");
         const cropCardGrid = document.getElementById("cropCardGrid");
         const modalTitle = document.getElementById("cropModalTitle");
+        const viewButtons = document.querySelectorAll(".view-toggle-btn");
+        let availablePests = [];
+        let selectedPestIds = new Set();
+
+        function setCropView(view) {
+            const selectedView = view === "list" ? "list" : "gallery";
+            cropCardGrid.classList.toggle("is-list-view", selectedView === "list");
+            cropCardGrid.classList.toggle("is-gallery-view", selectedView === "gallery");
+            viewButtons.forEach(button => {
+                const isActive = button.dataset.view === selectedView;
+                button.classList.toggle("active", isActive);
+                button.setAttribute("aria-pressed", String(isActive));
+            });
+            localStorage.setItem("agritrack-admin-management-view", selectedView);
+        }
+
+        viewButtons.forEach(button => button.addEventListener("click", () => setCropView(button.dataset.view)));
+        setCropView(localStorage.getItem("agritrack-admin-management-view") || "gallery");
 
         function resetCropImageState() {
             const upload = document.querySelector(".image-upload");
@@ -385,6 +414,9 @@
         function openCropForm(crop = null) {
             cropForm.reset();
             resetCropImageState();
+            selectedPestIds = new Set((crop?.pests || []).map(pest => String(pest.id)));
+            document.getElementById("pestSearch").value = "";
+            renderPestOptions();
             document.getElementById("cropId").value = crop ? crop.CropID : "0";
             modalTitle.textContent = crop ? "I-edit ang Impormasyon ng Pananim" : "Magdagdag ng Inirerekomendang Pananim";
             if (crop) {
@@ -420,6 +452,20 @@
             });
         }
 
+        function renderPestOptions() {
+            const search = document.getElementById("pestSearch").value.trim().toLowerCase();
+            const options = document.getElementById("pestOptions");
+            const filteredPests = availablePests.filter(pest => `${pest.name} ${pest.type}`.toLowerCase().includes(search));
+            options.innerHTML = filteredPests.length ? filteredPests.map(pest => `
+                <label class="relationship-option">
+                    <input type="checkbox" name="pestIds[]" value="${pest.id}" ${selectedPestIds.has(String(pest.id)) ? "checked" : ""}>
+                    <span>${escapeHtml(pest.name)}</span>
+                    <small>${escapeHtml(pest.type)}</small>
+                </label>
+            `).join("") : `<p class="relationship-empty">${availablePests.length ? "Walang tugmang peste o sakit." : "Wala pang naidagdag na peste o sakit."}</p>`;
+            document.getElementById("pestSelectionCount").textContent = `${selectedPestIds.size} napili`;
+        }
+
         function escapeHtml(value) {
             return String(value).replace(/[&<>"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
         }
@@ -428,6 +474,7 @@
             const response = await fetch(apiUrl);
             const data = await response.json();
             if (!data.success) throw new Error(data.message);
+            availablePests = data.pests || [];
             renderCrops(data.crops);
         }
 
@@ -439,6 +486,14 @@
         });
         document.addEventListener("keydown", event => {
             if (event.key === "Escape") closeCropForm();
+        });
+
+        document.getElementById("pestSearch").addEventListener("input", renderPestOptions);
+        document.getElementById("pestOptions").addEventListener("change", event => {
+            const checkbox = event.target.closest('input[name="pestIds[]"]');
+            if (!checkbox) return;
+            checkbox.checked ? selectedPestIds.add(checkbox.value) : selectedPestIds.delete(checkbox.value);
+            renderPestOptions();
         });
 
         document.getElementById("cropImage").addEventListener("change", event => {
@@ -460,7 +515,10 @@
             const saveButton = document.querySelector(".save-crop-btn");
             saveButton.disabled = true;
             try {
-                const response = await fetch(apiUrl, { method: "POST", body: new FormData(cropForm) });
+                const formData = new FormData(cropForm);
+                formData.delete("pestIds[]");
+                selectedPestIds.forEach(id => formData.append("pestIds[]", id));
+                const response = await fetch(apiUrl, { method: "POST", body: formData });
                 const data = await response.json();
                 if (!data.success) throw new Error(data.message);
                 closeCropForm();
@@ -473,12 +531,15 @@
             }
         });
 
-        document.getElementById("searchCrop").addEventListener("input", event => {
-            const search = event.target.value.toLowerCase();
+        const searchCrop = document.getElementById("searchCrop");
+        function filterCrops() {
+            const search = searchCrop.value.trim().toLowerCase();
             document.querySelectorAll(".crop-card").forEach(card => {
                 card.hidden = !card.textContent.toLowerCase().includes(search);
             });
-        });
+        }
+        searchCrop.addEventListener("input", filterCrops);
+        document.getElementById("searchCropButton").addEventListener("click", filterCrops);
 
         loadCrops().catch(error => {
             cropCardGrid.innerHTML = `<p>Hindi ma-load ang mga pananim: ${escapeHtml(error.message)}</p>`;

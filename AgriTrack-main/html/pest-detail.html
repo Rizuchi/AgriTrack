@@ -6,10 +6,12 @@
     <title>AgriTrack - Pest Detail</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/crop-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
 </head>
 
 <body>
@@ -60,6 +62,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -94,7 +104,7 @@
         <div class="detail-title" id="detail-title">
             <h1>
                 <a href="prediction.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i></a>
-                Naglo-load...
+                <span class="skeleton-inline" role="status" aria-label="Naglo-load"><span class="skeleton-bar" aria-hidden="true"></span></span>
             </h1>
             <p></p>
         </div>
@@ -105,7 +115,7 @@
     </div>
 
     <div class="crop-detail-card" id="detail-container">
-        <p style="padding: 18px;">Naglo-load ng datos...</p>
+        <div class="skeleton-loader skeleton-loader--detail" role="status" aria-label="Naglo-load ng datos" aria-busy="true" style="padding: 18px;"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-detail-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
     </div>
 
 </div>
@@ -182,6 +192,7 @@ if (!pestId) {
                         <p><strong>Mga Sintomas:</strong><br>${escapeHtml(pest.Symptoms)}</p>
                         <p><strong>Pamamahala:</strong><br>${escapeHtml(pest.ManagementTips)}</p>
                         ${affectedCropsHtml}
+                        ${renderReference(pest.Reference)}
                     </div>
                 </div>
             `;
@@ -194,6 +205,16 @@ if (!pestId) {
             container.innerHTML = '';
             console.error(err);
         });
+}
+
+function renderReference(reference) {
+    const value = String(reference || '').trim();
+    if (!value) return '';
+    const source = escapeHtml(value);
+    const content = /^https?:\/\//i.test(value)
+        ? `<a href="${source}" target="_blank" rel="noopener noreferrer">${source}</a>`
+        : source;
+    return `<p class="detail-reference">Retrieved from: ${content}</p>`;
 }
 </script>
 

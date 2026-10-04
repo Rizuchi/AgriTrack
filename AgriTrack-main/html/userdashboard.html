@@ -9,10 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/userdashboard.css">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css?v=3">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
 </head>
 <body>
 
@@ -66,6 +69,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -110,9 +121,9 @@
         </div>
 
         <div class="dashboard-icons">
-            <button type="button" class="icon-btn" aria-label="Mga abiso">
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
                 <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
+                <span class="notification-count" id="notificationCount" hidden></span>
             </button>
         </div>
 
@@ -144,58 +155,44 @@
 
             <section class="stats-grid">
 
-                <div class="stat-card">
+                <a class="stat-card" href="crops.html" aria-label="Kabuuang Pananim: view Crops">
                     <div class="stat-icon"><i class="fa-solid fa-seedling"></i></div>
                     <div class="stat-label">
                         <h3>Kabuuang Pananim</h3>
                         <p>Total Crops</p>
                     </div>
                     <div class="stat-number" id="statTotalCrops">&ndash;</div>
-                </div>
+                </a>
 
-                <div class="stat-card">
+                <a class="stat-card" href="monitoring.html" aria-label="Mga Aktibong Pagsubaybay: view Crop Monitoring">
                     <div class="stat-icon"><i class="fa-solid fa-leaf"></i></div>
                     <div class="stat-label">
                         <h3>Mga Aktibong Pagsubaybay</h3>
                         <p>Active Monitoring</p>
                     </div>
                     <div class="stat-number" id="statActiveMonitoring">&ndash;</div>
-                </div>
+                </a>
 
-                <div class="stat-card">
+                <a class="stat-card" href="monitoring.html" aria-label="Mga Babala sa Peste: view Crop Monitoring">
                     <div class="stat-icon stat-icon--warn"><i class="fa-solid fa-bug"></i></div>
                     <div class="stat-label">
                         <h3>Mga Babala sa Peste</h3>
                         <p>Pest Alerts</p>
                     </div>
                     <div class="stat-number" id="statPestAlerts">&ndash;</div>
-                </div>
+                    <span class="stat-hint" id="pestAlertHint" aria-live="polite" hidden></span>
+                </a>
 
-                <div class="stat-card">
+                <button type="button" class="stat-card scheduled-tasks-stat-card" id="openScheduledTasks" aria-label="Mga Nakaiskedyul na Gawain: view scheduled tasks">
                     <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
                     <div class="stat-label">
                         <h3>Mga Nakaiskedyul na Gawain</h3>
                         <p>Scheduled Tasks</p>
                     </div>
                     <div class="stat-number" id="statScheduledTasks">&ndash;</div>
-                </div>
+                    <p id="scheduledTaskSummary" class="scheduled-task-summary" aria-live="polite"><span class="skeleton-inline" role="status" aria-label="Loading crop tasks"><span class="skeleton-bar" aria-hidden="true"></span></span></p>
+                </button>
 
-            </section>
-
-            <section class="scheduled-tasks-card" aria-labelledby="scheduledTasksTitle">
-                <div class="scheduled-tasks-header">
-                    <div>
-                        <h2 id="scheduledTasksTitle">Scheduled Tasks</h2>
-                        <p>Crop care reminders</p>
-                    </div>
-                </div>
-                <div class="scheduled-tasks-launcher-row">
-                    <p id="scheduledTaskSummary" class="scheduled-task-summary">Loading crop tasks...</p>
-                    <button type="button" class="task-open-button" id="openScheduledTasks">
-                        <i class="fa-solid fa-list-check" aria-hidden="true"></i>
-                        View Tasks
-                    </button>
-                </div>
             </section>
 
         </section>
@@ -209,7 +206,7 @@
                 <div class="calendar-header">
 
                     <h3>
-                        <span id="calendarMonthYear">August 2026</span>
+                        <span id="calendarMonthYear"></span>
                         <span>
                             <i class="fa-solid fa-chevron-left" id="prevMonthBtn" role="button" tabindex="0" aria-label="Previous month"></i>
                             <i class="fa-solid fa-chevron-right" id="nextMonthBtn" role="button" tabindex="0" aria-label="Next month"></i>
@@ -218,7 +215,7 @@
 
                     <div class="calendar-month">
                         <i class="fa-solid fa-calendar-days"></i>
-                        <span id="calendarMonthLabel">August</span>
+                        <span id="calendarMonthLabel"></span>
                     </div>
 
                 </div>
@@ -235,7 +232,7 @@
                 </div>
 
 
-                <div class="calendar-grid" id="calendarGrid">
+                <div class="calendar-grid" id="calendarGrid" aria-busy="true">
                 </div>
 
 
@@ -249,51 +246,51 @@
             <div class="weather-card">
 
                 <div class="weather-title">
-                    <h3>Panahon Ngayon</h3>
-                    <p>Current Weather</p>
+                    <div>
+                        <h3>Panahon Ngayon sa Orani</h3>
+                        <p>Current conditions · Orani, Bataan</p>
+                    </div>
+                    <i class="fa-solid fa-cloud-sun weather-title-icon" aria-hidden="true"></i>
                 </div>
 
-                <div class="weather-content">
-
+                <div class="weather-content" id="weatherContent" aria-live="polite" aria-busy="false" aria-hidden="true">
                     <div class="weather-main">
-
                         <div class="weather-label">
-                            <h4>Bahagyang Maulap</h4>
-                            <span>Partly Cloudy</span>
+                            <h4 id="weatherDescription">Weather not loaded</h4>
+                            <span id="weatherLocation">Orani, Bataan</span>
                         </div>
-
                         <div class="weather-temperature">
-                            <i class="fa-solid fa-cloud-sun"></i>
-                            <strong>27°C</strong>
+                            <i class="fa-solid fa-cloud-sun" id="weatherIcon" aria-hidden="true"></i>
+                            <strong id="weatherTemperature">--°C</strong>
                         </div>
-
                     </div>
 
-
-                    <div class="weather-side">
-
-                        <div class="weather-box">
-                            <div class="rain-text">
-                                <h4>Tsansa ng Ulan</h4>
-                                <span>Chance of Rain</span>
-                            </div>
-                            <strong>60%</strong>
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <span>Precipitation</span>
+                            <strong id="weatherRainfall">-- mm</strong>
                         </div>
-
-                        <div class="weather-box weather-box--season">
-                            <div>
-                                <h4>
-                                    Panahon ng<br>
-                                    Tag-ulan
-                                </h4>
-                                <span>Wet Season</span>
-                            </div>
+                        <div class="weather-detail">
+                            <span>Feels like</span>
+                            <strong id="weatherFeelsLike">--°C</strong>
                         </div>
-
+                        <div class="weather-detail">
+                            <span>Humidity</span>
+                            <strong id="weatherHumidity">--%</strong>
+                        </div>
+                        <div class="weather-detail">
+                            <span>Wind</span>
+                            <strong id="weatherWind">-- km/h</strong>
+                        </div>
                     </div>
-
                 </div>
-
+                <p class="weather-update" id="weatherUpdate" role="status" aria-hidden="true">Checking today's weather update…</p>
+                <!-- COMMENT BEFORE DEFENSE -->
+                <div class="weather-gate" id="weatherGate">
+                    <button type="button" class="weather-fetch-button" id="loadWeatherButton">
+                        <span class="weather-button-label">Get Weather</span>
+                    </button>
+                </div>
             </div>
 
         </section>
@@ -304,34 +301,35 @@
         <section class="task-modal-panel">
             <header class="task-modal-header">
                 <div>
-                    <h2 id="scheduledTasksModalTitle">Scheduled Tasks</h2>
-                    <p>Crop care reminders</p>
+                    <h2 id="scheduledTasksModalTitle">Mga Nakaiskedyul na Gawain</h2>
+                    <p>Crop care reminders and scheduled tasks</p>
                 </div>
                 <button type="button" class="task-modal-close" id="closeScheduledTasks" aria-label="Close scheduled tasks">
                     <i class="fa-solid fa-xmark" aria-hidden="true"></i>
                 </button>
             </header>
             <div class="task-filters" role="group" aria-label="Filter scheduled tasks">
+                <button type="button" class="task-filter is-active" data-task-filter="all" aria-pressed="true">All</button>
                 <button type="button" class="task-filter" data-task-filter="today" aria-pressed="false">Today</button>
-                <button type="button" class="task-filter is-active" data-task-filter="week" aria-pressed="true">This Week</button>
+                <button type="button" class="task-filter" data-task-filter="week" aria-pressed="false">This Week</button>
                 <button type="button" class="task-filter" data-task-filter="overdue" aria-pressed="false">Overdue</button>
             </div>
             <div class="scheduled-task-list" id="scheduledTaskList" aria-live="polite">
-                <p class="task-empty">Loading crop tasks...</p>
+                <div class="skeleton-loader skeleton-loader--lines" role="status" aria-label="Loading crop tasks" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div>
             </div>
         </section>
     </div>
 
     <div class="task-tips-modal" id="taskTipsModal" role="dialog" aria-modal="true" aria-labelledby="taskTipsTitle" hidden>
         <div class="task-tips-panel">
-            <button type="button" class="task-tips-close" id="closeTaskTips" aria-label="Close tips"><i class="fa-solid fa-xmark"></i></button>
-            <p class="task-tips-eyebrow" id="taskTipsCrop">Crop care</p>
-            <h2 id="taskTipsTitle">Task tips</h2>
+            <button type="button" class="task-tips-close" id="closeTaskTips" aria-label="Isara ang mga tip"><i class="fa-solid fa-xmark"></i></button>
+            <p class="task-tips-eyebrow" id="taskTipsCrop">Pag-aalaga ng pananim</p>
+            <h2 id="taskTipsTitle">Mga Tip sa Gawain</h2>
             <dl class="task-tips-content">
-                <div id="taskTipsActionWrap" hidden><dt>Recommended action</dt><dd id="taskTipsAction"></dd></div>
-                <div><dt>Fix</dt><dd id="taskTipsFix"></dd></div>
-                <div><dt>Prevention</dt><dd id="taskTipsPrevention"></dd></div>
-                <div><dt>Follow-up</dt><dd id="taskTipsFollowUp"></dd></div>
+                <div id="taskTipsActionWrap" hidden><dt>Inirerekomendang Hakbang</dt><dd id="taskTipsAction"></dd></div>
+                <div><dt>Solusyon</dt><dd id="taskTipsFix"></dd></div>
+                <div><dt>Pag-iwas</dt><dd id="taskTipsPrevention"></dd></div>
+                <div><dt>Susunod na Pagsusuri</dt><dd id="taskTipsFollowUp"></dd></div>
             </dl>
         </div>
     </div>
@@ -342,7 +340,17 @@
 
         <div class="note-modal-content">
 
-            <div class="modal-calendar">
+            <div class="note-modal-toolbar">
+                <div class="note-modal-tabs" role="tablist" aria-label="Calendar and task views">
+                    <button type="button" class="note-modal-tab is-active" id="calendarViewTab" role="tab" aria-selected="true" aria-controls="modalCalendarPanel" data-modal-view="calendar">Calendar / Kalendaryo</button>
+                    <button type="button" class="note-modal-tab" id="actionsViewTab" role="tab" aria-selected="false" aria-controls="modalActionsPanel" data-modal-view="actions" tabindex="-1">Actions / Mga Gawain</button>
+                </div>
+                <button type="button" class="note-modal-close" id="closeNoteModal" aria-label="Close calendar / Isara ang kalendaryo">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <div class="modal-calendar" id="modalCalendarPanel" role="tabpanel" aria-labelledby="calendarViewTab">
 
                 <div class="modal-calendar-header">
 
@@ -359,12 +367,12 @@
 
 
                 <div class="modal-weekdays">
-                    <span>Sun</span>
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
+                    <span>Linggo</span>
+                    <span>Lunes</span>
+                    <span>Martes</span>
+                    <span>Miyerkules</span>
+                    <span>Huwebes</span>
+                    <span>Biyernes</span>
                     <span>Sat</span>
                 </div>
 
@@ -388,7 +396,17 @@
             </div>
 
 
-            <div class="modal-information">
+            <div class="modal-information" id="modalActionsPanel" role="tabpanel" aria-labelledby="actionsViewTab">
+
+                <section class="calendar-task-scheduler" aria-labelledby="calendarTaskHeading">
+                    <h3 id="calendarTaskHeading">Schedule a Task / Mag-iskedyul ng Gawain</h3>
+                    <label for="calendarTaskInput">Task / Gawain</label>
+                    <div class="calendar-task-scheduler-controls">
+                        <input id="calendarTaskInput" type="text" maxlength="150" placeholder="e.g., Water seedlings / hal., Diligan ang mga punla">
+                        <button type="button" id="scheduleCalendarTask">Schedule / Iskedyul</button>
+                    </div>
+                    <p id="calendarTaskError" class="modal-error-text" role="alert"></p>
+                </section>
 
                 <section class="activity-section">
 
@@ -403,6 +421,10 @@
                         <button type="button">Naglagay ng Pataba</button>
                         <button type="button">Nag-ani</button>
                         <button type="button">Nagtanim ng Panibago</button>
+                        <button type="button" class="custom-tag-button" data-custom-tag aria-label="Add a custom activity">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            <span>Custom:</span>
+                        </button>
                     </div>
 
                 </section>
@@ -422,6 +444,10 @@
                         <button type="button">Handa nang Anihin</button>
                         <button type="button">Nabaha</button>
                         <button type="button">Natuyuan</button>
+                        <button type="button" class="custom-tag-button" data-custom-tag aria-label="Add a custom condition">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            <span>Custom:</span>
+                        </button>
                     </div>
 
                 </section>
@@ -437,6 +463,10 @@
                         <button type="button">Umuulan</button>
                         <button type="button">Mahangin</button>
                         <button type="button">Malakas na Ulan</button>
+                        <button type="button" class="custom-tag-button" data-custom-tag aria-label="Add custom weather">
+                            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                            <span>Custom:</span>
+                        </button>
                     </div>
 
                 </section>
@@ -467,9 +497,22 @@
         <span id="saveToastText">Na-save ang impormasyon.</span>
     </div>
 
+    <div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+        <section class="notification-panel">
+            <header class="notification-panel-header">
+                <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+                <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </header>
+            <div class="notification-panel-body" id="notificationList" aria-live="polite">
+                <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true"><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
+            </div>
+        </section>
+    </div>
+    <script src="../js/notifications.js"></script>
     <script src="../js/userdashboard.js"></script>
     <script>
-        // Today's date under the welcome title
         document.getElementById('todayDate').textContent =
             new Date().toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     </script>

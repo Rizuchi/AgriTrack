@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriTrack - Mga Sanggunian</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/references.css">
+    <link rel="stylesheet" href="../css/crop-references.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
+    <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="user-sidebar">
+
+    <div class="overlay"></div>
+
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item">
+
+                <i class="fa-solid fa-table-columns"></i>
+
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+
+            </a>
+
+
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item">
+
+                <i class="fa-solid fa-seedling"></i>
+
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+
+            </a>
+
+
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+
+                <i class="fa-solid fa-leaf"></i>
+
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+
+            </a>
+
+
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+
+            </a>
+
+
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+
+                <i class="fa-solid fa-bug"></i>
+
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+
+            </a>
+
+
+            <!-- REFERENCES -->
+            <a href="references.html" class="menu-item active">
+
+                <i class="fa-solid fa-book"></i>
+
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+
+            </a>
+
+
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+
+        </nav>
+
+
+        <!-- LOG OUT -->
+
+        <div class="logout-section">
+
+            <a href="login.html" class="menu-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="dashboard-main references-main crop-references-main">
+
+
+    <!-- HEADER -->
+
+    <div class="crop-references-header">
+
+        <div>
+
+            <div class="crop-header-title">
+
+                <a href="references.html" class="back-button" title="Bumalik">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
+                </a>
+
+                <h1>Mga Sanggunian</h1>
+
+            </div>
+
+
+            <p>
+                Mga mapagkakatiwalaang sanggunian na ginagamit ng AgriTrack bilang batayan
+                ng impormasyon at rekomendasyon sa pagsasaka.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-icons">
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- LINE -->
+
+    <div class="crop-references-line"></div>
+
+
+    <!-- CROP REFERENCE HEADING -->
+
+    <div class="crop-reference-heading">
+
+        <div class="crop-reference-title">
+
+            <i class="fa-solid fa-seedling"></i>
+
+            <h2>Pamamahala ng Pananim</h2>
+
+        </div>
+
+
+        <p>
+            Mga impormasyon tungkol sa wastong pagtatanim,
+            pagpapalaki, at pangangalaga ng mga pananim.
+        </p>
+
+    </div>
+
+
+    <!-- REFERENCE LIST -->
+
+    <div class="reference-list">
+
+
+        <!-- REFERENCE 1 -->
+
+        <div class="reference-item">
+
+            <p>
+                Bureau of Plant Industry. (n.d.).
+                <em>
+                    Planting calendar: Here's your easy guide on when is
+                    the best time of the year to plant.
+                </em>
+                Facebook.
+            </p>
+
+            <a
+                href="https://www.facebook.com/BureauOfPlantIndustry/posts/planting-calendarheres-your-easy-guide-on-when-is-the-best-time-of-the-year-to-plant/736083736968294/"
+                target="_blank"
+            >
+                https://www.facebook.com/BureauOfPlantIndustry/posts/planting-calendarheres-your-easy-guide-on-when-is-the-best-time-of-the-year-to-plant/736083736968294/
+            </a>
+
+        </div>
+
+
+        <!-- REFERENCE 2 -->
+
+        <div class="reference-item">
+
+            <p>
+                Bureau of Soils and Water Management. (n.d.).
+                <em>Bataan.</em>
+                Department of Agriculture.
+            </p>
+
+            <a
+                href="https://bswm.da.gov.ph/wp-content/uploads/Bataan.pdf"
+                target="_blank"
+            >
+                https://bswm.da.gov.ph/wp-content/uploads/Bataan.pdf
+            </a>
+
+        </div>
+
+
+        <!-- REFERENCE 3 -->
+
+        <div class="reference-item">
+
+            <p>
+                Department of Agriculture. (2021).
+                <em>Investment guide for cassava.</em>
+            </p>
+
+            <a
+                href="https://www.da.gov.ph/wp-content/uploads/2021/04/Investment-Guide-for-Cassava.pdf"
+                target="_blank"
+            >
+                https://www.da.gov.ph/wp-content/uploads/2021/04/Investment-Guide-for-Cassava.pdf
+            </a>
+
+        </div>
+
+
+        <!-- REFERENCE 4 -->
+
+        <div class="reference-item">
+
+            <p>
+                Department of Agriculture, High Value Crops Development Program. (2022).
+                <em>Taro production guide.</em>
+            </p>
+
+            <a
+                href="https://hcvp.da.gov.ph/wp-content/uploads/2022/05/TARO-Production-Guide.pdf"
+                target="_blank"
+            >
+                https://hcvp.da.gov.ph/wp-content/uploads/2022/05/TARO-Production-Guide.pdf
+            </a>
+
+        </div>
+
+
+        <!-- REFERENCE 5 -->
+
+        <div class="reference-item">
+
+            <p>
+                Department of Agriculture Regional Field Office No. 02. (n.d.).
+                <em>Ube production guide.</em>
+            </p>
+
+            <a
+                href="https://cagayanvalley.da.gov.ph/wp-content/uploads/2018/02/Ube_production_guide.pdf"
+                target="_blank"
+            >
+                https://cagayanvalley.da.gov.ph/wp-content/uploads/2018/02/Ube_production_guide.pdf
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite"></div>
+    </section>
+</div>
+
+</body>
+</html>

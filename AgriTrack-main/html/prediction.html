@@ -8,10 +8,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
-    <link rel="stylesheet" href="../css/prediction.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/prediction.css?v=3">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=10">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
 </head>
 
 <body>
@@ -62,6 +66,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -100,9 +112,9 @@
         </div>
 
         <div class="dashboard-icons">
-            <button type="button" class="icon-btn" aria-label="Mga abiso">
-                <i class="fa-solid fa-bell"></i>
-                <span class="dot"></span>
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
             </button>
         </div>
     </div>
@@ -119,18 +131,62 @@
         </div>
     </section>
 
-    <h2 class="prediction-title">Predicted Pests and Diseases</h2>
+    <div class="results-toolbar">
+        <h2 class="prediction-title">Predicted Pests and Diseases</h2>
+        <div class="view-toggle" role="group" aria-label="Results layout">
+            <button type="button" class="view-toggle-btn" data-view="list" aria-label="List view" title="List view" aria-pressed="false">
+                <i class="fa-solid fa-list-ul" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="view-toggle-btn" data-view="gallery" aria-label="Gallery view" title="Gallery view" aria-pressed="true">
+                <i class="fa-solid fa-grip" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
 
     <div class="prediction-grid" id="prediction-grid">
-        <p id="loading-message">Naglo-load ng datos...</p>
+        <div id="loading-message" class="skeleton-loader skeleton-loader--cards" role="status" aria-label="Naglo-load ng datos" aria-busy="true">
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+            <div class="skeleton-card"><span class="skeleton-media" aria-hidden="true"></span><span class="skeleton-card-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+        </div>
     </div>
 
 </main>
 
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite">
+            <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true"><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div><div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div></div>
+        </div>
+    </section>
+</div>
+
 <script>
 const grid = document.getElementById('prediction-grid');
 const seasonButtons = document.querySelectorAll('.season-btn');
+const viewButtons = document.querySelectorAll('.view-toggle-btn');
 let allPests = [];
+
+function setView(view) {
+    const selectedView = view === 'list' ? 'list' : 'gallery';
+    grid.classList.toggle('is-list-view', selectedView === 'list');
+    grid.classList.toggle('is-gallery-view', selectedView === 'gallery');
+    viewButtons.forEach(button => {
+        const isActive = button.dataset.view === selectedView;
+        button.classList.toggle('active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+    });
+    localStorage.setItem('agritrack-results-view', selectedView);
+}
+
+viewButtons.forEach(button => button.addEventListener('click', () => setView(button.dataset.view)));
+setView(localStorage.getItem('agritrack-results-view') || 'gallery');
 
 function seasonLabel(type) {
     switch (type) {

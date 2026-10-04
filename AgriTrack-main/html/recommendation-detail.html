@@ -8,10 +8,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/crop-detail.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
 </head>
 <body>
 
@@ -55,6 +57,7 @@
                         <span class="subtitle">Pest and Disease Prediction</span>
                     </div>
                 </a>
+                <a href="references.html" class="menu-item"><i class="fa-solid fa-book"></i><div><span class="title">Mga Sanggunian</span><span class="subtitle">References</span></div></a>
                 <a href="contact.html" class="menu-item">
                     <i class="fa-solid fa-phone"></i>
                     <div>
@@ -90,7 +93,7 @@
                     <a href="recommendation.html" class="back-btn" aria-label="Bumalik sa Rekomendasyon">
                         <i class="fa-solid fa-arrow-left"></i>
                     </a>
-                    Detalye ng Pananim: <span id="detailCropName">Naglo-load...</span>
+                    Detalye ng Pananim: <span id="detailCropName" class="skeleton-inline" role="status" aria-label="Naglo-load"><span class="skeleton-bar" aria-hidden="true"></span></span>
                 </h1>
                 <p>Impormasyon tungkol sa pananim na ito at ang mga peste o sakit na dapat bantayan.</p>
             </div>
@@ -111,7 +114,7 @@
                 <h2>Pangunahing Impormasyon</h2>
 
                 <div class="detail-scroll" id="detailScroll">
-                    <p>Naglo-load ang detalye ng pananim...</p>
+                    <div class="skeleton-loader skeleton-loader--lines" role="status" aria-label="Naglo-load ang detalye ng pananim" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div>
                 </div>
             </div>
         </div>
@@ -214,7 +217,18 @@
                 `;
             }
 
+            html += renderReference(crop.reference);
             detailScroll.innerHTML = html;
+        }
+
+        function renderReference(reference) {
+            const value = String(reference || "").trim();
+            if (!value) return "";
+            const safeValue = escapeHtml(value);
+            const source = /^https?:\/\//i.test(value)
+                ? `<a href="${safeValue}" target="_blank" rel="noopener noreferrer">${safeValue}</a>`
+                : safeValue;
+            return `<p class="detail-reference">Retrieved from: ${source}</p>`;
         }
 
         function escapeHtml(str) {

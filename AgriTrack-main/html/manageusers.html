@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="../css/adminsidebar.css">
     <link rel="stylesheet" href="../css/manageusers.css?v=2">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <link rel="stylesheet" href="../css/admin-theme.css">
     <script src="../js/responsive.js" defer></script>
 </head>
@@ -53,14 +53,6 @@
                 </div>
             </a>
 
-            <a href="reports.html" class="menu-item">
-                <i class="fa-regular fa-clipboard"></i>
-                <div class="menu-text">
-                    <span class="title">Mga Ulat</span>
-                    <span class="subtitle">Reports</span>
-                </div>
-            </a>
-
             <a href="admincontact.html" class="menu-item">
                 <i class="fa-solid fa-phone"></i>
                 <div class="menu-text">
@@ -102,6 +94,33 @@
             <i class="fa-solid fa-magnifying-glass"></i>
         </div>
 
+        <div class="users-sort-control">
+            <label for="userSortSelect">Ayusin ayon sa</label>
+            <select id="userSortSelect" class="user-sort-select">
+                <option value="default">Default (pinakabago)</option>
+                <optgroup label="Unang Pangalan">
+                    <option value="firstName:asc">A hanggang Z</option>
+                    <option value="firstName:desc">Z hanggang A</option>
+                </optgroup>
+                <optgroup label="Apelyido">
+                    <option value="lastName:asc">A hanggang Z</option>
+                    <option value="lastName:desc">Z hanggang A</option>
+                </optgroup>
+                <optgroup label="Email">
+                    <option value="email:asc">A hanggang Z</option>
+                    <option value="email:desc">Z hanggang A</option>
+                </optgroup>
+                <optgroup label="Numero ng Contact">
+                    <option value="contact:asc">Paakyat</option>
+                    <option value="contact:desc">Pababa</option>
+                </optgroup>
+                <optgroup label="Katayuan">
+                    <option value="status:asc">A hanggang Z</option>
+                    <option value="status:desc">Z hanggang A</option>
+                </optgroup>
+            </select>
+        </div>
+
         <button type="button" class="add-user-btn" id="openAddUserModal">
             <i class="fa-solid fa-plus"></i>
             Magdagdag ng User
@@ -112,16 +131,16 @@
         <table class="users-table">
             <thead>
                 <tr>
-                    <th>Unang Pangalan</th>
-                    <th>Apelyido</th>
-                    <th>Email</th>
-                    <th>Numero ng Contact</th>
-                    <th>Katayuan</th>
+                    <th aria-sort="none"><button type="button" class="user-sort-button" data-sort-key="firstName">Unang Pangalan <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
+                    <th aria-sort="none"><button type="button" class="user-sort-button" data-sort-key="lastName">Apelyido <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
+                    <th aria-sort="none"><button type="button" class="user-sort-button" data-sort-key="email">Email <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
+                    <th aria-sort="none"><button type="button" class="user-sort-button" data-sort-key="contact">Numero ng Contact <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
+                    <th aria-sort="none"><button type="button" class="user-sort-button" data-sort-key="status">Katayuan <i class="fa-solid fa-sort" aria-hidden="true"></i></button></th>
                     <th>Aksyon</th>
                 </tr>
             </thead>
             <tbody id="usersTableBody">
-                <tr><td colspan="6">Naglo-load ang mga user...</td></tr>
+                <tr><td colspan="6"><div class="skeleton-loader skeleton-loader--table" role="status" aria-label="Naglo-load ang mga user" aria-busy="true"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></div></td></tr>
             </tbody>
         </table>
     </div>
@@ -137,8 +156,8 @@
                 <label>Unang Pangalan<input name="fname" required></label>
                 <label>Apelyido<input name="lname" required></label>
                 <label>Pangalan ng Gumagamit<input name="userName" required></label>
-                <label>Email <span>(optional)</span><input type="email" name="email"></label>
-                <label>Numero ng Contact <span>(optional)</span><input name="contact"></label>
+                <label>Email<input type="email" name="email" required></label>
+                <label>Numero ng Contact<input type="tel" name="contact" required></label>
                 <label>Password<input type="password" name="password" required minlength="8"></label>
                 <label>Kumpirmahin ang Password<input type="password" name="confirmPassword" required minlength="8"></label>
             </div>
@@ -151,14 +170,58 @@
     </div>
 </div>
 
+<div class="user-modal" id="userDetailsModal" hidden>
+    <div class="user-modal-content" role="dialog" aria-modal="true" aria-labelledby="userDetailsTitle">
+        <button type="button" class="user-modal-close" id="closeUserDetailsModal" aria-label="Isara">&times;</button>
+        <h2 id="userDetailsTitle">Detalye ng User</h2>
+        <p>Impormasyon ng account</p>
+        <dl class="user-details-grid">
+            <div><dt>User ID</dt><dd id="detailUserId"></dd></div>
+            <div><dt>Katayuan</dt><dd id="detailUserStatus"></dd></div>
+            <div><dt>Unang Pangalan</dt><dd id="detailFirstName"></dd></div>
+            <div><dt>Apelyido</dt><dd id="detailLastName"></dd></div>
+            <div><dt>Email</dt><dd id="detailEmail"></dd></div>
+            <div><dt>Numero ng Contact</dt><dd id="detailContact"></dd></div>
+            <div class="user-details-updated"><dt>Huling Na-update</dt><dd id="detailUpdatedAt"></dd></div>
+        </dl>
+        <div class="user-modal-actions">
+            <button type="button" class="save-user-btn" id="viewUserContactMessagesBtn">Tingnan ang mga Mensahe</button>
+        </div>
+    </div>
+</div>
+
+<div class="user-modal" id="adminPasswordModal" hidden>
+    <div class="user-modal-content" role="dialog" aria-modal="true" aria-labelledby="adminPasswordTitle">
+        <button type="button" class="user-modal-close" id="closeAdminPasswordModal" aria-label="Isara">&times;</button>
+        <h2 id="adminPasswordTitle">Kumpirmahin ang Admin</h2>
+        <p>Ilagay ang password ng iyong admin account upang magdagdag ng user.</p>
+        <form id="adminPasswordForm">
+            <label class="admin-password-label" for="adminPasswordInput">Admin Password</label>
+            <input id="adminPasswordInput" name="adminPassword" type="password" autocomplete="current-password" required>
+            <p id="adminPasswordMessage" class="add-user-message" role="status" aria-live="polite"></p>
+            <div class="user-modal-actions">
+                <button type="button" class="cancel-user-btn" id="cancelAdminPassword">Kanselahin</button>
+                <button type="submit" class="save-user-btn" id="confirmAdminPassword">Kumpirmahin at I-save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 const usersApiUrl = "../Admin/manageusers.php";
 const usersTableBody = document.getElementById("usersTableBody");
 const searchUser = document.getElementById("searchUser");
+const userSortSelect = document.getElementById("userSortSelect");
 const addUserModal = document.getElementById("addUserModal");
+const userDetailsModal = document.getElementById("userDetailsModal");
+const adminPasswordModal = document.getElementById("adminPasswordModal");
 const addUserForm = document.getElementById("addUserForm");
 const addUserMessage = document.getElementById("addUserMessage");
+const adminPasswordForm = document.getElementById("adminPasswordForm");
+const adminPasswordMessage = document.getElementById("adminPasswordMessage");
 let users = [];
+let sortState = { key: null, direction: 1 };
+let pendingUserPayload = null;
 
 function escapeHtml(value) {
     return String(value || "").replace(/[&<>\"]/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[character]));
@@ -169,6 +232,15 @@ function renderUsers() {
     const filteredUsers = users.filter(user =>
         `${user.firstName} ${user.lastName} ${user.email} ${user.contact}`.toLowerCase().includes(search)
     );
+    if (sortState.key) {
+        filteredUsers.sort((firstUser, secondUser) =>
+            String(firstUser[sortState.key] || "").localeCompare(
+                String(secondUser[sortState.key] || ""),
+                "fil",
+                { numeric: true, sensitivity: "base" }
+            ) * sortState.direction
+        );
+    }
 
     usersTableBody.innerHTML = filteredUsers.length
         ? filteredUsers.map(user => `
@@ -184,6 +256,73 @@ function renderUsers() {
         : '<tr><td colspan="6">Walang regular user na nakita.</td></tr>';
 }
 
+function applyUserSort(key, direction) {
+    sortState = { key, direction };
+    userSortSelect.value = key ? `${key}:${direction === 1 ? "asc" : "desc"}` : "default";
+
+    document.querySelectorAll(".user-sort-button").forEach(sortButton => {
+        const active = sortButton.dataset.sortKey === key;
+        sortButton.closest("th").setAttribute("aria-sort", active
+            ? (direction === 1 ? "ascending" : "descending")
+            : "none");
+        sortButton.querySelector("i").className = active
+            ? `fa-solid ${direction === 1 ? "fa-sort-up" : "fa-sort-down"}`
+            : "fa-solid fa-sort";
+    });
+
+    renderUsers();
+}
+
+userSortSelect.addEventListener("change", () => {
+    if (userSortSelect.value === "default") {
+        applyUserSort(null, 1);
+        return;
+    }
+
+    const [key, direction] = userSortSelect.value.split(":");
+    applyUserSort(key, direction === "asc" ? 1 : -1);
+});
+
+document.querySelectorAll(".user-sort-button").forEach(button => {
+    button.addEventListener("click", () => {
+        const key = button.dataset.sortKey;
+        const direction = sortState.key === key ? -sortState.direction : 1;
+        applyUserSort(key, direction);
+    });
+});
+
+let currentSelectedUser = null;
+
+function openUserDetails(user) {
+    currentSelectedUser = user;
+    const updatedAt = user.updatedAt ? new Date(user.updatedAt) : null;
+    const formattedUpdatedAt = updatedAt && !Number.isNaN(updatedAt.getTime())
+        ? new Intl.DateTimeFormat("fil-PH", { dateStyle: "medium", timeStyle: "short" }).format(updatedAt)
+        : "Hindi available";
+
+    document.getElementById("detailUserId").textContent = String(user.userId);
+    document.getElementById("detailUserStatus").textContent = user.status || "Hindi available";
+    document.getElementById("detailFirstName").textContent = user.firstName || "Hindi available";
+    document.getElementById("detailLastName").textContent = user.lastName || "Hindi available";
+    document.getElementById("detailEmail").textContent = user.email || "Hindi available";
+    document.getElementById("detailContact").textContent = user.contact || "Hindi available";
+    document.getElementById("detailUpdatedAt").textContent = formattedUpdatedAt;
+    userDetailsModal.hidden = false;
+    document.body.classList.add("modal-open");
+    document.getElementById("closeUserDetailsModal").focus();
+}
+
+function closeUserDetailsModal() {
+    currentSelectedUser = null;
+    userDetailsModal.hidden = true;
+    if (addUserModal.hidden) document.body.classList.remove("modal-open");
+}
+
+function openUserContactMessages() {
+    if (!currentSelectedUser || !currentSelectedUser.userId) return;
+    window.location.href = `admincontact.html?userId=${encodeURIComponent(currentSelectedUser.userId)}`;
+}
+
 async function loadUsers() {
     const response = await fetch(usersApiUrl, { credentials: "include" });
     const data = await response.json();
@@ -193,12 +332,26 @@ async function loadUsers() {
 }
 
 searchUser.addEventListener("input", renderUsers);
+usersTableBody.addEventListener("click", event => {
+    const viewButton = event.target.closest(".view-btn");
+    if (!viewButton) return;
+    const user = users.find(item => String(item.userId) === viewButton.dataset.userId);
+    if (user) openUserDetails(user);
+});
 
 function closeAddUserModal() {
     addUserModal.hidden = true;
     document.body.classList.remove("modal-open");
     addUserForm.reset();
     addUserMessage.textContent = "";
+}
+
+function closeAdminPasswordModal() {
+    adminPasswordModal.hidden = true;
+    adminPasswordForm.reset();
+    adminPasswordMessage.textContent = "";
+    pendingUserPayload = null;
+    if (!addUserModal.hidden) addUserForm.querySelector(".save-user-btn").focus();
 }
 
 document.getElementById("openAddUserModal").addEventListener("click", () => {
@@ -208,20 +361,49 @@ document.getElementById("openAddUserModal").addEventListener("click", () => {
 });
 document.getElementById("closeAddUserModal").addEventListener("click", closeAddUserModal);
 document.getElementById("cancelAddUser").addEventListener("click", closeAddUserModal);
+document.getElementById("closeUserDetailsModal").addEventListener("click", closeUserDetailsModal);
+document.getElementById("viewUserContactMessagesBtn").addEventListener("click", openUserContactMessages);
+document.getElementById("closeAdminPasswordModal").addEventListener("click", closeAdminPasswordModal);
+document.getElementById("cancelAdminPassword").addEventListener("click", closeAdminPasswordModal);
 addUserModal.addEventListener("click", event => {
     if (event.target === addUserModal) closeAddUserModal();
 });
+userDetailsModal.addEventListener("click", event => {
+    if (event.target === userDetailsModal) closeUserDetailsModal();
+});
+adminPasswordModal.addEventListener("click", event => {
+    if (event.target === adminPasswordModal) closeAdminPasswordModal();
+});
 document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && !adminPasswordModal.hidden) {
+        closeAdminPasswordModal();
+        return;
+    }
     if (event.key === "Escape" && !addUserModal.hidden) closeAddUserModal();
+    if (event.key === "Escape" && !userDetailsModal.hidden) closeUserDetailsModal();
 });
 
-addUserForm.addEventListener("submit", async event => {
+addUserForm.addEventListener("submit", event => {
     event.preventDefault();
-    const saveButton = addUserForm.querySelector(".save-user-btn");
-    const payload = Object.fromEntries(new FormData(addUserForm).entries());
+    pendingUserPayload = Object.fromEntries(new FormData(addUserForm).entries());
+    adminPasswordForm.reset();
+    adminPasswordMessage.textContent = "";
+    adminPasswordModal.hidden = false;
+    adminPasswordForm.elements.adminPassword.focus();
+});
+
+adminPasswordForm.addEventListener("submit", async event => {
+    event.preventDefault();
+    if (!pendingUserPayload) return;
+
+    const saveButton = document.getElementById("confirmAdminPassword");
+    const payload = {
+        ...pendingUserPayload,
+        adminPassword: adminPasswordForm.elements.adminPassword.value
+    };
     saveButton.disabled = true;
-    addUserMessage.textContent = "Sine-save ang user...";
-    addUserMessage.className = "add-user-message";
+    adminPasswordMessage.textContent = "Sinusuri ang password...";
+    adminPasswordMessage.className = "add-user-message";
 
     try {
         const response = await fetch("../php/registration.php", {
@@ -232,11 +414,18 @@ addUserForm.addEventListener("submit", async event => {
         });
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error(data.message || "Hindi ma-save ang user.");
+        closeAdminPasswordModal();
         closeAddUserModal();
-        await loadUsers();
+        try {
+            await loadUsers();
+        } catch (error) {
+            usersTableBody.innerHTML = `<tr><td colspan="6">${escapeHtml(error.message)}</td></tr>`;
+        }
     } catch (error) {
-        addUserMessage.textContent = error.message;
-        addUserMessage.className = "add-user-message error";
+        adminPasswordMessage.textContent = error.message;
+        adminPasswordMessage.className = "add-user-message error";
+        adminPasswordForm.elements.adminPassword.value = "";
+        adminPasswordForm.elements.adminPassword.focus();
     } finally {
         saveButton.disabled = false;
     }

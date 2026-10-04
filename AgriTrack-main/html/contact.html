@@ -8,10 +8,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
     <link rel="stylesheet" href="../css/contact.css">
+    <link rel="stylesheet" href="../css/notifications.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
     <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
+    <script src="../js/contact.js" defer></script>
 </head>
 <body>
 
@@ -62,6 +67,14 @@
                 </div>
             </a>
 
+            <a href="references.html" class="menu-item">
+                <i class="fa-solid fa-book"></i>
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+            </a>
+
             <a href="contact.html" class="menu-item active">
                 <i class="fa-solid fa-phone"></i>
                 <div>
@@ -106,7 +119,13 @@
 
         
         <div class="header-icons">
-            <i class="fa-solid fa-bell"></i>
+            <button type="button" class="notification-trigger inbox-trigger" id="openInbox" aria-label="Buksan ang inbox" aria-controls="inboxOverlay" aria-expanded="false">
+                <i class="fa-solid fa-inbox" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
+            </button>
         </div>
     </header>
 
@@ -148,7 +167,7 @@
                 <i class="fa-solid fa-location-dot"></i>
                 <div>
                     <h3>Lokasyon</h3>
-                    <p>Balanga City, Bataan, Philippines</p>
+                    <p>Orani, Bataan, Philippines</p>
                 </div>
             </div>
 
@@ -178,7 +197,7 @@
             </div>
 
             
-            <form>
+            <form id="contactForm">
                 
                 <div class="form-row">
                     
@@ -187,7 +206,7 @@
                             Unang Pangalan
                             <span>First Name</span>
                         </label>
-                        <input type="text" id="firstName" name="firstName" required>
+                        <input type="text" id="firstName" name="firstName" maxlength="100" required>
                     </div>
 
                     
@@ -196,7 +215,7 @@
                             Apelyido
                             <span>Last Name</span>
                         </label>
-                        <input type="text" id="lastName" name="lastName" required>
+                        <input type="text" id="lastName" name="lastName" maxlength="100" required>
                     </div>
                 </div>
 
@@ -206,7 +225,7 @@
                         Email Address
                         <span>Email Address</span>
                     </label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" maxlength="254" required>
                 </div>
 
                 
@@ -215,16 +234,58 @@
                         Mensahe
                         <span>Message</span>
                     </label>
-                    <textarea id="message" name="message" required></textarea>
+                    <textarea id="message" name="message" maxlength="10000" required></textarea>
                 </div>
 
                 
                 <div class="form-submit">
-                    <button type="submit">Ipadala</button>
+                    <button type="submit" id="contactSubmitBtn">Ipadala</button>
                 </div>
+                <p class="form-message" id="contactFormMessage" role="status" aria-live="polite"></p>
             </form>
         </div>
     </section>
+
+    <div class="contact-inbox-overlay" id="inboxOverlay" role="dialog" aria-modal="true" aria-labelledby="inboxTitle" hidden>
+        <section class="contact-inbox-dialog">
+            <header class="contact-inbox-heading">
+                <div>
+                    <h2 id="inboxTitle">Inbox</h2>
+                    <p>Mga mensahe mo at mga sagot ng admin</p>
+                </div>
+                <div class="contact-inbox-header-actions">
+                    <button type="button" class="contact-inbox-sort" id="sortInbox" aria-pressed="false" aria-label="Pinakabago muna; pindutin para unahin ang pinakaluma">
+                        <i class="fa-solid fa-arrow-down-wide-short" aria-hidden="true"></i>
+                        <span id="inboxSortLabel">Pinakabago</span>
+                    </button>
+                    <button type="button" class="contact-inbox-close" id="closeInbox" aria-label="Isara ang inbox">
+                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </header>
+            <div class="contact-inbox-list" id="contactInbox" aria-live="polite">
+                <p class="contact-inbox-state" role="status">Naglo-load ang iyong inbox...</p>
+            </div>
+        </section>
+    </div>
+
+    <div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+        <section class="notification-panel">
+            <header class="notification-panel-header">
+                <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+                <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                </button>
+            </header>
+            <div class="notification-panel-body" id="notificationList" aria-live="polite">
+                <div class="skeleton-loader skeleton-loader--notifications" role="status" aria-label="Loading notifications" aria-busy="true">
+                    <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+                    <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+                    <div class="skeleton-notification-row"><span class="skeleton-avatar" aria-hidden="true"></span><span class="skeleton-notification-copy"><span class="skeleton-bar" aria-hidden="true"></span><span class="skeleton-bar" aria-hidden="true"></span></span></div>
+                </div>
+            </div>
+        </section>
+    </div>
 </main>
 
 </body>

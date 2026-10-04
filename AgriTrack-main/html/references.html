@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AgriTrack - Mga Sanggunian</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/usersidebar.css">
+    <link rel="stylesheet" href="../css/tutorial.css">
+    <link rel="stylesheet" href="../css/references.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="../css/responsive.css?v=5">
+    <script src="../js/responsive.js" defer></script>
+    <script src="../js/tutorial.js" defer></script>
+    <script src="../js/notifications.js" defer></script>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<aside class="user-sidebar">
+
+    <div class="overlay"></div>
+
+    <div class="sidebar-content">
+
+        <div class="logo">AGRITRACK</div>
+
+        <nav class="menu">
+
+            <!-- DASHBOARD -->
+            <a href="userdashboard.html" class="menu-item">
+
+                <i class="fa-solid fa-table-columns"></i>
+
+                <div>
+                    <span class="title">Dashboard</span>
+                    <span class="subtitle">Dashboard</span>
+                </div>
+
+            </a>
+
+
+            <!-- MGA PANANIM -->
+            <a href="crops.html" class="menu-item">
+
+                <i class="fa-solid fa-seedling"></i>
+
+                <div>
+                    <span class="title">Mga Pananim</span>
+                    <span class="subtitle">Crops</span>
+                </div>
+
+            </a>
+
+
+            <!-- CROP MONITORING -->
+            <a href="monitoring.html" class="menu-item">
+
+                <i class="fa-solid fa-leaf"></i>
+
+                <div>
+                    <span class="title">Subaybayan ang Pananim</span>
+                    <span class="subtitle">Crop Monitoring</span>
+                </div>
+
+            </a>
+
+
+            <!-- CROP RECOMMENDATION -->
+            <a href="recommendation.html" class="menu-item">
+
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+                <div>
+                    <span class="title">Rekomendasyon na Pananim</span>
+                    <span class="subtitle">Crop Recommendation</span>
+                </div>
+
+            </a>
+
+
+            <!-- PEST AND DISEASE PREDICTION -->
+            <a href="prediction.html" class="menu-item">
+
+                <i class="fa-solid fa-bug"></i>
+
+                <div>
+                    <span class="title">Prediksyon sa Peste at Sakit</span>
+                    <span class="subtitle">Pest and Disease Prediction</span>
+                </div>
+
+            </a>
+
+
+            <!-- REFERENCES -->
+            <a href="references.html" class="menu-item active">
+
+                <i class="fa-solid fa-book"></i>
+
+                <div>
+                    <span class="title">Mga Sanggunian</span>
+                    <span class="subtitle">References</span>
+                </div>
+
+            </a>
+
+
+            <!-- CONTACT -->
+            <a href="contact.html" class="menu-item">
+
+                <i class="fa-solid fa-phone"></i>
+
+                <div>
+                    <span class="title">Makipag-ugnayan</span>
+                    <span class="subtitle">Contact</span>
+                </div>
+
+            </a>
+
+            <a href="profile.html" class="menu-item">
+                <i class="fa-solid fa-user"></i>
+                <div>
+                    <span class="title">Profile</span>
+                    <span class="subtitle">Profile</span>
+                </div>
+            </a>
+
+        </nav>
+
+
+        <!-- LOG OUT -->
+
+        <div class="logout-section">
+
+            <a href="login.html" class="menu-item logout">
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                <div>
+                    <span class="title">Mag-log Out</span>
+                    <span class="subtitle">Log Out</span>
+                </div>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN CONTENT -->
+
+<main class="dashboard-main references-main">
+
+
+    <!-- HEADER -->
+
+    <div class="references-header">
+
+        <div>
+
+            <h1>Mga Sanggunian</h1>
+
+            <p>
+                Mga mapagkakatiwalaang sanggunian na ginagamit ng AgriTrack bilang batayan
+                ng impormasyon at rekomendasyon sa pagsasaka.
+            </p>
+
+        </div>
+
+
+        <div class="dashboard-icons">
+            <button type="button" class="icon-btn notification-trigger" id="openNotifications" aria-label="Mga abiso" aria-controls="notificationOverlay" aria-expanded="false">
+                <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                <span class="notification-count" id="notificationCount" hidden></span>
+            </button>
+        </div>
+
+    </div>
+
+
+    <!-- LINE -->
+
+    <div class="references-line"></div>
+
+
+    <div class="reference-section-header">
+        <div>
+            <h2>Mga Kategorya</h2>
+            <p>Browse by topic</p>
+        </div>
+    </div>
+
+
+    <!-- REFERENCE CARDS -->
+
+    <div class="reference-grid">
+
+
+        <!-- CROP MANAGEMENT -->
+
+        <div class="reference-card">
+
+            <div>
+
+                <div class="reference-title">
+
+                    <i class="fa-solid fa-seedling"></i>
+
+                    <h2>Pamamahala ng Pananim</h2>
+
+                </div>
+
+
+                <p>
+                    Mga impormasyon tungkol sa wastong pagtatanim,
+                    pagpapalaki, at pangangalaga ng mga pananim.
+                </p>
+
+            </div>
+
+
+            <a
+                href="crop-references.html"
+                class="reference-button"
+            >
+                <span>Tingnan ang Sanggunian</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+
+        </div>
+
+
+
+        <!-- PEST MANAGEMENT -->
+
+        <div class="reference-card">
+
+            <div>
+
+                <div class="reference-title">
+
+                    <i class="fa-solid fa-bug"></i>
+
+                    <h2>Pamamahala ng Peste</h2>
+
+                </div>
+
+
+                <p>
+                    Mga sanggunian para sa pagkilala sa mga peste at
+                    wastong paraan ng pagkontrol sa mga ito.
+                </p>
+
+            </div>
+
+
+            <a
+                href="pest-references.html"
+                class="reference-button"
+            >
+                <span>Tingnan ang Sanggunian</span>
+                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
+    <section class="notification-panel">
+        <header class="notification-panel-header">
+            <h2 id="notificationTitle"><i class="fa-solid fa-bell" aria-hidden="true"></i> Notifications</h2>
+            <button type="button" class="notification-close-btn" id="closeNotifications" aria-label="Close notifications">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </header>
+        <div class="notification-panel-body" id="notificationList" aria-live="polite"></div>
+    </section>
+</div>
+
+</body>
+</html>
