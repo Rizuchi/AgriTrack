@@ -1,5 +1,6 @@
 <?php
 require_once 'require_user_session.php';
+require_once __DIR__ . '/session_data_cache.php';
 require_once 'db.php';
 
 $conn = getDbConnection();
@@ -68,6 +69,8 @@ try {
     }
 
     $conn->commit();
+    clearSessionDataCachePrefix("calendar:{$userId}:");
+    clearSessionDataCachePrefix("monitoring:{$userId}");
     $response['success']              = true;
     $response['plantedCropId']        = $plantedCropId;
     $response['expectedHarvestDate']  = $expectedHarvestDate;

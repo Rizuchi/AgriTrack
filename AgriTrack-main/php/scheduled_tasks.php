@@ -34,6 +34,21 @@ function taskTips(string $fix, string $prevention, string $followUp, ?string $ac
     return json_encode($tips, JSON_UNESCAPED_UNICODE);
 }
 
+function encodeTaskTips(array $tips): string
+{
+    return json_encode($tips, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+}
+
+function bindScheduledTaskTypes(mysqli_stmt $stmt, int $userId, int $plantId, array $taskTypes): void
+{
+    $values = [$userId, $plantId, ...$taskTypes];
+    $parameters = ['ii' . str_repeat('s', count($taskTypes))];
+    foreach ($values as $index => &$value) {
+        $parameters[] = &$value;
+    }
+    call_user_func_array([$stmt, 'bind_param'], $parameters);
+}
+
 function insertScheduledTask(mysqli $conn, int $userId, int $plantId, string $type, string $dueDate, string $priority, string $tips, bool $urgent = false): void
 {
     $stmt = $conn->prepare(
@@ -49,6 +64,9 @@ function insertScheduledTask(mysqli $conn, int $userId, int $plantId, string $ty
 
 function latestStage(array $crop): string
 {
+    if (preg_match('/Yugto:\s*(seedling|growth|flowering|fruiting|ready)(?:\s*\||$)/iu', $crop['LatestNote'] ?? '', $match)) {
+        return strtolower($match[1]) === 'ready' ? 'fruiting' : strtolower($match[1]);
+    }
     if (empty($crop['ExpectedHarvestDate']) || $crop['ExpectedHarvestDate'] <= $crop['DateOfPlant']) {
         return 'growth';
     }
@@ -56,7 +74,7 @@ function latestStage(array $crop): string
     $harvest = new DateTimeImmutable($crop['ExpectedHarvestDate']);
     $today = new DateTimeImmutable('today');
     $total = max(1, (int) $planted->diff($harvest)->days);
-    $elapsed = max(0, (int) $planted->diff($today)->days);
+    $elapsed = max(0, (int) $planted->diff($today)->format('%r%a'));
     $progress = min(1, $elapsed / $total);
     if ($progress < 0.25) return 'seedling';
     if ($progress < 0.5) return 'growth';
@@ -83,7 +101,13 @@ try {
         exit;
     }
 
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
     $rules = json_decode(file_get_contents(__DIR__ . '/crop_task_rules.json'), true, 512, JSON_THROW_ON_ERROR);
+    $taskTypes = $rules['taskTypes'];
+    $typePlaceholders = implode(',', array_fill(0, count($taskTypes), '?'));
     $conn = getDbConnection();
     $cropStmt = $conn->prepare(
         "SELECT pc.PlantedCropID, pc.PlantLabel, pc.CropID, pc.DateOfPlant, pc.ExpectedHarvestDate, pc.Status,
@@ -103,13 +127,12 @@ try {
     $today = (new DateTimeImmutable('today'))->format('Y-m-d');
     $horizon = taskDate($today, (int) $rules['generateAheadDays']);
     $deleteStmt = $conn->prepare(
-        "DELETE FROM tasks WHERE user_id = ? AND plant_id = ? AND status <> 'Done'
-         AND type IN ('Watering','Fertilizing','Weeding','Pruning','Harvest reminder')"
+        "DELETE FROM tasks WHERE user_id = ? AND plant_id = ? AND status <> 'Done' AND type IN ($typePlaceholders)"
     );
     foreach ($crops as $crop) {
         $plantId = (int) $crop['PlantedCropID'];
         if (in_array($crop['Status'], ['Harvested', 'Archived'], true)) {
-            $deleteStmt->bind_param('ii', $userId, $plantId);
+            bindScheduledTaskTypes($deleteStmt, $userId, $plantId, array_keys($taskTypes));
             $deleteStmt->execute();
             continue;
         }
@@ -121,17 +144,29 @@ try {
 
         $cropRules = array_merge($rules['defaults'], $rules['cropTypes'][$crop['CropType']] ?? [], $rules['crops'][(string) $crop['CropID']] ?? []);
         $stage = latestStage($crop);
-        $wateringDays = (int) ($cropRules['wateringDaysByStage'][$stage] ?? 3);
-        $schedule = [
-            'Watering' => [1, max(1, $wateringDays), 'High', 'Water the crop at soil level; adjust for rainfall and soil moisture.', 'Check soil moisture before watering and keep drainage clear.', 'Check soil moisture again tomorrow.'],
-            'Fertilizing' => [(int) $cropRules['fertilizerStartDays'], max(0, (int) $cropRules['fertilizerIntervalDays']), 'Medium', 'Apply a crop-appropriate fertilizer at the label rate.', 'Use soil-test guidance and avoid over-fertilizing.', 'Check plant response in 7 days.'],
-            'Weeding' => [(int) $cropRules['weedingStartDays'], max(0, (int) $cropRules['weedingIntervalDays']), 'Medium', 'Remove weeds around the crop without disturbing its roots.', 'Mulch and inspect the bed weekly.', 'Re-check for new weeds in 7 days.'],
-            'Pruning' => [(int) $cropRules['pruningStartDays'], max(0, (int) $cropRules['pruningIntervalDays']), 'Low', 'Remove dead or damaged growth using clean tools.', 'Sanitize pruning tools and avoid removing healthy growth.', 'Inspect new growth in 7 days.'],
-        ];
 
         $pastCandidates = [];
         $upcomingCandidates = [];
-        foreach ($schedule as $type => [$startDays, $interval, $priority, $fix, $prevention, $followUp]) {
+        foreach ($taskTypes as $type => $taskRule) {
+            if (!empty($taskRule['dateField'])) {
+                $date = $crop[$taskRule['dateField']] ?? null;
+                if ($date) {
+                    $upcomingCandidates[] = [
+                        'type' => $type,
+                        'date' => $date,
+                        'priority' => $taskRule['priority'],
+                        'tips' => encodeTaskTips($taskRule['tips']),
+                    ];
+                }
+                continue;
+            }
+            $startDays = (int) ($taskRule['startDays'] ?? $cropRules[$taskRule['startDaysSetting']] ?? 0);
+            $interval = isset($taskRule['intervalDaysByStage'])
+                ? (int) ($cropRules[$taskRule['intervalDaysByStage']][$stage] ?? 0)
+                : (int) ($cropRules[$taskRule['intervalDaysSetting']] ?? 0);
+            $interval = max((int) ($taskRule['minimumInterval'] ?? 0), $interval);
+            $priority = $taskRule['priority'];
+            $tips = encodeTaskTips($taskRule['tips']);
             if ($interval <= 0) continue;
             $firstDate = new DateTimeImmutable(taskDate($crop['DateOfPlant'], $startDays));
             $todayDate = new DateTimeImmutable($today);
@@ -155,7 +190,7 @@ try {
                     'type' => $type,
                     'date' => $lastPast->format('Y-m-d'),
                     'priority' => $priority,
-                    'tips' => taskTips($fix, $prevention, $followUp),
+                    'tips' => $tips,
                 ];
             }
             if ($nextDate->format('Y-m-d') <= $horizon) {
@@ -163,22 +198,9 @@ try {
                     'type' => $type,
                     'date' => $nextDate->format('Y-m-d'),
                     'priority' => $priority,
-                    'tips' => taskTips($fix, $prevention, $followUp),
+                    'tips' => $tips,
                 ];
             }
-        }
-
-        if (!empty($crop['ExpectedHarvestDate'])) {
-            $upcomingCandidates[] = [
-                'type' => 'Harvest reminder',
-                'date' => $crop['ExpectedHarvestDate'],
-                'priority' => 'High',
-                'tips' => taskTips(
-                    'Harvest when the crop reaches maturity and shows the expected signs of readiness.',
-                    'Monitor the crop near its expected harvest date and use clean harvesting tools.',
-                    'Re-check maturity in 2 days if it is not ready.'
-                ),
-            ];
         }
 
         usort($pastCandidates, static fn(array $a, array $b): int => $b['date'] <=> $a['date']);
@@ -204,10 +226,9 @@ try {
         }
 
         $existingStmt = $conn->prepare(
-            "SELECT id, type, due_date FROM tasks WHERE user_id = ? AND plant_id = ? AND status <> 'Done'
-             AND type IN ('Watering','Fertilizing','Weeding','Pruning','Harvest reminder')"
+            "SELECT id, type, due_date FROM tasks WHERE user_id = ? AND plant_id = ? AND status <> 'Done' AND type IN ($typePlaceholders)"
         );
-        $existingStmt->bind_param('ii', $userId, $plantId);
+        bindScheduledTaskTypes($existingStmt, $userId, $plantId, array_keys($taskTypes));
         $existingStmt->execute();
         $existingTasks = $existingStmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $existingStmt->close();
@@ -304,9 +325,52 @@ try {
     $taskStmt->execute();
     $tasks = $taskStmt->get_result()->fetch_all(MYSQLI_ASSOC);
     $taskStmt->close();
+    foreach ($tasks as &$task) {
+        $task['typeLabel'] = $taskTypes[$task['type']]['label'] ?? $task['type'];
+    }
+    unset($task);
+
+    $calendarStmt = $conn->prepare(
+        "SELECT cal.CalendarID, cal.TaskType, cal.StartDate, cal.EndDate, cal.Status,
+                pc.PlantLabel, c.CropName
+         FROM calendar cal
+         LEFT JOIN planted_crop pc ON pc.PlantedCropID = cal.PlantedCropID AND pc.UserID = cal.UserID
+         LEFT JOIN crops c ON c.CropID = pc.CropID
+         WHERE cal.UserID = ? AND cal.Status = 'Pending'
+         ORDER BY cal.StartDate ASC, cal.CalendarID ASC"
+    );
+    $calendarStmt->bind_param('i', $userId);
+    $calendarStmt->execute();
+    $calendarTasks = $calendarStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $calendarStmt->close();
+
+    $contactReplies = [];
+    $replyStmt = $conn->prepare(
+        'SELECT r.ReplyID, r.reply_text, r.created_at, c.ContactID
+         FROM contact_message_replies r
+         JOIN contact_messages c ON c.ContactID = r.ContactID
+         WHERE c.UserID = ?
+         ORDER BY r.created_at DESC, r.ReplyID DESC LIMIT 20'
+    );
+    if (!$replyStmt && $conn->errno !== 1146) {
+        throw new RuntimeException('Unable to load contact reply notifications.');
+    }
+    if ($replyStmt) {
+        $replyStmt->bind_param('i', $userId);
+        $replyStmt->execute();
+        $contactReplies = $replyStmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $replyStmt->close();
+    }
+
     $conn->close();
 
-    echo json_encode(['success' => true, 'tasks' => $tasks, 'reminderSent' => $reminderSent]);
+    echo json_encode([
+        'success' => true,
+        'tasks' => $tasks,
+        'calendarTasks' => $calendarTasks,
+        'contactReplies' => $contactReplies,
+        'reminderSent' => $reminderSent,
+    ], JSON_UNESCAPED_UNICODE);
 } catch (Throwable $exception) {
     if (isset($conn) && $conn instanceof mysqli) $conn->close();
     error_log('Scheduled tasks error: ' . $exception->getMessage());

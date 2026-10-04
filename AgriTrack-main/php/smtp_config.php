@@ -8,4 +8,5 @@ return [
     'password' => env('SMTP_PASSWORD', ''),
     'from_email' => env('SMTP_FROM_EMAIL', ''),
     'from_name' => env('SMTP_FROM_NAME', 'noreply.AgriTrack'),
+    'contact_recipient' => env('CONTACT_RECIPIENT_EMAIL', 'agritrack.ph@gmail.com'),
 ];

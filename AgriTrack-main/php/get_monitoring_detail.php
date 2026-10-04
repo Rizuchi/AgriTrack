@@ -50,6 +50,7 @@ $noteStmt->close();
 
 $condition = 'Walang Tala';
 $pest = 'Wala';
+$growthStage = null;
 
 if ($note) {
     if (preg_match('/Kalagayan:\s*(.*?)(\s*\||$)/iu', $note['Message'], $condMatch)) {
@@ -63,6 +64,9 @@ if ($note) {
         if ($pestText !== '') {
             $pest = $pestText;
         }
+    }
+    if (preg_match('/Yugto:\s*(.*?)(\s*\||$)/iu', $note['Message'], $stageMatch)) {
+        $growthStage = trim($stageMatch[1]);
     }
 }
 
@@ -117,6 +121,7 @@ $conn->close();
 $crop['ImageURL'] = '../php/crop_image.php?id=' . (int) $crop['CropID'];
 $crop['Condition'] = $condition;
 $crop['PestOrDisease'] = $pest;
+$crop['GrowthStageCode'] = $growthStage;
 
 echo json_encode([
     'success' => true,

@@ -28,7 +28,7 @@ function formatSeasonRange(string $start, string $end, array $monthsPH): string
 }
 
 $stmt = $conn->prepare(
-    "SELECT c.CropID, c.SeasonID, c.CropName, c.EnglishName, c.CropType,
+    "SELECT c.CropID, c.SeasonID, c.CropName, c.EnglishName, c.CropType, c.Reference,
             c.Reason, c.MinDaysToHarvest, c.MaxDaysToHarvest,
             s.SeasonType, s.StartDate AS SeasonStart, s.EndDate AS SeasonEnd
      FROM crops c
@@ -82,6 +82,7 @@ echo json_encode([
         'cropName'         => $row['CropName'],
         'englishName'      => $row['EnglishName'],
         'cropType'         => $row['CropType'],
+        'reference'        => $row['Reference'],
         'reason'           => $row['Reason'],
         'minDaysToHarvest' => (int) $row['MinDaysToHarvest'],
         'maxDaysToHarvest' => (int) $row['MaxDaysToHarvest'],

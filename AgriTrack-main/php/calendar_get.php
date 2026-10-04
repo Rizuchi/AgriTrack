@@ -1,5 +1,6 @@
 <?php
 require_once 'require_user_session.php';
+require_once __DIR__ . '/session_data_cache.php';
 require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
@@ -17,16 +18,26 @@ if ($month < 1 || $month > 12) {
     exit;
 }
 
-$userId = $_SESSION['UserID'];
+$userId = (int) $_SESSION['UserID'];
+$cacheKey = "calendar:{$userId}:{$year}:{$month}";
+$cachedResponse = getSessionDataCache($cacheKey);
+if ($cachedResponse !== null) {
+    echo json_encode($cachedResponse);
+    exit;
+}
+
 $monthStart = sprintf('%04d-%02d-01', $year, $month);
 $monthEnd = date('Y-m-t', strtotime($monthStart));
 
 $conn = getDbConnection();
 $stmt = $conn->prepare(
-    "SELECT CalendarID, TaskType, StartDate, EndDate, Status
-     FROM calendar
-     WHERE UserID = ? AND StartDate BETWEEN ? AND ?
-     ORDER BY StartDate ASC"
+    "SELECT cal.CalendarID, cal.TaskType, cal.StartDate, cal.EndDate, cal.Status,
+            pc.PlantLabel, c.CropName
+     FROM calendar cal
+     LEFT JOIN planted_crop pc ON pc.PlantedCropID = cal.PlantedCropID AND pc.UserID = cal.UserID
+     LEFT JOIN crops c ON c.CropID = pc.CropID
+     WHERE cal.UserID = ? AND cal.StartDate BETWEEN ? AND ?
+     ORDER BY cal.StartDate ASC"
 );
 $stmt->bind_param('iss', $userId, $monthStart, $monthEnd);
 $stmt->execute();
@@ -74,11 +85,14 @@ $stmt->close();
 
 $conn->close();
 
-echo json_encode([
+$response = [
     'success' => true,
     'year' => $year,
     'month' => $month,
     'tasks' => $tasks,
     'notes' => $notes,
     'harvests' => $harvests,
-]);
+];
+setSessionDataCache($cacheKey, $response);
+
+echo json_encode($response);

@@ -1,5 +1,6 @@
 <?php
 require_once 'require_user_session.php';
+require_once __DIR__ . '/session_data_cache.php';
 require_once 'db.php';
 
 header('Content-Type: application/json; charset=utf-8');
@@ -12,12 +13,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 const MONITORING_COOLDOWN_SECONDS = 4;
 
-function replaceMonitoringSegments(string $message, string $condition, string $pest, string $additionalNote): string
+function replaceMonitoringSegments(string $message, string $condition, string $pest, string $additionalNote, string $growthStage): string
 {
     $updates = [
         'Kalagayan' => $condition,
         'Peste/Sakit' => strcasecmp($pest, 'Wala') === 0 ? '' : $pest,
         'Tala' => $additionalNote,
+        'Yugto' => $growthStage,
     ];
     $segments = [];
     $seen = [];
@@ -53,12 +55,14 @@ $plantedCropId = (int) ($input['plantedCropId'] ?? 0);
 $condition = trim($input['condition'] ?? '');
 $pest = trim($input['pest'] ?? 'Wala');
 $additionalNote = trim($input['additionalNote'] ?? '');
+$growthStage = trim($input['growthStage'] ?? '');
 $markHarvested = !empty($input['markHarvested']);
 $userId = (int) ($_SESSION['UserID'] ?? 0);
+$validGrowthStages = ['seedling', 'growth', 'flowering', 'fruiting', 'ready'];
 
-if ($plantedCropId <= 0 || $condition === '') {
+if ($plantedCropId <= 0 || $condition === '' || !in_array($growthStage, $validGrowthStages, true)) {
     http_response_code(400);
-    echo json_encode(['success' => false, 'message' => 'Condition and crop are required.']);
+    echo json_encode(['success' => false, 'message' => 'Pumili ng wastong yugto ng paglago at kalagayan ng pananim.']);
     exit;
 }
 
@@ -97,6 +101,9 @@ if (!$exists) {
 }
 
 $parts = ['Kalagayan: ' . $condition];
+if ($growthStage !== '') {
+    $parts[] = 'Yugto: ' . $growthStage;
+}
 if ($pest !== '' && strcasecmp($pest, 'Wala') !== 0) {
     $parts[] = 'Peste/Sakit: ' . $pest;
 }
@@ -117,7 +124,7 @@ $todayNote = $todayStmt->get_result()->fetch_assoc();
 $todayStmt->close();
 
 if ($todayNote) {
-    $message = replaceMonitoringSegments($todayNote['Message'], $condition, $pest, $additionalNote);
+    $message = replaceMonitoringSegments($todayNote['Message'], $condition, $pest, $additionalNote, $growthStage);
     $saveStmt = $conn->prepare('UPDATE notes SET Message = ?, TimeCreated = NOW() WHERE NotesID = ?');
     $saveStmt->bind_param('si', $message, $todayNote['NotesID']);
 } else {
@@ -155,11 +162,28 @@ if ($markHarvested) {
         exit;
     }
     $statusStmt->close();
+} else {
+    $status = $growthStage === 'ready' ? 'Ready to Harvest' : 'Growing';
+    $statusStmt = $conn->prepare(
+        'UPDATE planted_crop SET Status = ? WHERE PlantedCropID = ? AND UserID = ? AND Status <> \'Harvested\''
+    );
+    $statusStmt->bind_param('sii', $status, $plantedCropId, $userId);
+    if (!$statusStmt->execute()) {
+        $statusStmt->close();
+        $conn->rollback();
+        http_response_code(500);
+        echo json_encode(['success' => false, 'message' => 'Failed to update growth stage.']);
+        $conn->close();
+        exit;
+    }
+    $statusStmt->close();
 }
 
 $conn->commit();
 $conn->close();
 
+clearSessionDataCachePrefix("calendar:{$userId}:");
+clearSessionDataCachePrefix("monitoring:{$userId}");
 $_SESSION['lastMonitoringSave'][$plantedCropId] = time();
 
 echo json_encode(['success' => true, 'message' => 'Monitoring update saved.']);

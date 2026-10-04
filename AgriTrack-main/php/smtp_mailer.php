@@ -9,7 +9,7 @@ final class SmtpMailer
         $this->config = require __DIR__ . '/smtp_config.php';
     }
 
-    public function send(string $recipient, string $subject, string $html): bool
+    public function send(string $recipient, string $subject, string $html, ?string $replyTo = null): bool
     {
         $socket = @fsockopen($this->config['host'], (int) $this->config['port'], $errorNumber, $errorMessage, 15);
         if (!$socket) {
@@ -33,6 +33,7 @@ final class SmtpMailer
 
             $message = 'From: ' . $this->config['from_name'] . ' <' . $this->config['from_email'] . ">\r\n"
                 . 'To: <' . $recipient . ">\r\n"
+                . ($replyTo !== null && filter_var($replyTo, FILTER_VALIDATE_EMAIL) ? 'Reply-To: <' . $replyTo . ">\r\n" : '')
                 . 'Subject: ' . $subject . "\r\n"
                 . "MIME-Version: 1.0\r\nContent-Type: text/html; charset=UTF-8\r\n\r\n"
                 . $html;

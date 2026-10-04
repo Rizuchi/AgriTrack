@@ -44,7 +44,7 @@ if ($conn->connect_error) {
 
 $encryptedUserName = encryptDeterministic($userName);
 
-$stmt = $conn->prepare("SELECT UserID, fname, lname, userName, password, role, accStatus, isActive FROM users WHERE userName = ?");
+$stmt = $conn->prepare("SELECT UserID, fname, lname, userName, password, role, accStatus, isActive, sessionStatus FROM users WHERE userName = ?");
 $stmt->bind_param('s', $encryptedUserName);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -74,11 +74,6 @@ if ($user['accStatus'] !== 'Active' || !$user['isActive']) {
     exit;
 }
 
-$updateStmt = $conn->prepare("UPDATE users SET sessionStatus = FALSE WHERE UserID = ?");
-$updateStmt->bind_param('i', $user['UserID']);
-$updateStmt->execute();
-$updateStmt->close();
-
 $conn->close();
 
 $_SESSION['UserID'] = $user['UserID'];
@@ -86,6 +81,7 @@ $_SESSION['userName'] = decryptData($user['userName']);
 $_SESSION['fname'] = decryptData($user['fname']);
 $_SESSION['lname'] = decryptData($user['lname']);
 $_SESSION['role'] = $user['role'];
+$_SESSION['sessionStatus'] = (int) $user['sessionStatus'];
 
 $redirectMap = [
     'Admin'      => 'admindashboard.html',

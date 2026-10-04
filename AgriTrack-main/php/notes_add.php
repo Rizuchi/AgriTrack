@@ -1,5 +1,6 @@
 <?php
 require_once 'require_user_session.php';
+require_once __DIR__ . '/session_data_cache.php';
 require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -224,6 +225,8 @@ if (!$ok) {
 
 $conn->close();
 
+clearSessionDataCachePrefix("calendar:{$userId}:");
+clearSessionDataCachePrefix("monitoring:{$userId}");
 $_SESSION['lastNoteSave'][$saveKey] = time();
 
 echo json_encode([

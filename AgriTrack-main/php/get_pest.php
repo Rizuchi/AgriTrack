@@ -10,7 +10,7 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 if ($id) {
 
     $stmt = $conn->prepare("
-        SELECT p.PestDiseaseID, p.Name, p.Type, p.Info, p.ManagementTips, p.Symptoms,
+        SELECT p.PestDiseaseID, p.Name, p.Type, p.Info, p.ManagementTips, p.Symptoms, p.Reference,
                s.SeasonType
         FROM pest_diseases p
         LEFT JOIN seasons s ON p.SeasonID = s.SeasonID
@@ -46,7 +46,7 @@ if ($id) {
 
 
 $sql = "
-    SELECT p.PestDiseaseID, p.Name, p.Type, p.Info, p.ManagementTips, p.Symptoms,
+    SELECT p.PestDiseaseID, p.Name, p.Type, p.Info, p.ManagementTips, p.Symptoms, p.Reference,
            s.SeasonType
     FROM pest_diseases p
     LEFT JOIN seasons s ON p.SeasonID = s.SeasonID

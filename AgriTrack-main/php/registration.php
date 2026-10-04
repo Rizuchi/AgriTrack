@@ -35,10 +35,17 @@ $contact = trim($input['contact'] ?? '');
 $password = $input['password'] ?? '';
 $confirmPassword = $input['confirmPassword'] ?? '';
 $isAdminRequest = isset($_SESSION['role']) && $_SESSION['role'] === 'Admin';
+$adminPassword = (string) ($input['adminPassword'] ?? '');
 
-if ($fname === '' || $lname === '' || $userName === '' || (!$isAdminRequest && ($email === '' || $contact === '')) || $password === '' || $confirmPassword === '') {
+if ($fname === '' || $lname === '' || $userName === '' || $email === '' || $contact === '' || $password === '' || $confirmPassword === '') {
     http_response_code(400);
     echo json_encode(['success' => false, 'message' => 'Please fill in all required fields.']);
+    exit;
+}
+
+if ($isAdminRequest && $adminPassword === '') {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Admin password confirmation is required.']);
     exit;
 }
 
@@ -87,6 +94,42 @@ if ($conn->connect_error) {
     http_response_code(500);
     echo json_encode(['success' => false, 'message' => 'Database connection failed.']);
     exit;
+}
+
+if ($isAdminRequest) {
+    $adminUserId = (int) ($_SESSION['UserID'] ?? 0);
+    $adminStmt = $conn->prepare('SELECT password, role, accStatus, isActive FROM users WHERE UserID = ? LIMIT 1');
+
+    if ($adminUserId <= 0 || !$adminStmt) {
+        $conn->close();
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Admin access required.']);
+        exit;
+    }
+
+    $adminStmt->bind_param('i', $adminUserId);
+    $adminStmt->execute();
+    $admin = $adminStmt->get_result()->fetch_assoc();
+    $adminStmt->close();
+
+    if (
+        !$admin
+        || strcasecmp(trim((string) $admin['role']), 'Admin') !== 0
+        || strcasecmp(trim((string) $admin['accStatus']), 'Active') !== 0
+        || !(bool) $admin['isActive']
+    ) {
+        $conn->close();
+        http_response_code(403);
+        echo json_encode(['success' => false, 'message' => 'Active admin access required.']);
+        exit;
+    }
+
+    if (!password_verify($adminPassword, $admin['password'])) {
+        $conn->close();
+        http_response_code(401);
+        echo json_encode(['success' => false, 'message' => 'Incorrect admin password.']);
+        exit;
+    }
 }
 
 $encryptedUserName = encryptDeterministic($userName);

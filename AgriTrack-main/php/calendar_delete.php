@@ -1,5 +1,6 @@
 <?php
 require_once 'require_user_session.php';
+require_once 'session_data_cache.php';
 require_once 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -24,6 +25,7 @@ $stmt = $conn->prepare("DELETE FROM calendar WHERE CalendarID = ? AND UserID = ?
 $stmt->bind_param('ii', $calendarId, $userId);
 
 if ($stmt->execute() && $stmt->affected_rows > 0) {
+    clearSessionDataCachePrefix("calendar:{$userId}:");
     echo json_encode(['success' => true, 'message' => 'Task deleted.']);
 } else {
     http_response_code(404);

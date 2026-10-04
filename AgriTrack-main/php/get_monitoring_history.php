@@ -60,6 +60,7 @@ while ($row = $result->fetch_assoc()) {
         'entryDate' => $row['EntryDate'],
         'timeCreated' => $row['TimeCreated'],
         'condition' => extractSegment($row['Message'], 'Kalagayan'),
+        'growthStage' => extractSegment($row['Message'], 'Yugto'),
         'pest' => extractSegment($row['Message'], 'Peste/Sakit'),
         'note' => extractSegment($row['Message'], 'Tala'),
     ];

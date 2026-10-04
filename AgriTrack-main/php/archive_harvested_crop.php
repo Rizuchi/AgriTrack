@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/require_user_session.php';
+require_once __DIR__ . '/session_data_cache.php';
 require_once __DIR__ . '/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -51,4 +52,6 @@ if ($crop['Status'] !== 'Archived') {
 }
 
 $conn->close();
+clearSessionDataCachePrefix("calendar:{$userId}:");
+clearSessionDataCachePrefix("monitoring:{$userId}");
 echo json_encode(['success' => true]);

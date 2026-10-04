@@ -26,6 +26,63 @@
     }
   },
   "crops": {},
+  "taskTypes": {
+    "Watering": {
+      "label": "Pagdidilig",
+      "startDays": 1,
+      "intervalDaysByStage": "wateringDaysByStage",
+      "minimumInterval": 1,
+      "priority": "High",
+      "tips": {
+        "fix": "Diligan ang lupa sa paligid ng tanim; ibagay ang dami ng tubig sa ulan at pagkabasa ng lupa.",
+        "prevention": "Suriin muna ang halumigmig ng lupa bago magdilig at tiyaking maayos ang daluyan ng tubig.",
+        "followUp": "Suriin muli bukas kung kailangan ng tubig ang lupa."
+      }
+    },
+    "Fertilizing": {
+      "label": "Pagpapataba",
+      "startDaysSetting": "fertilizerStartDays",
+      "intervalDaysSetting": "fertilizerIntervalDays",
+      "priority": "Medium",
+      "tips": {
+        "fix": "Maglagay ng patabang angkop sa tanim ayon sa tamang dami na nakasaad sa etiketa.",
+        "prevention": "Gumamit ng resulta ng pagsusuri ng lupa bilang gabay at iwasan ang sobrang pagpapataba.",
+        "followUp": "Suriin ang tugon ng halaman makalipas ang 7 araw."
+      }
+    },
+    "Weeding": {
+      "label": "Pag-aalis ng Damo",
+      "startDaysSetting": "weedingStartDays",
+      "intervalDaysSetting": "weedingIntervalDays",
+      "priority": "Medium",
+      "tips": {
+        "fix": "Alisin ang mga damo sa paligid ng tanim nang hindi nasisira ang mga ugat nito.",
+        "prevention": "Lagyan ng sapin ang lupa at suriin ang taniman linggu-linggo.",
+        "followUp": "Suriin muli makalipas ang 7 araw kung may tumubong damo."
+      }
+    },
+    "Pruning": {
+      "label": "Pagpuputol ng Sanga",
+      "startDaysSetting": "pruningStartDays",
+      "intervalDaysSetting": "pruningIntervalDays",
+      "priority": "Low",
+      "tips": {
+        "fix": "Putulin ang mga patay o sirang bahagi gamit ang malinis na kagamitan.",
+        "prevention": "Linisin at disimpektahin ang mga panggupit; iwasang putulin ang malulusog na bahagi.",
+        "followUp": "Suriin ang bagong tubo makalipas ang 7 araw."
+      }
+    },
+    "Harvest reminder": {
+      "label": "Paalala sa Pag-aani",
+      "dateField": "ExpectedHarvestDate",
+      "priority": "High",
+      "tips": {
+        "fix": "Anihin ang pananim kapag hinog na ito at nagpapakita ng mga palatandaan ng kahandaan sa pag-aani.",
+        "prevention": "Bantayan ang pananim habang papalapit ang inaasahang petsa ng anihan at gumamit ng malinis na kagamitan.",
+        "followUp": "Suriin muli ang pagkahinog makalipas ang 2 araw kung hindi pa ito handang anihin."
+      }
+    }
+  },
   "pests": {
     "aphid": {
       "action": "Tanggalin ang mga dahong sobrang apektado at gumamit ng aprubadong insecticidal soap.",

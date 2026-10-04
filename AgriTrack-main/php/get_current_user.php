@@ -4,4 +4,5 @@ echo json_encode([
     'success' => true,
     'fname' => $_SESSION['fname'] ?? '',
     'lname' => $_SESSION['lname'] ?? '',
+    'sessionStatus' => (int) ($_SESSION['sessionStatus'] ?? 0),
 ]);

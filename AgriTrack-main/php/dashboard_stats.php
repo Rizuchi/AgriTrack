@@ -43,6 +43,27 @@ $stmt->bind_param('i', $userId);
 $stmt->execute();
 $pestAlerts = (int) $stmt->get_result()->fetch_assoc()['total'];
 $stmt->close();
+$stmt = $conn->prepare(
+        "SELECT COALESCE(NULLIF(pc.PlantLabel, ''), c.CropName) AS cropName
+         FROM notes n
+         JOIN planted_crop pc ON pc.PlantedCropID = n.PlantedCropID
+         JOIN crops c ON c.CropID = pc.CropID
+         WHERE n.UserID = ?
+             AND LOWER(n.Message) LIKE '%kalagayan:%'
+             AND LOWER(n.Message) LIKE '%peste%'
+             AND NOT EXISTS (
+                     SELECT 1
+                     FROM notes newer
+                     WHERE newer.UserID = n.UserID
+                         AND newer.PlantedCropID = n.PlantedCropID
+                         AND newer.TimeCreated > n.TimeCreated
+             )
+         ORDER BY cropName"
+);
+$stmt->bind_param('i', $userId);
+$stmt->execute();
+$pestCropNames = array_column($stmt->get_result()->fetch_all(MYSQLI_ASSOC), 'cropName');
+$stmt->close();
 $stmt = $conn->prepare("SELECT COUNT(*) AS total FROM calendar WHERE UserID = ? AND Status = 'Pending'");
 $stmt->bind_param('i', $userId);
 $stmt->execute();
@@ -56,5 +77,6 @@ echo json_encode([
     'totalCrops' => $totalCrops,
     'activeMonitoring' => $activeMonitoring,
     'pestAlerts' => $pestAlerts,
+    'pestCropNames' => $pestCropNames,
     'scheduledTasks' => $scheduledTasks,
 ]);
