@@ -179,7 +179,7 @@ body::-webkit-scrollbar {
 
 .message-table {
     width: 100%;
-    min-width: 800px;
+    min-width: 900px;
     border-collapse: separate;
     border-spacing: 0;
     table-layout: auto;
@@ -248,32 +248,282 @@ body::-webkit-scrollbar {
 
 .message-table th:nth-child(1),
 .message-table td:nth-child(1) {
-    width: 15%;
+    width: 18%;
 }
 
 .message-table th:nth-child(2),
 .message-table td:nth-child(2) {
-    width: 15%;
+    width: 20%;
 }
 
 .message-table th:nth-child(3),
 .message-table td:nth-child(3) {
-    width: 23%;
+    width: 36%;
 }
 
 .message-table th:nth-child(4),
 .message-table td:nth-child(4) {
-    width: 18%;
+    width: 16%;
 }
 
 .message-table th:nth-child(5),
 .message-table td:nth-child(5) {
-    width: 15%;
+    width: 10%;
 }
 
-.message-table th:nth-child(6),
-.message-table td:nth-child(6) {
-    width: 14%;
+.message-table td.contact-message-preview {
+    max-width: 360px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    margin: 12px 0 24px;
+    color: #53665e;
+    font-size: 13px;
+}
+
+.message-pagination label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.message-pagination select {
+    min-height: 36px;
+    padding: 0 26px 0 8px;
+    border: 1px solid #cbd6cb;
+    border-radius: 6px;
+    background: #fff;
+    color: #0d241d;
+    font: inherit;
+}
+
+.message-pagination p {
+    min-width: 96px;
+    text-align: right;
+}
+
+.message-page-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.message-page-actions button {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #cbd6cb;
+    border-radius: 6px;
+    background: #fff;
+    color: #174b35;
+    cursor: pointer;
+}
+
+.message-page-actions button:disabled {
+    color: #9aa79f;
+    cursor: not-allowed;
+}
+
+.contact-message-overlay[hidden] {
+    display: none;
+}
+
+.contact-message-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(13, 36, 29, 0.55);
+}
+
+.contact-message-dialog {
+    width: min(100%, 620px);
+    max-height: min(80vh, 720px);
+    overflow-y: auto;
+    padding: 24px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 60px rgba(0, 0, 0, 0.2);
+}
+
+.contact-message-dialog header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.contact-message-dialog h2 {
+    font-size: 22px;
+}
+
+.contact-message-dialog header p,
+.contact-message-email,
+.contact-message-date {
+    color: #53665e;
+    font-size: 13px;
+}
+
+.contact-message-dialog header button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 4px;
+    background: #edf3e6;
+    color: #0d241d;
+    cursor: pointer;
+}
+
+.contact-message-email {
+    margin-top: 20px;
+}
+
+.contact-message-date {
+    margin-top: 4px;
+}
+
+.contact-message-content {
+    margin: 20px 0;
+    padding: 16px;
+    border-left: 3px solid #93b84c;
+    background: #f5f8ef;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+}
+
+.contact-message-replies {
+    margin: 20px 0;
+}
+
+.contact-message-replies h3 {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.contact-reply-empty {
+    color: #65756d;
+    font-size: 13px;
+}
+
+.contact-reply-item {
+    padding: 12px 0;
+    border-top: 1px solid #e2e9e2;
+}
+
+.contact-reply-heading,
+.contact-reply-delivery {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.contact-reply-heading {
+    font-size: 12px;
+}
+
+.contact-reply-heading time {
+    color: #65756d;
+}
+
+.contact-reply-body {
+    margin-top: 8px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    line-height: 1.5;
+}
+
+.contact-reply-delivery {
+    margin-top: 10px;
+    color: #365820;
+    font-size: 12px;
+}
+
+.contact-reply-delivery.is-pending {
+    color: #9a4a22;
+}
+
+.contact-reply-retry {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.contact-reply-form {
+    display: grid;
+    gap: 8px;
+    padding-top: 16px;
+    border-top: 1px solid #dce5dc;
+}
+
+.contact-reply-form label {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.contact-reply-form textarea {
+    width: 100%;
+    min-height: 110px;
+    padding: 10px 12px;
+    border: 1px solid #aab8ae;
+    border-radius: 6px;
+    color: #0d241d;
+    font: inherit;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.contact-reply-form textarea:focus {
+    border-color: #52733e;
+    outline: 2px solid rgba(82, 115, 62, 0.2);
+}
+
+.contact-reply-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.contact-reply-actions p {
+    color: #365820;
+    font-size: 12px;
+}
+
+.contact-reply-actions p.is-error {
+    color: #a33d2b;
+}
+
+.contact-reply-actions button {
+    min-height: 42px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 6px;
+    background: #174b35;
+    color: #fff;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.contact-reply-actions button:disabled,
+.contact-reply-retry:disabled {
+    cursor: wait;
+    opacity: 0.65;
 }
 
 .message-action {
@@ -297,6 +547,50 @@ body::-webkit-scrollbar {
     content: "";
     display: block;
     height: 30px;
+}
+
+.message-status-tabs {
+    display: flex;
+    gap: 8px;
+    margin: 0 0 22px;
+    border-bottom: 1px solid #dce5dc;
+}
+
+.message-status-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 42px;
+    padding: 0 14px;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #53665e;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.message-status-tab:hover,
+.message-status-tab.is-active {
+    color: #174b35;
+}
+
+.message-status-tab.is-active {
+    border-bottom-color: #7c9b5c;
+}
+
+.message-status-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #edf3e6;
+    color: #174b35;
+    font-size: 11px;
 }
 
 @media (max-width: 1150px) {
@@ -367,6 +661,23 @@ body::-webkit-scrollbar {
     .message-table {
         min-width: 1000px;
     }
+
+    .message-pagination {
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .message-status-tabs {
+        gap: 0;
+    }
+
+    .message-status-tab {
+        flex: 1;
+        justify-content: center;
+        padding: 0 6px;
+        font-size: 12px;
+    }
 }
 
 @media (max-width: 450px) {
@@ -376,5 +687,23 @@ body::-webkit-scrollbar {
 
     .message-table {
         min-width: 1000px;
+    }
+
+    .contact-message-overlay {
+        padding: 10px;
+    }
+
+    .contact-message-dialog {
+        max-height: calc(100dvh - 20px);
+        padding: 18px;
+    }
+
+    .contact-reply-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .contact-reply-actions button {
+        width: 100%;
     }
 }

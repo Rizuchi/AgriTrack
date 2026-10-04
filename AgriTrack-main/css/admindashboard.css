@@ -153,8 +153,8 @@ body {
 /* ---------- Section titles ---------- */
 
 .section-title {
-    margin-top: 36px;
-    margin-bottom: 16px;
+    margin-top: 0;
+    margin-bottom: 0;
     color: var(--ink);
     font-size: 18px;
     font-weight: 700;
@@ -162,11 +162,29 @@ body {
     line-height: 1.3;
 }
 
+.dashboard-overview {
+    margin-top: 30px;
+    margin-bottom: 18px;
+}
+
+.eyebrow {
+    margin-bottom: 6px;
+    color: var(--ink-faint);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.compact-title {
+    margin: 0;
+}
+
 /* ---------- Statistics ---------- */
 
 .statistics {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 16px;
     width: 100%;
 }
@@ -175,9 +193,9 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 22px;
-    min-height: 148px;
-    padding: 20px;
+    gap: 18px;
+    min-height: 150px;
+    padding: 18px 16px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
@@ -234,6 +252,53 @@ body {
 
 .stat-card--highlight .stat-number {
     color: #ffffff;
+}
+
+/* ---------- Compact analytics panels ---------- */
+
+/* ---------- Insights panels ---------- */
+
+.reports-grid {
+    display: grid;
+    grid-template-columns: 1.55fr 0.95fr;
+    gap: 20px;
+    width: 100%;
+    margin-top: 28px;
+}
+
+.report-panel {
+    width: 100%;
+    min-height: 360px;
+    padding: 18px 18px 14px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+}
+
+.report-panel h3 {
+    margin-bottom: 12px;
+    color: var(--ink);
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.chart-area {
+    position: relative;
+    width: 100%;
+    height: 280px;
+}
+
+.doughnut-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart-area canvas {
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* ---------- Chart ---------- */
@@ -312,7 +377,11 @@ body {
     }
 
     .statistics {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .reports-grid {
+        grid-template-columns: 1fr;
     }
 
     .welcome-banner {
@@ -329,6 +398,10 @@ body {
         margin-left: 0;
         width: 100%;
         padding: 16px 16px 32px;
+    }
+
+    .statistics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .dashboard-header {
@@ -358,6 +431,11 @@ body {
         min-height: 128px;
         padding: 16px;
         gap: 16px;
+    }
+
+    .report-panel {
+        min-height: 320px;
+        padding: 16px 14px 12px;
     }
 
     .chart-card {

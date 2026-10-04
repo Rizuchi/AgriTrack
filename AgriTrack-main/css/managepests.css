@@ -1,3 +1,82 @@
+.relationship-help {
+    margin: -1px 0 6px;
+    color: #5d695b;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.relationship-group {
+    grid-column: 1 / -1;
+}
+
+.relationship-search {
+    height: 36px !important;
+    line-height: normal !important;
+    border-color: #9aa895 !important;
+    border-radius: 6px !important;
+    padding: 0 10px !important;
+}
+
+.relationship-selection-count {
+    margin: 6px 0 5px;
+    color: #425830;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.relationship-options {
+    max-height: 145px;
+    overflow-y: auto;
+    border: 1px solid #c4cebb;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.relationship-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 38px;
+    margin: 0 !important;
+    padding: 7px 10px;
+    border-bottom: 1px solid #edf0e9;
+    cursor: pointer;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+.relationship-option:last-child {
+    border-bottom: 0;
+}
+
+.relationship-option:hover {
+    background: #f5f8ef;
+}
+
+.relationship-option input {
+    width: 16px !important;
+    height: 16px !important;
+    flex: 0 0 16px;
+    margin: 0;
+    accent-color: #52733e;
+}
+
+.relationship-option span {
+    flex: 1;
+}
+
+.relationship-option small {
+    color: #6a7565;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.relationship-empty {
+    padding: 12px;
+    color: #65705f;
+    font-size: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -83,14 +162,26 @@ body::-webkit-scrollbar {
 
 .pests-toolbar {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 35px;
+    gap: 16px;
     margin-bottom: 24px;
 }
 
 .search-area {
     position: relative;
     width: 385px;
+}
+
+.pests-toolbar .search-area {
+    flex: 1 1 385px;
+    max-width: 385px;
+    min-width: 0;
+}
+
+.pests-toolbar .view-toggle {
+    flex: 0 0 auto;
+    margin-left: auto;
 }
 
 .search-area input {
@@ -162,7 +253,8 @@ body::-webkit-scrollbar {
 
 .pest-card {
     width: 470px;
-    height: 330px;
+    min-height: 330px;
+    height: auto;
     background: #ffffff;
     border: 1px solid #0d241d;
     border-radius: 18px;
@@ -190,8 +282,8 @@ body::-webkit-scrollbar {
 .pest-info {
     position: relative;
     flex: 1;
-    height: 100%;
-    padding: 0px 2px 20px 0;
+    min-height: 288px;
+    padding: 0 2px 48px 0;
     min-width: 0;
 }
 
@@ -267,7 +359,8 @@ body.modal-open {
 
 .pest-modal-content {
     width: 1000px;
-    height: 610px;
+    height: min(92vh, 760px);
+    max-height: 92vh;
     background: #e6f4c7;
     border: 1px solid #425830;
     border-radius: 18px;
@@ -336,12 +429,14 @@ body.modal-open {
 
 .pest-form {
     display: grid;
+    flex: 1 1 auto;
     grid-template-columns: 1fr 1fr;
     column-gap: 25px;
     row-gap: 15px;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     align-content: start;
+    padding: 0 6px 12px 0;
 }
 
 .pest-form-group {
@@ -504,13 +599,13 @@ body.modal-open {
 }
 
 .pest-modal-footer {
-    position: absolute;
-    right: 30px;
-    bottom: 22px;
+    position: static;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
+    margin-top: 8px;
 }
 
 .cancel-pest-btn {
@@ -562,7 +657,7 @@ body.modal-open {
 @media (max-width: 800px) {
     .pest-modal-content {
         width: calc(100% - 30px);
-        height: 600px;
+        height: min(92vh, 760px);
         padding: 25px;
     }
 
@@ -583,7 +678,7 @@ body.modal-open {
 @media (max-width: 650px) {
     .pest-modal-content {
         width: calc(100% - 20px);
-        height: 600px;
+        height: min(92vh, 760px);
         padding: 22px;
     }
 
@@ -602,5 +697,257 @@ body.modal-open {
 
     .save-pest-btn {
         width: 120px;
+    }
+}
+
+@media (max-width: 760px) {
+    .pests-toolbar {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+    }
+
+    .pests-toolbar .search-area {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .pests-toolbar .view-toggle {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .pests-toolbar .add-pest-btn {
+        grid-column: 2;
+        grid-row: 2;
+        width: 100%;
+        height: 50px;
+        min-height: 50px;
+    }
+
+    .pest-card-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-right: 0;
+    }
+
+    .pest-card {
+        width: 100%;
+        min-height: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .pest-image {
+        width: 100%;
+        height: 180px;
+        border-radius: 8px;
+    }
+
+    .pest-info {
+        min-height: 0;
+        padding: 0;
+    }
+
+    .pest-info h2 {
+        font-size: 21px;
+        overflow-wrap: anywhere;
+    }
+
+    .pest-info .pest-name {
+        margin-bottom: 10px;
+    }
+
+    .pest-info p {
+        margin-bottom: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .edit-pest-btn {
+        position: static;
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        margin-top: 4px;
+        font-size: 14px;
+    }
+
+    .pest-card-grid.is-list-view {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .pest-card-grid.is-list-view .pest-card {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        align-items: start;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .pest-card-grid.is-list-view .pest-image {
+        width: 112px;
+        height: 112px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 10px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info h2,
+    .pest-card-grid.is-list-view .pest-info .pest-name,
+    .pest-card-grid.is-list-view .pest-info p:nth-of-type(2),
+    .pest-card-grid.is-list-view .edit-pest-btn {
+        grid-column: 1 / -1;
+    }
+
+    .pest-card-grid.is-list-view .pest-info h2 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info .pest-name,
+    .pest-card-grid.is-list-view .pest-info p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .pest-card-grid.is-list-view .edit-pest-btn {
+        margin-top: 2px;
+    }
+}
+
+.pest-card-grid.is-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pest-card-grid.is-list-view .pest-card {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 0;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.pest-card-grid.is-list-view .pest-image {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+}
+
+.pest-card-grid.is-list-view .pest-info {
+    display: grid;
+    grid-template-columns: minmax(110px, 1fr) minmax(100px, 0.7fr) minmax(150px, 1.3fr) 156px;
+    align-items: center;
+    gap: 8px 14px;
+    min-height: 0;
+    padding: 0;
+}
+
+.pest-card-grid.is-list-view .pest-info h2,
+.pest-card-grid.is-list-view .pest-info p {
+    margin: 0;
+}
+
+.pest-card-grid.is-list-view .pest-info h2 {
+    font-size: 17px;
+}
+
+.pest-card-grid.is-list-view .pest-info .pest-name,
+.pest-card-grid.is-list-view .pest-info p {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.pest-card-grid.is-list-view .pest-info p:nth-of-type(2) {
+    grid-column: 3;
+    grid-row: 1 / 3;
+}
+
+.pest-card-grid.is-list-view .edit-pest-btn {
+    position: static;
+    width: 156px;
+    height: 40px;
+    min-height: 40px;
+    grid-column: 4;
+    grid-row: 1 / 3;
+    margin: 0;
+    font-size: 12px;
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+    .pest-card-grid.is-list-view .pest-info {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 140px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info h2,
+    .pest-card-grid.is-list-view .pest-info .pest-name {
+        grid-column: auto;
+    }
+
+    .pest-card-grid.is-list-view .pest-info p:nth-of-type(2) {
+        grid-column: 1 / 3;
+        grid-row: 2;
+    }
+
+    .pest-card-grid.is-list-view .edit-pest-btn {
+        width: 140px;
+        grid-column: 3;
+        grid-row: 1 / 3;
+    }
+}
+
+@media (max-width: 760px) {
+    .pest-card-grid.is-list-view .pest-card {
+        grid-template-columns: 112px minmax(0, 1fr);
+        padding: 10px;
+    }
+
+    .pest-card-grid.is-list-view .pest-image {
+        width: 112px;
+        height: 112px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0;
+    }
+
+    .pest-card-grid.is-list-view .pest-info h2 {
+        font-size: 16px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info .pest-name,
+    .pest-card-grid.is-list-view .pest-info p {
+        font-size: 12px;
+    }
+
+    .pest-card-grid.is-list-view .pest-info p:nth-of-type(2) {
+        grid-column: 1 / -1;
+        grid-row: auto;
+    }
+
+    .pest-card-grid.is-list-view .edit-pest-btn {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        grid-column: 1 / -1;
+        grid-row: auto;
+        margin-top: 2px;
+        font-size: 12px;
     }
 }

@@ -98,17 +98,6 @@ body {
     border-color: #cfe39a;
 }
 
-.icon-btn .dot {
-    position: absolute;
-    top: 11px;
-    right: 12px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #e5484d;
-    border: 2px solid var(--surface);
-}
-
 .dashboard-layout {
     display: grid;
     grid-template-columns: 1.45fr 0.95fr;
@@ -190,6 +179,7 @@ body {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr;
     gap: 16px;
 }
 
@@ -205,6 +195,32 @@ body {
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
+    width: 100%;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    border-color: #c5d8c4;
+    box-shadow: 0 5px 18px rgba(16, 40, 29, 0.1);
+}
+
+.stat-card:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 3px;
+}
+
+.stat-hint {
+    color: #9a6200;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
 }
 
 .stat-icon {
@@ -254,69 +270,55 @@ body {
     font-variant-numeric: tabular-nums;
 }
 
-/* ---------- Scheduled tasks ---------- */
-
-.scheduled-tasks-card {
-    margin-top: 22px;
-    padding: 18px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow);
+.scheduled-tasks-stat-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    align-content: space-between;
+    row-gap: 6px;
+    min-height: 150px;
 }
 
-.scheduled-tasks-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 12px;
+.scheduled-tasks-stat-card .stat-label {
+    grid-column: 1;
+    grid-row: 1;
 }
 
-.scheduled-tasks-header h2 {
-    font-size: 16px;
-    line-height: 1.3;
-    font-weight: 700;
-}
-
-.scheduled-tasks-header p {
-    margin-top: 2px;
-    color: var(--ink-faint);
-    font-size: 12px;
-}
-
-.scheduled-tasks-launcher-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    min-height: 38px;
+.scheduled-tasks-stat-card .stat-number {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
 }
 
 .scheduled-task-summary {
+    grid-column: 1;
+    grid-row: 3;
     color: var(--ink-soft);
     font-size: 12px;
     font-variant-numeric: tabular-nums;
 }
 
-.task-open-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    min-height: 36px;
-    padding: 7px 12px;
-    border: 1px solid var(--forest);
-    border-radius: 7px;
-    background: var(--forest);
-    color: #fff;
-    font: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
+@media (max-width: 420px) {
+    .scheduled-tasks-stat-card {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+    }
 
-.task-open-button:hover { background: var(--forest-deep); }
+    .scheduled-tasks-stat-card .stat-label {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .scheduled-tasks-stat-card .stat-number {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .scheduled-tasks-stat-card .scheduled-task-summary {
+        grid-column: 1;
+        grid-row: 3;
+    }
+}
 
 .task-modal[hidden] { display: none; }
 
@@ -441,6 +443,13 @@ body {
     background: #fff8f6;
 }
 
+.scheduled-task.is-targeted {
+    border-radius: 6px;
+    outline: 2px solid var(--leaf);
+    outline-offset: -2px;
+    scroll-margin-block: 8px;
+}
+
 .scheduled-task-main {
     min-width: 0;
 }
@@ -533,14 +542,15 @@ body {
 
 .task-tips-panel {
     position: relative;
-    width: min(460px, 100%);
-    max-height: min(80vh, 620px);
+    width: min(640px, 100%);
+    max-height: min(80dvh, 720px);
     overflow-y: auto;
     padding: 24px;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--surface);
     box-shadow: 0 20px 50px rgba(8, 32, 20, 0.25);
+    overflow-wrap: anywhere;
 }
 
 .task-tips-close {
@@ -687,9 +697,22 @@ body {
 }
 
 .calendar-grid .date {
+    position: relative;
     cursor: pointer;
     border-radius: 50%;
     transition: background 0.15s ease;
+}
+
+.calendar-grid .date.has-scheduled-task::after {
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--forest);
+    content: "";
+    transform: translateX(-50%);
 }
 
 .calendar-grid .date:hover {
@@ -749,6 +772,7 @@ body {
 /* ---------- Weather card (dark – the one standout) ---------- */
 
 .weather-card {
+    position: relative;
     flex: 1;                     /* fills remaining height so the bottom lines up with Scheduled Tasks */
     display: flex;
     flex-direction: column;
@@ -760,6 +784,10 @@ body {
 }
 
 .weather-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 16px;
 }
 
@@ -778,46 +806,39 @@ body {
     color: rgba(255, 255, 255, 0.65);
 }
 
-/* Three stacked rows */
+.weather-title-icon {
+    color: var(--lime);
+    font-size: 24px;
+}
+
 .weather-content {
-    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.weather-side {
-    display: contents;           /* rain + season boxes become rows of the same stack */
-}
-
-.weather-main,
-.weather-box {
-    flex: 1;                     /* rows share the height equally */
+.weather-main {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
     gap: 14px;
-    min-height: 72px;
-    padding: 14px 18px;
+    min-height: 90px;
+    padding: 16px 18px;
     border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.09);
     border: 1px solid rgba(255, 255, 255, 0.1);
     color: #ffffff;
 }
 
-.weather-label h4,
-.weather-box h4,
-.rain-text h4 {
+.weather-label h4 {
     font-size: 14px;
     font-weight: 700;
     line-height: 1.3;
     color: #ffffff;
 }
 
-.weather-label span,
-.weather-box span,
-.rain-text span {
+.weather-label span {
     display: block;
     margin-top: 2px;
     font-size: 12px;
@@ -845,31 +866,105 @@ body {
     color: #ffffff;
 }
 
-.weather-box strong,
-.weather-box--season span {
-    margin-top: 0;
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1;
-    color: var(--lime);
-}
-
-.weather-box--season > div {
+.weather-details {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 14px;
-    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 }
 
-.weather-box--season span {
-    text-align: right;
-}
-
-.rain-text {
+.weather-detail {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+    padding: 12px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.09);
+}
+
+.weather-detail span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
+}
+
+.weather-detail strong {
+    color: var(--lime);
+    font-size: 14px;
+    font-weight: 800;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.weather-update {
+    margin-top: 12px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.weather-update.is-error {
+    color: #ffd2cb;
+}
+
+.weather-gate {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 22px;
+    border-radius: inherit;
+    background: rgba(7, 28, 19, 0.36);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+}
+
+.weather-gate[hidden] {
+    display: none;
+}
+
+.weather-fetch-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 190px;
+    min-height: 76px;
+    padding: 16px 26px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    font: inherit;
+    font-size: 22px;
+    font-weight: 500;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.weather-fetch-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.34);
+}
+
+.weather-fetch-button:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+.weather-fetch-button:focus-visible {
+    outline: 3px solid var(--lime);
+    outline-offset: 4px;
+}
+
+.weather-button-label {
+    text-align: center;
 }
 
 /* ---------- Note modal ---------- */
@@ -891,17 +986,38 @@ body {
 }
 
 .note-modal-content {
+    position: relative;
     width: min(1020px, 100%);
-    max-height: calc(100vh - 32px);
+    height: min(760px, calc(100dvh - 32px));
+    min-height: 0;
     display: grid;
     grid-template-columns: 460px 1fr;
+    grid-template-rows: minmax(0, 1fr);
     background: var(--surface);
     border-radius: 22px;
     overflow: hidden;
     box-shadow: 0 24px 60px rgba(8, 32, 20, 0.35);
 }
 
+.note-modal-toolbar {
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 0;
+    padding: 0;
+}
+
+.note-modal-tabs {
+    display: none;
+}
+
 .modal-calendar {
+    position: relative;
+    min-height: 0;
     padding: 28px;
     background: var(--lime-soft);
     overflow-y: auto;
@@ -912,6 +1028,25 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+}
+
+.note-modal-close {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.note-modal-close:hover {
+    background: var(--lime-soft);
+    border-color: #cfe39a;
 }
 
 .modal-calendar-header h2 {
@@ -1034,6 +1169,202 @@ body {
     margin-bottom: 8px;
 }
 
+.calendar-task-scheduler {
+    display: grid;
+    gap: 7px;
+    margin: 0 0 4px;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    min-width: 0;
+}
+
+.calendar-task-scheduler h3 {
+    font-size: 14px;
+    line-height: 1.4;
+    padding-right: 38px;
+}
+
+.calendar-task-scheduler label {
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.calendar-task-scheduler-controls {
+    display: flex;
+    min-width: 0;
+    gap: 8px;
+}
+
+.calendar-task-scheduler-controls input {
+    min-width: 0;
+    flex: 1;
+    width: 100%;
+    padding: 9px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+}
+
+.calendar-task-scheduler-controls button {
+    flex: 0 0 auto;
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--forest);
+    color: #fff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.calendar-task-scheduler-controls button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+@media (max-width: 520px) {
+    .note-modal {
+        align-items: flex-start;
+        padding: 8px;
+    }
+
+    .note-modal-content {
+        height: calc(100dvh - 16px);
+        border-radius: 14px;
+    }
+
+    .modal-calendar,
+    .modal-information {
+        padding: 12px;
+    }
+
+    .modal-calendar-header {
+        gap: 8px;
+        margin-bottom: 10px;
+    }
+
+    .modal-calendar-header h2 {
+        font-size: 18px;
+    }
+
+    .modal-month {
+        gap: 5px;
+        padding: 5px 9px;
+        font-size: 11px;
+    }
+
+    .modal-weekdays {
+        margin-bottom: 4px;
+    }
+
+    .modal-weekdays span {
+        font-size: 10px;
+    }
+
+    .modal-calendar-grid {
+        row-gap: 2px;
+    }
+
+    .modal-calendar-grid span {
+        height: 32px;
+        font-size: 13px;
+    }
+
+    .modal-selected-date-label {
+        margin-top: 8px;
+        font-size: 0.75rem;
+    }
+
+    .modal-crop-select {
+        gap: 4px;
+        margin-top: 8px;
+        font-size: 0.75rem;
+    }
+
+    .modal-crop-select select {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .modal-information {
+        gap: 12px;
+    }
+
+    .calendar-task-scheduler {
+        gap: 4px;
+        padding: 9px;
+    }
+
+    .calendar-task-scheduler h3 {
+        padding-right: 34px;
+        font-size: 12px;
+    }
+
+    .calendar-task-scheduler label {
+        font-size: 11px;
+    }
+
+    .calendar-task-scheduler-controls {
+        flex-direction: row;
+        gap: 5px;
+    }
+
+    .calendar-task-scheduler-controls input {
+        padding: 8px;
+        font-size: 11px;
+    }
+
+    .calendar-task-scheduler-controls button {
+        min-height: 34px;
+        padding: 6px 7px;
+        font-size: 10px;
+        white-space: nowrap;
+    }
+
+    .activity-section h2 {
+        margin-bottom: 6px;
+        font-size: 14px;
+    }
+
+    .tag-list {
+        gap: 5px;
+    }
+
+    .tag-list button {
+        padding: 6px 9px;
+        font-size: 11px;
+    }
+
+    #modalFreeText {
+        padding: 9px;
+        font-size: 12px;
+    }
+
+    #saveNoteBtn {
+        padding: 10px;
+        margin-top: 0;
+    }
+}
+
+.calendar-task-entry {
+    margin-bottom: 6px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--lime-soft);
+    color: var(--ink-soft);
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.calendar-task-entry strong {
+    color: var(--ink);
+}
+
 .note-entry {
     background: var(--surface);
     border: 1px solid var(--line);
@@ -1075,10 +1406,12 @@ body {
 }
 
 .modal-information {
+    position: relative;
     display: flex;
     flex-direction: column;
+    min-height: 0;
     gap: 20px;
-    padding: 28px;
+    padding: 76px 28px 28px;
     background: var(--surface);
     overflow-y: auto;
 }
@@ -1119,6 +1452,41 @@ body {
     background: var(--forest);
     border-color: var(--forest);
     color: #ffffff;
+}
+
+.tag-list .custom-tag-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-style: dashed;
+    color: var(--forest);
+}
+
+.tag-list .custom-tag-button span {
+    white-space: nowrap;
+}
+
+.tag-list .custom-tag-value {
+    overflow-wrap: anywhere;
+}
+
+.tag-list .custom-tag-input {
+    width: 140px;
+    min-width: 0;
+    padding: 8px 12px;
+    border: 1px solid var(--leaf);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.tag-list .custom-tag-input:focus {
+    outline: 2px solid var(--lime-strong);
+    outline-offset: 1px;
 }
 
 #modalFreeText {
@@ -1292,15 +1660,6 @@ body {
         padding: 18px;
     }
 
-    .scheduled-tasks-card { padding: 14px; }
-
-    .scheduled-tasks-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .scheduled-tasks-launcher-row { align-items: flex-start; }
-
     .task-filters { width: 100%; }
 
     .task-filter {
@@ -1328,21 +1687,92 @@ body {
         padding: 16px;
     }
 
-    /* Weather rows already stack, so only the min-height needs resetting */
-    .weather-main,
-    .weather-box {
+    .weather-main {
         min-height: 0;
     }
 
     .note-modal-content {
-        grid-template-columns: 1fr;
-        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        height: calc(100dvh - 16px);
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: hidden;
+    }
+
+    .note-modal-toolbar {
+        position: relative;
+        top: auto;
+        right: auto;
+        z-index: auto;
+        flex: 0 0 auto;
+        justify-content: space-between;
+        gap: 8px;
+        min-height: 0;
+        padding: 8px 10px;
+        border-bottom: 1px solid var(--line);
+    }
+
+    .note-modal-tabs {
+        display: flex;
+        min-width: 0;
+        flex: 1;
+        gap: 4px;
+        padding: 3px;
+        border-radius: 9px;
+        background: var(--page);
+    }
+
+    .note-modal-tab {
+        min-width: 0;
+        flex: 1;
+        padding: 8px 6px;
+        border: 0;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--ink-soft);
+        font: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 1.25;
+        cursor: pointer;
+    }
+
+    .note-modal-tab.is-active {
+        background: var(--forest);
+        color: #fff;
+    }
+
+    .note-modal-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
     }
 
     .modal-calendar,
     .modal-information {
-        overflow-y: visible;
+        display: none;
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
         padding: 20px;
+    }
+
+    .note-modal-content.show-calendar .modal-calendar,
+    .note-modal-content.show-actions .modal-information {
+        display: block;
+    }
+}
+
+@media (max-width: 380px) {
+    .calendar-task-scheduler-controls {
+        flex-direction: column;
+    }
+
+    .calendar-task-scheduler-controls button {
+        width: 100%;
     }
 }
 
@@ -1364,5 +1794,21 @@ body {
         right: 12px;
         left: 12px;
         max-width: none;
+    }
+}
+
+@media (min-width: 1101px) {
+    .calendar-card {
+        padding-top: 18px;
+        padding-bottom: 18px;
+    }
+
+    .calendar-grid span {
+        min-height: 32px;
+    }
+
+    .weather-card {
+        padding-top: 16px;
+        padding-bottom: 16px;
     }
 }

@@ -1,0 +1,180 @@
+.tutorial-help-button {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    border: 1px solid var(--line, #dce5db);
+    border-radius: 12px;
+    background: var(--surface, #ffffff);
+    color: var(--ink, #173b29);
+    font: inherit;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.tutorial-help-button:hover {
+    transform: translateY(-1px);
+    background: var(--lime-soft, #eef7d6);
+    border-color: #cfe39a;
+}
+
+.tutorial-help-button:focus-visible,
+.tutorial-dialog button:focus-visible {
+    outline: 3px solid #7ba83f;
+    outline-offset: 3px;
+}
+
+.tutorial-backdrop[hidden],
+.tutorial-dialog[hidden] {
+    display: none;
+}
+
+.tutorial-highlight {
+    position: relative !important;
+    z-index: 10002 !important;
+    border-radius: 8px;
+    outline: 4px solid #ffffff !important;
+    box-shadow: 0 0 0 8px #2f744b, 0 0 0 100vmax rgba(8, 23, 15, 0.72) !important;
+}
+
+.tutorial-indicator {
+    position: fixed;
+    z-index: 10003;
+    border: 3px solid #2f744b;
+    border-radius: 8px;
+    box-shadow: 0 0 0 3px #ffffff, 0 0 0 7px rgba(47, 116, 75, 0.72);
+    pointer-events: none;
+    transition: top 0.12s ease, left 0.12s ease, width 0.12s ease, height 0.12s ease;
+}
+
+.tutorial-indicator[hidden] {
+    display: none;
+}
+
+.tutorial-dialog {
+    position: fixed;
+    z-index: 10004;
+    right: max(20px, env(safe-area-inset-right));
+    bottom: max(20px, env(safe-area-inset-bottom));
+    width: min(420px, calc(100vw - 32px));
+    padding: 22px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    border: 1px solid #dfe8dc;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #173b29;
+    box-shadow: 0 18px 55px rgba(8, 23, 15, 0.28);
+    font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+    animation: tutorial-enter 0.18s ease-out;
+}
+
+.tutorial-progress {
+    margin: 0;
+    color: #64806b;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tutorial-dialog-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.tutorial-language-toggle {
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid #d9e3d7;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #286541;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tutorial-language-toggle:hover {
+    background: #eef7d6;
+}
+
+.tutorial-dialog h2 {
+    margin: 0 0 8px;
+    color: #173b29;
+    font-size: 19px;
+    line-height: 1.3;
+}
+
+.tutorial-dialog p:not(.tutorial-progress) {
+    margin: 0;
+    color: #526458;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.tutorial-actions {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+}
+
+.tutorial-actions button {
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid #d9e3d7;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #34513d;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.tutorial-actions button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.tutorial-actions .tutorial-next {
+    margin-left: auto;
+    border-color: #286541;
+    background: #286541;
+    color: #ffffff;
+}
+
+@keyframes tutorial-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .tutorial-dialog {
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        width: calc(100vw - 24px);
+        max-height: calc(100vh - 24px);
+        padding: 18px;
+    }
+
+    .tutorial-help-button {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tutorial-help-button,
+    .tutorial-dialog,
+    .tutorial-indicator {
+        animation: none;
+        transition: none;
+    }
+}

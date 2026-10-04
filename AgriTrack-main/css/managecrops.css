@@ -1,3 +1,82 @@
+ .relationship-group {
+    grid-column: 1 / -1;
+}
+
+.relationship-help {
+    margin: -1px 0 6px;
+    color: #5d695b;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.relationship-search {
+    height: 36px !important;
+    line-height: normal !important;
+    border-color: #9aa895 !important;
+    border-radius: 6px !important;
+    padding: 0 10px !important;
+}
+
+.relationship-selection-count {
+    margin: 6px 0 5px;
+    color: #425830;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.relationship-options {
+    max-height: 145px;
+    overflow-y: auto;
+    border: 1px solid #c4cebb;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.relationship-option {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 38px;
+    margin: 0 !important;
+    padding: 7px 10px;
+    border-bottom: 1px solid #edf0e9;
+    cursor: pointer;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+.relationship-option:last-child {
+    border-bottom: 0;
+}
+
+.relationship-option:hover {
+    background: #f5f8ef;
+}
+
+.relationship-option input {
+    width: 16px !important;
+    height: 16px !important;
+    flex: 0 0 16px;
+    margin: 0;
+    accent-color: #52733e;
+}
+
+.relationship-option span {
+    flex: 1;
+}
+
+.relationship-option small {
+    color: #6a7565;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.relationship-empty {
+    padding: 12px;
+    color: #65705f;
+    font-size: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -95,14 +174,26 @@ body::-webkit-scrollbar {
 
 .crops-toolbar {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 35px;
+    gap: 16px;
     margin-bottom: 24px;
 }
 
 .search-area {
     position: relative;
     width: 385px;
+}
+
+.crops-toolbar .search-area {
+    flex: 1 1 385px;
+    max-width: 385px;
+    min-width: 0;
+}
+
+.crops-toolbar .view-toggle {
+    flex: 0 0 auto;
+    margin-left: auto;
 }
 
 .search-area input {
@@ -179,7 +270,8 @@ body::-webkit-scrollbar {
 
 .crop-card {
     width: 520px;
-    height: 310px;
+    min-height: 310px;
+    height: auto;
     background: #ffffff;
     border: 1px solid #0d241d;
     border-radius: 18px;
@@ -207,7 +299,7 @@ body::-webkit-scrollbar {
 .crop-info {
     position: relative;
     flex: 1;
-    height: 100%;
+    min-height: 268px;
     padding: 2px 4px 52px 0;
     min-width: 0;
 }
@@ -285,7 +377,8 @@ body.modal-open {
 
 .crop-modal-content {
     width: 1000px;
-    height: 610px;
+    height: min(92vh, 760px);
+    max-height: 92vh;
     background: #e6f4c7;
     border: 1px solid #425830;
     border-radius: 18px;
@@ -365,12 +458,14 @@ body.modal-open {
 
 .crop-form {
     display: grid;
+    flex: 1 1 auto;
     grid-template-columns: 1fr 1fr;
     column-gap: 25px;
     row-gap: 15px;
     min-height: 0;
-    overflow: hidden;
+    overflow-y: auto;
     align-content: start;
+    padding: 0 6px 12px 0;
 }
 
 .crop-form-group {
@@ -531,13 +626,13 @@ body.modal-open {
 }
 
 .crop-modal-footer {
-    position: absolute;
-    right: 30px;
-    bottom: 22px;
+    position: static;
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
+    margin-top: 8px;
 }
 
 .cancel-crop-btn {
@@ -597,7 +692,7 @@ body.modal-open {
 
     .crop-modal-content {
         width: calc(100% - 30px);
-        height: 600px;
+        height: min(92vh, 760px);
         padding: 25px;
     }
 
@@ -621,7 +716,7 @@ body.modal-open {
 
     .crop-modal-content {
         width: calc(100% - 20px);
-        height: 600px;
+        height: min(92vh, 760px);
         padding: 22px;
     }
 
@@ -642,4 +737,249 @@ body.modal-open {
         width: 120px;
     }
 
+}
+
+@media (max-width: 760px) {
+    .crops-toolbar {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+    }
+
+    .crops-toolbar .search-area {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+
+    .crops-toolbar .view-toggle {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .crops-toolbar .add-crop-btn {
+        grid-column: 2;
+        grid-row: 2;
+        width: 100%;
+        height: 50px;
+        min-height: 50px;
+    }
+
+    .crop-card-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        padding-right: 0;
+    }
+
+    .crop-card {
+        width: 100%;
+        min-height: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .crop-image {
+        width: 100%;
+        height: 180px;
+        border-radius: 8px;
+    }
+
+    .crop-info {
+        min-height: 0;
+        padding: 0;
+    }
+
+    .crop-info h2 {
+        font-size: 21px;
+        overflow-wrap: anywhere;
+    }
+
+    .crop-info .crop-name {
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    .crop-info p {
+        margin-bottom: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .edit-crop-btn {
+        position: static;
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        margin-top: 4px;
+        font-size: 14px;
+    }
+
+    .crop-card-grid.is-list-view {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .crop-card-grid.is-list-view .crop-card {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        align-items: start;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .crop-card-grid.is-list-view .crop-image {
+        width: 112px;
+        height: 112px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px 10px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info h2,
+    .crop-card-grid.is-list-view .crop-info .crop-name,
+    .crop-card-grid.is-list-view .edit-crop-btn {
+        grid-column: 1 / -1;
+    }
+
+    .crop-card-grid.is-list-view .crop-info h2 {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info .crop-name,
+    .crop-card-grid.is-list-view .crop-info p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .crop-card-grid.is-list-view .crop-info p strong {
+        display: block;
+    }
+
+    .crop-card-grid.is-list-view .edit-crop-btn {
+        margin-top: 2px;
+    }
+}
+
+.crop-card-grid.is-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.crop-card-grid.is-list-view .crop-card {
+    display: grid;
+    grid-template-columns: 92px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    min-height: 0;
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.crop-card-grid.is-list-view .crop-image {
+    width: 92px;
+    height: 92px;
+    border-radius: 8px;
+}
+
+.crop-card-grid.is-list-view .crop-info {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(130px, 0.8fr) 156px;
+    align-items: center;
+    gap: 8px 14px;
+    min-height: 0;
+    padding: 0;
+}
+
+.crop-card-grid.is-list-view .crop-info h2,
+.crop-card-grid.is-list-view .crop-info .crop-name,
+.crop-card-grid.is-list-view .crop-info p {
+    margin: 0;
+}
+
+.crop-card-grid.is-list-view .crop-info h2 {
+    font-size: 17px;
+}
+
+.crop-card-grid.is-list-view .crop-info .crop-name {
+    font-size: 13px;
+}
+
+.crop-card-grid.is-list-view .crop-info p {
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.crop-card-grid.is-list-view .edit-crop-btn {
+    position: static;
+    width: 156px;
+    height: 40px;
+    min-height: 40px;
+    grid-column: 4;
+    grid-row: 1 / 3;
+    margin: 0;
+    font-size: 12px;
+}
+
+@media (min-width: 761px) and (max-width: 1100px) {
+    .crop-card-grid.is-list-view .crop-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) 140px;
+        gap: 6px 12px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info h2,
+    .crop-card-grid.is-list-view .crop-info .crop-name {
+        grid-column: 1 / -1;
+    }
+
+    .crop-card-grid.is-list-view .edit-crop-btn {
+        width: 140px;
+        grid-column: 3;
+        grid-row: 3 / 5;
+    }
+}
+
+@media (max-width: 760px) {
+    .crop-card-grid.is-list-view .crop-card {
+        grid-template-columns: 112px minmax(0, 1fr);
+        padding: 10px;
+    }
+
+    .crop-card-grid.is-list-view .crop-image {
+        width: 112px;
+        height: 112px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        padding: 0;
+    }
+
+    .crop-card-grid.is-list-view .crop-info h2 {
+        font-size: 16px;
+    }
+
+    .crop-card-grid.is-list-view .crop-info .crop-name,
+    .crop-card-grid.is-list-view .crop-info p {
+        font-size: 12px;
+    }
+
+    .crop-card-grid.is-list-view .edit-crop-btn {
+        width: 100%;
+        height: auto;
+        min-height: 44px;
+        grid-column: 1 / -1;
+        grid-row: auto;
+        margin-top: 2px;
+        font-size: 12px;
+    }
 }

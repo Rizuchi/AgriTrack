@@ -102,8 +102,9 @@ body::-webkit-scrollbar {
 
 .users-toolbar {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 35px;
+    gap: 16px;
     margin-bottom: 24px;
 }
 
@@ -112,7 +113,9 @@ body::-webkit-scrollbar {
 
 .search-area {
     position: relative;
-    width: 385px;
+    flex: 1 1 385px;
+    width: min(385px, 100%);
+    max-width: 385px;
 }
 
 .search-area input {
@@ -147,12 +150,52 @@ body::-webkit-scrollbar {
     pointer-events: none;
 }
 
+.users-sort-control {
+    display: flex;
+    flex: 0 1 auto;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    color: var(--ink-soft);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.users-sort-control label {
+    white-space: nowrap;
+}
+
+.user-sort-select {
+    flex: 1 1 210px;
+    width: 245px;
+    min-width: 0;
+    height: 44px;
+    padding: 0 34px 0 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--ink);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.user-sort-select:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 2px;
+}
+
 
 
 
 .add-user-btn {
+    display: inline-flex;
+    flex: 0 0 200px;
+    align-items: center;
+    justify-content: center;
     width: 200px;
     height: 40px;
+    padding: 0 12px;
     border: none;
     border-radius: 5px;
     background: #bfe56f;
@@ -172,6 +215,34 @@ body::-webkit-scrollbar {
 .add-user-btn i {
     margin-right: 4px;
     font-size: 12px;
+}
+
+.user-sort-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.user-sort-button i {
+    color: var(--ink-faint);
+    font-size: 11px;
+}
+
+.user-sort-button:hover,
+.user-sort-button:focus-visible {
+    color: var(--forest);
+}
+
+.user-sort-button:focus-visible {
+    outline: 2px solid var(--leaf);
+    outline-offset: 3px;
 }
 
 
@@ -330,6 +401,43 @@ body::-webkit-scrollbar {
     text-decoration: underline;
 }
 
+.view-btn:focus-visible {
+    outline: 2px solid #6f8f3b;
+    outline-offset: 2px;
+}
+
+.user-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.user-details-grid > div {
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+}
+
+.user-details-grid dt {
+    margin-bottom: 5px;
+    color: var(--ink-faint);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.user-details-grid dd {
+    overflow-wrap: anywhere;
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.user-details-updated {
+    grid-column: 1 / -1;
+}
+
 
 
 
@@ -382,8 +490,15 @@ body::-webkit-scrollbar {
         max-width: 385px;
     }
 
+    .users-sort-control {
+        width: 100%;
+        max-width: 385px;
+    }
+
     .add-user-btn {
-        width: 150px;
+        flex-basis: auto;
+        width: 100%;
+        max-width: 385px;
     }
 }
 
@@ -414,6 +529,10 @@ body::-webkit-scrollbar {
 
     .users-table {
         min-width: 1000px;
+    }
+
+    .user-details-grid {
+        grid-template-columns: minmax(0, 1fr);
     }
 }
 

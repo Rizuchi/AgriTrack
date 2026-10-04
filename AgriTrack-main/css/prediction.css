@@ -180,12 +180,21 @@ body {
 /* ---------- Results ---------- */
 
 .prediction-title {
-    margin-bottom: 16px;
+    margin: 0;
     font-size: 18px;
     font-weight: 700;
     letter-spacing: -0.01em;
     line-height: 1.3;
     color: var(--ink);
+}
+
+.results-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    min-height: 40px;
+    margin-bottom: 16px;
 }
 
 .prediction-grid {
@@ -220,6 +229,76 @@ body {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow);
     overflow: hidden;
+}
+
+.prediction-grid.is-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    grid-auto-rows: auto;
+}
+
+.prediction-grid.is-list-view .prediction-card {
+    height: auto;
+    min-height: 104px;
+    padding: 10px 14px;
+    align-items: center;
+    gap: 16px;
+    border-radius: var(--radius-md);
+    box-shadow: none;
+}
+
+.prediction-grid.is-list-view .prediction-image {
+    width: 82px;
+    height: 82px;
+    border-radius: 9px;
+}
+
+.prediction-grid.is-list-view .prediction-info {
+    display: grid;
+    grid-template-columns: minmax(150px, 1.2fr) minmax(90px, 0.7fr) minmax(120px, 0.9fr) minmax(180px, 1.5fr) 156px;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+}
+
+.prediction-grid.is-list-view .prediction-info h3,
+.prediction-grid.is-list-view .prediction-info p {
+    margin: 0;
+}
+
+.prediction-grid.is-list-view .prediction-info h3 {
+    font-size: 16px;
+}
+
+.prediction-grid.is-list-view .prediction-info p:nth-of-type(3) {
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+}
+
+.prediction-grid.is-list-view .details-btn {
+    width: 156px;
+    height: 40px;
+    margin: 0;
+}
+
+@media (max-width: 1150px) {
+    .prediction-grid.is-list-view .prediction-info {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) 140px;
+        gap: 6px 12px;
+    }
+
+    .prediction-grid.is-list-view .prediction-info h3,
+    .prediction-grid.is-list-view .prediction-info p:nth-of-type(3) {
+        grid-column: 1 / -1;
+    }
+
+    .prediction-grid.is-list-view .details-btn {
+        grid-column: 3;
+        grid-row: 2 / 4;
+        width: 140px;
+        align-self: center;
+    }
 }
 
 .prediction-image {
