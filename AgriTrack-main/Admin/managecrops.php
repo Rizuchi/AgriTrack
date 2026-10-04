@@ -17,6 +17,25 @@ function postText(string $key): string
 	return trim((string) ($_POST[$key] ?? ''));
 }
 
+function selectedIds(string $key): ?array
+{
+	$values = $_POST[$key] ?? [];
+	if (!is_array($values)) {
+		return null;
+	}
+
+	$ids = [];
+	foreach ($values as $value) {
+		$id = filter_var($value, FILTER_VALIDATE_INT);
+		if ($id === false || $id <= 0) {
+			return null;
+		}
+		$ids[] = $id;
+	}
+
+	return array_values(array_unique($ids));
+}
+
 function uploadImage(): ?string
 {
 	if (!isset($_FILES['cropImage']) || $_FILES['cropImage']['error'] === UPLOAD_ERR_NO_FILE) {
@@ -68,8 +87,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 		$row['imageUrl'] = '../php/crop_image.php?id=' . $row['CropID'];
 		$crops[] = $row;
 	}
+	$result->free();
 
-	respond(['success' => true, 'crops' => $crops]);
+	$pestResult = $conn->query('SELECT PestDiseaseID, Name, Type FROM pest_diseases ORDER BY Name ASC');
+	if (!$pestResult) {
+		respond(['success' => false, 'message' => 'Unable to load pests and diseases.'], 500);
+	}
+	$pests = [];
+	while ($row = $pestResult->fetch_assoc()) {
+		$pests[] = [
+			'id' => (int) $row['PestDiseaseID'],
+			'name' => $row['Name'],
+			'type' => $row['Type'],
+		];
+	}
+	$pestResult->free();
+
+	$linkResult = $conn->query(
+		"SELECT pac.CropID, p.PestDiseaseID, p.Name, p.Type
+		 FROM pest_affected_crop pac
+		 JOIN pest_diseases p ON p.PestDiseaseID = pac.PestDiseaseID
+		 ORDER BY p.Name ASC"
+	);
+	if (!$linkResult) {
+		respond(['success' => false, 'message' => 'Unable to load crop relationships.'], 500);
+	}
+	$cropLinks = [];
+	while ($row = $linkResult->fetch_assoc()) {
+		$cropId = (int) $row['CropID'];
+		$cropLinks[$cropId][] = [
+			'id' => (int) $row['PestDiseaseID'],
+			'name' => $row['Name'],
+			'type' => $row['Type'],
+		];
+	}
+	$linkResult->free();
+	foreach ($crops as &$crop) {
+		$crop['pests'] = $cropLinks[$crop['CropID']] ?? [];
+	}
+	unset($crop);
+
+	respond(['success' => true, 'crops' => $crops, 'pests' => $pests]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -84,7 +142,12 @@ $reason = postText('reason');
 $seasonId = filter_input(INPUT_POST, 'seasonId', FILTER_VALIDATE_INT);
 $minDays = filter_input(INPUT_POST, 'minDaysToHarvest', FILTER_VALIDATE_INT);
 $maxDays = filter_input(INPUT_POST, 'maxDaysToHarvest', FILTER_VALIDATE_INT);
+$pestIds = selectedIds('pestIds');
 $image = uploadImage();
+
+if ($pestIds === null) {
+	respond(['success' => false, 'message' => 'Invalid pest or disease selection.'], 422);
+}
 
 if ($cropName === '') {
 	respond(['success' => false, 'message' => 'Crop name is required.'], 422);
@@ -98,39 +161,78 @@ if ($minDays !== null && $maxDays !== null && $minDays > $maxDays) {
 	respond(['success' => false, 'message' => 'Minimum harvest days cannot exceed maximum days.'], 422);
 }
 
-if ($cropId > 0) {
-	if ($image !== null) {
-		$stmt = $conn->prepare(
-			"UPDATE crops
-			 SET CropName = ?, EnglishName = NULLIF(?, ''), CropType = NULLIF(?, ''),
-				 SeasonID = NULLIF(?, 0), Reason = NULLIF(?, ''),
-				 MinDaysToHarvest = ?, MaxDaysToHarvest = ?, Image = ?
-			 WHERE CropID = ?"
-		);
-		$stmt->bind_param('sssisiisi', $cropName, $englishName, $cropType, $seasonId, $reason, $minDays, $maxDays, $image, $cropId);
+	if ($pestIds) {
+		$selectedPestIds = implode(',', $pestIds);
+		$validResult = $conn->query('SELECT PestDiseaseID FROM pest_diseases WHERE PestDiseaseID IN (' . $selectedPestIds . ')');
+		if (!$validResult) {
+			respond(['success' => false, 'message' => 'Unable to validate pest and disease selection.'], 500);
+		}
+		$validIds = array_map('intval', array_column($validResult->fetch_all(MYSQLI_ASSOC), 'PestDiseaseID'));
+		$validResult->free();
+		if (count($validIds) !== count($pestIds)) {
+			respond(['success' => false, 'message' => 'One or more selected pests or diseases no longer exist.'], 422);
+		}
+	}
+
+$conn->begin_transaction();
+try {
+	if ($cropId > 0) {
+		if ($image !== null) {
+			$stmt = $conn->prepare(
+				"UPDATE crops
+				 SET CropName = ?, EnglishName = NULLIF(?, ''), CropType = NULLIF(?, ''),
+					 SeasonID = NULLIF(?, 0), Reason = NULLIF(?, ''),
+					 MinDaysToHarvest = ?, MaxDaysToHarvest = ?, Image = ?
+				 WHERE CropID = ?"
+			);
+			$stmt->bind_param('sssisiisi', $cropName, $englishName, $cropType, $seasonId, $reason, $minDays, $maxDays, $image, $cropId);
+		} else {
+			$stmt = $conn->prepare(
+				"UPDATE crops
+				 SET CropName = ?, EnglishName = NULLIF(?, ''), CropType = NULLIF(?, ''),
+					 SeasonID = NULLIF(?, 0), Reason = NULLIF(?, ''),
+					 MinDaysToHarvest = ?, MaxDaysToHarvest = ?
+				 WHERE CropID = ?"
+			);
+			$stmt->bind_param('sssisiii', $cropName, $englishName, $cropType, $seasonId, $reason, $minDays, $maxDays, $cropId);
+		}
+		$message = 'Crop updated successfully.';
 	} else {
 		$stmt = $conn->prepare(
-			"UPDATE crops
-			 SET CropName = ?, EnglishName = NULLIF(?, ''), CropType = NULLIF(?, ''),
-				 SeasonID = NULLIF(?, 0), Reason = NULLIF(?, ''),
-				 MinDaysToHarvest = ?, MaxDaysToHarvest = ?
-			 WHERE CropID = ?"
+			"INSERT INTO crops
+			 (SeasonID, CropName, EnglishName, CropType, Image, Reason, MinDaysToHarvest, MaxDaysToHarvest)
+			 VALUES (NULLIF(?, 0), ?, NULLIF(?, ''), NULLIF(?, ''), ?, NULLIF(?, ''), ?, ?)"
 		);
-		$stmt->bind_param('sssisiii', $cropName, $englishName, $cropType, $seasonId, $reason, $minDays, $maxDays, $cropId);
+		$stmt->bind_param('isssssii', $seasonId, $cropName, $englishName, $cropType, $image, $reason, $minDays, $maxDays);
+		$message = 'Crop added successfully.';
 	}
-	$message = 'Crop updated successfully.';
-} else {
-	$stmt = $conn->prepare(
-		"INSERT INTO crops
-		 (SeasonID, CropName, EnglishName, CropType, Image, Reason, MinDaysToHarvest, MaxDaysToHarvest)
-		 VALUES (NULLIF(?, 0), ?, NULLIF(?, ''), NULLIF(?, ''), ?, NULLIF(?, ''), ?, ?)"
-	);
-	$stmt->bind_param('isssssii', $seasonId, $cropName, $englishName, $cropType, $image, $reason, $minDays, $maxDays);
-	$message = 'Crop added successfully.';
-}
 
-if (!$stmt || !$stmt->execute()) {
-	respond(['success' => false, 'message' => 'Unable to save crop.'], 500);
-}
+	if (!$stmt || !$stmt->execute()) {
+		throw new RuntimeException('Unable to save crop.');
+	}
+	$savedCropId = $cropId ?: $conn->insert_id;
+	$stmt->close();
 
-respond(['success' => true, 'message' => $message, 'cropId' => $cropId ?: $conn->insert_id]);
+	$deleteLinks = $conn->prepare('DELETE FROM pest_affected_crop WHERE CropID = ?');
+	$deleteLinks->bind_param('i', $savedCropId);
+	if (!$deleteLinks->execute()) {
+		throw new RuntimeException('Unable to update crop relationships.');
+	}
+	$deleteLinks->close();
+
+	if ($pestIds) {
+		$link = $conn->prepare('INSERT INTO pest_affected_crop (PestDiseaseID, CropID) VALUES (?, ?)');
+		foreach ($pestIds as $pestId) {
+			$link->bind_param('ii', $pestId, $savedCropId);
+			if (!$link->execute()) {
+				throw new RuntimeException('Unable to save crop relationships.');
+			}
+		}
+		$link->close();
+	}
+	$conn->commit();
+	respond(['success' => true, 'message' => $message, 'cropId' => $savedCropId]);
+} catch (Throwable $error) {
+	$conn->rollback();
+	respond(['success' => false, 'message' => 'Unable to save crop and its pest relationships.'], 500);
+}

@@ -62,30 +62,31 @@ function seasonIdFromText(mysqli $conn, string $season): int
     return $row ? (int) $row['SeasonID'] : 0;
 }
 
-function findCropId(mysqli $conn, string $cropName): int
+function selectedIds(string $key): ?array
 {
-    if ($cropName === '') {
-        return 0;
+    $values = $_POST[$key] ?? [];
+    if (!is_array($values)) {
+        return null;
     }
 
-    $stmt = $conn->prepare('SELECT CropID FROM crops WHERE CropName = ? OR EnglishName = ? LIMIT 1');
-    $stmt->bind_param('ss', $cropName, $cropName);
-    $stmt->execute();
-    $row = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-    return $row ? (int) $row['CropID'] : 0;
+    $ids = [];
+    foreach ($values as $value) {
+        $id = filter_var($value, FILTER_VALIDATE_INT);
+        if ($id === false || $id <= 0) {
+            return null;
+        }
+        $ids[] = $id;
+    }
+
+    return array_values(array_unique($ids));
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $result = $conn->query(
         "SELECT p.PestDiseaseID, p.Name, p.Type, p.Info, p.ManagementTips, p.Symptoms,
-                p.SeasonID, s.SeasonType, MD5(p.Image) AS ImageVersion,
-                GROUP_CONCAT(DISTINCT c.CropName ORDER BY c.CropName SEPARATOR ', ') AS AffectedCrop
+                p.SeasonID, s.SeasonType, MD5(p.Image) AS ImageVersion
          FROM pest_diseases p
          LEFT JOIN seasons s ON s.SeasonID = p.SeasonID
-         LEFT JOIN pest_affected_crop pac ON pac.PestDiseaseID = p.PestDiseaseID
-         LEFT JOIN crops c ON c.CropID = pac.CropID
-         GROUP BY p.PestDiseaseID
          ORDER BY p.Name ASC"
     );
 
@@ -101,8 +102,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             . '&v=' . rawurlencode((string) $row['ImageVersion']);
         $pests[] = $row;
     }
+    $result->free();
 
-    respond(['success' => true, 'pests' => $pests]);
+    $cropResult = $conn->query('SELECT CropID, CropName, EnglishName FROM crops ORDER BY CropName ASC');
+    if (!$cropResult) {
+        respond(['success' => false, 'message' => 'Unable to load crops.'], 500);
+    }
+    $crops = [];
+    while ($row = $cropResult->fetch_assoc()) {
+        $crops[] = [
+            'id' => (int) $row['CropID'],
+            'name' => $row['CropName'],
+            'englishName' => $row['EnglishName'],
+        ];
+    }
+    $cropResult->free();
+
+    $linkResult = $conn->query(
+        "SELECT pac.PestDiseaseID, c.CropID, c.CropName, c.EnglishName
+         FROM pest_affected_crop pac
+         JOIN crops c ON c.CropID = pac.CropID
+         ORDER BY c.CropName ASC"
+    );
+    if (!$linkResult) {
+        respond(['success' => false, 'message' => 'Unable to load pest relationships.'], 500);
+    }
+    $pestLinks = [];
+    while ($row = $linkResult->fetch_assoc()) {
+        $pestId = (int) $row['PestDiseaseID'];
+        $pestLinks[$pestId][] = [
+            'id' => (int) $row['CropID'],
+            'name' => $row['CropName'],
+            'englishName' => $row['EnglishName'],
+        ];
+    }
+    $linkResult->free();
+    foreach ($pests as &$pest) {
+        $pest['affectedCrops'] = $pestLinks[$pest['PestDiseaseID']] ?? [];
+    }
+    unset($pest);
+
+    respond(['success' => true, 'pests' => $pests, 'crops' => $crops]);
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -112,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $pestId = filter_input(INPUT_POST, 'pestId', FILTER_VALIDATE_INT) ?: 0;
 $name = postText('pestName');
 $type = postText('pestType');
-$affectedCrop = postText('affectedCrop');
+$cropIds = selectedIds('cropIds');
 $season = postText('season');
 $symptoms = postText('symptoms');
 $info = postText('conditions');
@@ -124,8 +164,25 @@ if ($name === '' || !in_array($type, ['Pest', 'Disease'], true)) {
     respond(['success' => false, 'message' => 'Name and type (Pest or Disease) are required.'], 422);
 }
 
+if ($cropIds === null) {
+    respond(['success' => false, 'message' => 'Invalid affected crop selection.'], 422);
+}
+
 if ($symptoms === '' || $info === '' || $managementTips === '') {
     respond(['success' => false, 'message' => 'Symptoms, conditions, and recommended action are required.'], 422);
+}
+
+if ($cropIds) {
+    $selectedCropIds = implode(',', $cropIds);
+    $validResult = $conn->query('SELECT CropID FROM crops WHERE CropID IN (' . $selectedCropIds . ')');
+    if (!$validResult) {
+        respond(['success' => false, 'message' => 'Unable to validate affected crop selection.'], 500);
+    }
+    $validIds = array_map('intval', array_column($validResult->fetch_all(MYSQLI_ASSOC), 'CropID'));
+    $validResult->free();
+    if (count($validIds) !== count($cropIds)) {
+        respond(['success' => false, 'message' => 'One or more selected crops no longer exist.'], 422);
+    }
 }
 
 $conn->begin_transaction();
@@ -163,16 +220,21 @@ try {
     $savedId = $pestId ?: $conn->insert_id;
     $stmt->close();
 
-    $cropId = findCropId($conn, $affectedCrop);
     $deleteLinks = $conn->prepare('DELETE FROM pest_affected_crop WHERE PestDiseaseID = ?');
     $deleteLinks->bind_param('i', $savedId);
-    $deleteLinks->execute();
+    if (!$deleteLinks->execute()) {
+        throw new RuntimeException($deleteLinks->error);
+    }
     $deleteLinks->close();
 
-    if ($cropId > 0) {
+    if ($cropIds) {
         $link = $conn->prepare('INSERT INTO pest_affected_crop (PestDiseaseID, CropID) VALUES (?, ?)');
-        $link->bind_param('ii', $savedId, $cropId);
-        $link->execute();
+        foreach ($cropIds as $cropId) {
+            $link->bind_param('ii', $savedId, $cropId);
+            if (!$link->execute()) {
+                throw new RuntimeException($link->error);
+            }
+        }
         $link->close();
     }
 

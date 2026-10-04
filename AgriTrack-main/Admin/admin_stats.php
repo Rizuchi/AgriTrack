@@ -82,10 +82,9 @@ $monthlyQuery->close();
 $cropResult = $conn->query(
     "SELECT c.CropName, COUNT(pc.PlantedCropID) AS planted_count
      FROM crops c
-     LEFT JOIN planted_crop pc ON pc.CropID = c.CropID
+     INNER JOIN planted_crop pc ON pc.CropID = c.CropID
      GROUP BY c.CropID, c.CropName
-     ORDER BY planted_count DESC, c.CropName ASC
-     LIMIT 8"
+     ORDER BY planted_count DESC, c.CropName ASC"
 );
 if (!$cropResult) {
     respond(['success' => false, 'message' => 'Unable to load crop statistics.'], 500);
@@ -122,7 +121,7 @@ respond([
         'activeUsers' => scalar($conn, "SELECT COUNT(*) FROM users WHERE role = 'User' AND accStatus = 'Active'"),
         'crops' => scalar($conn, 'SELECT COUNT(*) FROM crops'),
         'plantedCrops' => scalar($conn, 'SELECT COUNT(*) FROM planted_crop'),
-        'readyToHarvest' => scalar($conn, "SELECT COUNT(*) FROM planted_crop WHERE Status = 'Ready to Harvest'"),
+        'unreadMessages' => scalar($conn, "SELECT COUNT(*) FROM contact_messages c LEFT JOIN contact_message_status s ON s.ContactID = c.ContactID WHERE COALESCE(s.is_read, 0) = 0"),
         'pests' => scalar($conn, 'SELECT COUNT(*) FROM pest_diseases'),
     ],
     'monthly' => $monthly,
