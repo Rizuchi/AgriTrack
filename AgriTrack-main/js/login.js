@@ -67,6 +67,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (response.ok && result.success) {
+                try {
+                    sessionStorage.removeItem('agritrack.sessionReadNotifications.v1');
+                } catch (error) {
+                    console.warn('Temporary notification read state could not be cleared:', error);
+                }
                 messageBox.textContent = result.message;
                 messageBox.style.color = '#14532d';
                 redirectToDashboard(result.redirect);

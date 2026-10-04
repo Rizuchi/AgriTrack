@@ -24,7 +24,9 @@ const state = {
     selectedPlantedCropId: null,
     plantedCrops: [],
     scheduledTasks: [],
-    taskFilter: 'week',
+    calendarTasks: [],
+    taskFilter: 'all',
+    focusedTaskId: null,
 };
 
 function pad2(n) {
@@ -92,8 +94,112 @@ async function loadStats() {
         document.getElementById('statTotalCrops').textContent = String(data.totalCrops).padStart(2, '0');
         document.getElementById('statActiveMonitoring').textContent = String(data.activeMonitoring).padStart(2, '0');
         document.getElementById('statPestAlerts').textContent = String(data.pestAlerts).padStart(2, '0');
+        const pestCropNames = data.pestCropNames || [];
+        const pestHint = document.getElementById('pestAlertHint');
+        if (pestCropNames.length > 0) {
+            const visibleNames = pestCropNames.slice(0, 3).join(', ');
+            const moreCount = pestCropNames.length - 3;
+            pestHint.textContent = `Pest noted: ${visibleNames}${moreCount > 0 ? ` +${moreCount} more` : ''}`;
+            pestHint.hidden = false;
+            window.setTimeout(() => {
+                pestHint.hidden = true;
+            }, 7000);
+        }
     } catch (err) {
         console.error('Failed to load stats:', err);
+    }
+}
+
+function showWeather(data) {
+    const content = document.getElementById('weatherContent');
+    const update = document.getElementById('weatherUpdate');
+    const gate = document.getElementById('weatherGate');
+
+    if (data.needsFetch) {
+        update.textContent = "Today's weather update is not available yet.";
+        return;
+    }
+
+    gate.hidden = true;
+    content.setAttribute('aria-hidden', 'false');
+    update.setAttribute('aria-hidden', 'false');
+
+    if (!data.weather) {
+        document.getElementById('weatherDescription').textContent = 'Weather update unavailable';
+        update.textContent = data.error || 'Today’s shared weather request did not return conditions. The daily call has already been used.';
+        update.classList.add('is-error');
+        return;
+    }
+
+    const weather = data.weather;
+    document.getElementById('weatherDescription').textContent = weather.description || 'Conditions unavailable';
+    document.getElementById('weatherLocation').textContent = weather.location || 'Orani, Bataan';
+    document.getElementById('weatherTemperature').textContent = `${weather.temperature}°C`;
+    document.getElementById('weatherRainfall').textContent = `${weather.rainfall} mm`;
+    document.getElementById('weatherFeelsLike').textContent = `${weather.feelsLike}°C`;
+    document.getElementById('weatherHumidity').textContent = `${weather.humidity}%`;
+    document.getElementById('weatherWind').textContent = `${weather.windSpeed} km/h`;
+
+    const icon = document.getElementById('weatherIcon');
+    const description = String(weather.description || '').toLowerCase();
+    icon.className = description.includes('thunder')
+        ? 'fa-solid fa-cloud-bolt'
+        : description.includes('rain') || description.includes('drizzle')
+            ? 'fa-solid fa-cloud-showers-heavy'
+            : description.includes('cloud') || description.includes('overcast')
+                ? 'fa-solid fa-cloud'
+                : description.includes('sun') || description.includes('clear')
+                    ? 'fa-solid fa-sun'
+                    : 'fa-solid fa-cloud-sun';
+
+    const updatedAt = new Date(data.fetchedAt);
+    const timeLabel = Number.isNaN(updatedAt.getTime())
+        ? 'today'
+        : updatedAt.toLocaleString('en-PH', {
+            timeZone: 'Asia/Manila',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: 'numeric',
+            minute: '2-digit',
+        });
+    update.textContent = data.cached
+        ? `Shared current-conditions update · checked ${timeLabel} Philippine time. Refreshes daily.`
+        : `Shared current-conditions update · checked ${timeLabel} Philippine time.`;
+    update.classList.remove('is-error');
+}
+
+async function loadWeather(requestUpdate = false) {
+    const content = document.getElementById('weatherContent');
+    const update = document.getElementById('weatherUpdate');
+    const button = document.getElementById('loadWeatherButton');
+    const buttonLabel = button.querySelector('.weather-button-label');
+    const gate = document.getElementById('weatherGate');
+
+    if (requestUpdate && button.disabled) return;
+    gate.hidden = true;
+    update.setAttribute('aria-hidden', 'false');
+    update.classList.remove('is-error');
+    update.textContent = "Checking today's weather update…";
+    content.setAttribute('aria-busy', 'true');
+    button.disabled = true;
+    buttonLabel.textContent = 'Loading…';
+
+    try {
+        let data = await apiGet('get_weather.php');
+        if (data.needsFetch || requestUpdate) {
+            data = await apiPost('get_weather.php', {});
+        }
+        showWeather(data);
+    } catch (error) {
+        update.textContent = error.message || 'Could not check the shared weather update.';
+        update.classList.add('is-error');
+        gate.hidden = false;
+        console.error('Failed to load shared weather:', error);
+    } finally {
+        content.setAttribute('aria-busy', 'false');
+        button.disabled = false;
+        buttonLabel.textContent = 'Get Weather';
     }
 }
 
@@ -104,6 +210,41 @@ function taskDateValue(value) {
 
 function taskDateLabel(value) {
     return taskDateValue(value).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function todayDateKey() {
+    const today = new Date();
+    return toDateKey(today.getFullYear(), today.getMonth() + 1, today.getDate());
+}
+
+function scheduledTaskItems() {
+    const cropTasks = state.scheduledTasks.map(task => ({
+        ...task,
+        key: String(task.id),
+        isCalendarTask: false,
+    }));
+    const calendarTasks = state.calendarTasks.map(task => ({
+        ...task,
+        id: `calendar-${task.CalendarID}`,
+        key: `calendar-${task.CalendarID}`,
+        type: task.TaskType,
+        due_date: task.StartDate,
+        status: task.Status === 'Completed' ? 'Done' : 'Pending',
+        priority: 'Scheduled',
+        is_urgent: 0,
+        isCalendarTask: true,
+    }));
+    return [...cropTasks, ...calendarTasks];
+}
+
+function scheduledTaskStatusLabel(task) {
+    if (task.status === 'Pending' && normalizeDateKey(task.due_date) > todayDateKey()) {
+        return 'Upcoming / Paparating';
+    }
+    if (task.status === 'Pending') return 'Pending / Nakabinbin';
+    if (task.status === 'Overdue') return 'Overdue / Lampas na sa takdang araw';
+    if (task.status === 'Done') return 'Done / Tapos na';
+    return task.status;
 }
 
 function taskTipsData(task) {
@@ -121,9 +262,11 @@ function visibleTasks() {
     const weekEnd = new Date(today);
     weekEnd.setDate(weekEnd.getDate() + 6);
 
-    return state.scheduledTasks.filter(task => {
+    return scheduledTaskItems().filter(task => {
+        if (task.status === 'Done') return false;
         const due = taskDateValue(task.due_date);
         const overdue = task.status === 'Overdue' || due < today;
+        if (state.taskFilter === 'all') return true;
         if (state.taskFilter === 'overdue') return overdue && task.status !== 'Done';
         if (state.taskFilter === 'today') return due.getTime() === today.getTime();
         return due >= today && due <= weekEnd;
@@ -133,12 +276,18 @@ function visibleTasks() {
 function renderScheduledTasks() {
     const list = document.getElementById('scheduledTaskList');
     const tasks = visibleTasks();
+    const focusedTask = state.focusedTaskId === null
+        ? null
+        : scheduledTaskItems().find(task => task.key === String(state.focusedTaskId) && task.status !== 'Done');
+    if (focusedTask && !tasks.includes(focusedTask)) tasks.unshift(focusedTask);
     list.innerHTML = '';
 
     if (tasks.length === 0) {
         const empty = document.createElement('p');
         empty.className = 'task-empty';
-        empty.textContent = state.taskFilter === 'overdue' ? 'No overdue tasks.' : 'No tasks for this period.';
+        empty.textContent = state.taskFilter === 'overdue'
+            ? 'No overdue tasks.'
+            : state.taskFilter === 'all' ? 'No active tasks.' : 'No tasks for this period.';
         list.appendChild(empty);
         return;
     }
@@ -146,17 +295,25 @@ function renderScheduledTasks() {
     tasks.forEach(task => {
         const item = document.createElement('article');
         item.className = `scheduled-task${Number(task.is_urgent) ? ' is-urgent' : ''}${task.status === 'Done' ? ' is-done' : ''}`;
+        item.dataset.taskId = task.key;
+        const isFocusedTask = task.key === String(state.focusedTaskId);
+        if (isFocusedTask) {
+            item.classList.add('is-targeted');
+            item.tabIndex = -1;
+        }
 
         const content = document.createElement('div');
         content.className = 'scheduled-task-main';
         const heading = document.createElement('h3');
-        heading.textContent = task.type;
+        heading.textContent = task.typeLabel || task.type;
         const crop = document.createElement('p');
         crop.className = 'scheduled-task-crop';
-        crop.textContent = `${task.PlantLabel || task.CropName} · ${task.CropName}`;
+        crop.textContent = task.PlantLabel && task.CropName
+            ? `${task.PlantLabel} · ${task.CropName}`
+            : task.PlantLabel || task.CropName || 'General task';
         const meta = document.createElement('div');
         meta.className = 'scheduled-task-meta';
-        meta.textContent = `${taskDateLabel(task.due_date)} · ${task.status} · ${task.priority}`;
+        meta.textContent = `${taskDateLabel(task.due_date)} · ${scheduledTaskStatusLabel(task)} · ${task.priority}`;
         content.append(heading, crop, meta);
 
         const actions = document.createElement('div');
@@ -164,7 +321,7 @@ function renderScheduledTasks() {
         const tipsButton = document.createElement('button');
         tipsButton.type = 'button';
         tipsButton.className = 'task-action-link';
-        tipsButton.textContent = 'View Tips';
+        tipsButton.textContent = 'Tingnan ang Tip';
         tipsButton.addEventListener('click', () => openTaskTips(task));
         actions.appendChild(tipsButton);
 
@@ -172,8 +329,10 @@ function renderScheduledTasks() {
             const doneButton = document.createElement('button');
             doneButton.type = 'button';
             doneButton.className = 'task-done-button';
-            doneButton.textContent = 'Mark Done';
-            doneButton.addEventListener('click', () => markTaskDone(task, doneButton));
+            doneButton.textContent = 'Markahan bilang Tapos na';
+            doneButton.addEventListener('click', () => task.isCalendarTask
+                ? markCalendarTaskDone(task, doneButton)
+                : markTaskDone(task, doneButton));
             actions.appendChild(doneButton);
         }
 
@@ -188,31 +347,36 @@ async function loadScheduledTasks() {
     try {
         const data = await apiGet('scheduled_tasks.php');
         state.scheduledTasks = data.tasks || [];
-        const activeCount = state.scheduledTasks.filter(task => task.status !== 'Done').length;
+        state.calendarTasks = data.calendarTasks || [];
+        const activeCount = scheduledTaskItems().filter(task => task.status !== 'Done').length;
         const urgentCount = state.scheduledTasks.filter(task => Number(task.is_urgent) === 1 && task.status !== 'Done').length;
         document.getElementById('statScheduledTasks').textContent = String(activeCount).padStart(2, '0');
         summary.textContent = `${activeCount} active tasks · ${urgentCount} urgent`;
         renderScheduledTasks();
+        renderMainCalendar();
+        window.AgriTrackNotifications?.update(state.scheduledTasks, '', data.contactReplies || [], data.calendarTasks || []);
     } catch (err) {
+        state.calendarTasks = [];
         summary.textContent = 'Tasks could not be loaded.';
         list.innerHTML = '';
         const message = document.createElement('p');
         message.className = 'task-empty task-error';
         message.textContent = err.message || 'Unable to load crop tasks.';
         list.appendChild(message);
+        window.AgriTrackNotifications?.update([], err.message || 'Notifications could not be loaded.');
         console.error('Failed to load scheduled tasks:', err);
     }
 }
 
 function openTaskTips(task) {
     const tips = taskTipsData(task);
-    document.getElementById('taskTipsCrop').textContent = `${task.PlantLabel || task.CropName} · ${task.type}`;
-    document.getElementById('taskTipsTitle').textContent = 'Task tips';
+    document.getElementById('taskTipsCrop').textContent = `${task.PlantLabel || task.CropName || 'Pangkalahatang gawain'} · ${task.typeLabel || task.type}`;
+    document.getElementById('taskTipsTitle').textContent = 'Mga Tip sa Gawain';
     document.getElementById('taskTipsActionWrap').hidden = !tips.action;
     document.getElementById('taskTipsAction').textContent = tips.action || '';
-    document.getElementById('taskTipsFix').textContent = tips.fix || 'Follow the recommended crop care for this task.';
-    document.getElementById('taskTipsPrevention').textContent = tips.prevention || 'Inspect the crop regularly and keep tools clean.';
-    document.getElementById('taskTipsFollowUp').textContent = tips.followUp || 'Re-check the crop in 3 days.';
+    document.getElementById('taskTipsFix').textContent = tips.fix || 'Sundin ang inirerekomendang pag-aalaga para sa gawaing ito.';
+    document.getElementById('taskTipsPrevention').textContent = tips.prevention || 'Regular na suriin ang pananim at panatilihing malinis ang mga kagamitan.';
+    document.getElementById('taskTipsFollowUp').textContent = tips.followUp || 'Suriin muli ang pananim makalipas ang 3 araw.';
     document.getElementById('taskTipsModal').hidden = false;
     document.getElementById('closeTaskTips').focus();
 }
@@ -223,7 +387,9 @@ async function markTaskDone(task, button) {
         await apiPost('scheduled_task_update.php', { taskId: Number(task.id) });
         task.status = 'Done';
         renderScheduledTasks();
-        const activeCount = state.scheduledTasks.filter(item => item.status !== 'Done').length;
+        renderMainCalendar();
+        window.AgriTrackNotifications?.update(state.scheduledTasks);
+        const activeCount = scheduledTaskItems().filter(item => item.status !== 'Done').length;
         document.getElementById('statScheduledTasks').textContent = String(activeCount).padStart(2, '0');
     } catch (err) {
         button.disabled = false;
@@ -231,9 +397,37 @@ async function markTaskDone(task, button) {
     }
 }
 
+async function markCalendarTaskDone(task, button) {
+    button.disabled = true;
+    try {
+        const calendarId = Number(String(task.id).replace('calendar-', ''));
+        await apiPost('calendar_update_status.php', { calendarId, status: 'Completed' });
+        const savedTask = state.calendarTasks.find(item => Number(item.CalendarID) === calendarId);
+        if (savedTask) savedTask.Status = 'Completed';
+        renderScheduledTasks();
+        renderMainCalendar();
+        window.AgriTrackNotifications?.update(state.scheduledTasks, '', undefined, state.calendarTasks);
+        const activeCount = scheduledTaskItems().filter(item => item.status !== 'Done').length;
+        document.getElementById('statScheduledTasks').textContent = String(activeCount).padStart(2, '0');
+    } catch (err) {
+        button.disabled = false;
+        console.error('Failed to complete calendar task:', err);
+    }
+}
+
 // ---------- MAIN CALENDAR ----------
 
+function showMainCalendarSkeleton(year, month) {
+    const grid = document.getElementById('calendarGrid');
+    const cells = Math.ceil((new Date(year, month - 1, 1).getDay() + new Date(year, month, 0).getDate()) / 7) * 7;
+    grid.setAttribute('aria-busy', 'true');
+    grid.innerHTML = Array.from({ length: cells }, () =>
+        '<span class="skeleton-bar skeleton-calendar-cell" aria-hidden="true"></span>'
+    ).join('');
+}
+
 async function loadMonthData(year, month) {
+    showMainCalendarSkeleton(year, month);
     try {
         const data = await apiGet(`calendar_get.php?year=${year}&month=${month}`);
 
@@ -275,6 +469,7 @@ function renderMainCalendar() {
 
     const grid = document.getElementById('calendarGrid');
     grid.innerHTML = '';
+    grid.setAttribute('aria-busy', 'false');
 
     const firstWeekday = new Date(viewYear, viewMonth - 1, 1).getDay(); // 0=Sun
     const daysInMonth = new Date(viewYear, viewMonth, 0).getDate();
@@ -292,12 +487,28 @@ function renderMainCalendar() {
         if (isToday(viewYear, viewMonth, day)) {
             span.classList.add('today');
         }
-        if (state.tasksByDate[key] || state.notesByDate[key]) {
+        const calendarTasks = state.tasksByDate[key] || [];
+        const cropTasks = state.scheduledTasks.filter(task =>
+            task.status !== 'Done' && normalizeDateKey(task.due_date) === key
+        );
+        const scheduledCount = calendarTasks.length + cropTasks.length;
+        if (scheduledCount || state.notesByDate[key]) {
             span.classList.add('has-entry');
+        }
+        if (scheduledCount) {
+            span.classList.add('has-scheduled-task');
+            const taskNames = [
+                ...calendarTasks.map(task => task.TaskType),
+                ...cropTasks.map(task => task.type),
+            ];
+            span.title = `${scheduledCount} scheduled task${scheduledCount === 1 ? '' : 's'}: ${taskNames.join(', ')}`;
+            span.setAttribute('aria-label', `${key}: ${span.title}`);
+        } else {
+            span.setAttribute('aria-label', key);
         }
         if (state.notesByDate[key]) {
             span.classList.add('has-note');
-            span.title = 'May tala / Has note';
+            span.title = `${span.title ? `${span.title} · ` : ''}May tala / Has note`;
         }
         if (state.harvestByDate[key]) {
             span.classList.add('harvest-ready');
@@ -499,6 +710,33 @@ async function loadExistingNotesForDate(key) {
     const container = document.getElementById('modalExistingNotes');
     container.innerHTML = '';
 
+    const scheduledTasks = [
+        ...(state.tasksByDate[key] || []).map(task => ({
+            title: task.TaskType,
+            details: `${task.Status === 'Pending' && normalizeDateKey(task.StartDate) > todayDateKey() ? 'Upcoming / Paparating' : task.Status === 'Pending' ? 'Pending / Nakabinbin' : task.Status === 'Completed' ? 'Done / Tapos na' : task.Status}${task.CropName ? ` · ${task.PlantLabel || task.CropName}` : ''}`,
+        })),
+        ...state.scheduledTasks
+            .filter(task => task.status !== 'Done' && normalizeDateKey(task.due_date) === key)
+            .map(task => ({
+                title: task.type,
+                details: `${scheduledTaskStatusLabel(task)} · ${task.PlantLabel || task.CropName} · ${task.priority} priority`,
+            })),
+    ];
+    if (scheduledTasks.length > 0) {
+        const heading = document.createElement('p');
+        heading.className = 'modal-existing-notes-heading';
+        heading.textContent = 'Scheduled tasks for this day / Mga naka-iskedyul na gawain sa araw na ito:';
+        container.appendChild(heading);
+        scheduledTasks.forEach(task => {
+            const item = document.createElement('p');
+            item.className = 'calendar-task-entry';
+            const title = document.createElement('strong');
+            title.textContent = task.title;
+            item.append(title, document.createTextNode(` · ${task.details}`));
+            container.appendChild(item);
+        });
+    }
+
     const harvests = state.harvestByDate[key];
     if (harvests && harvests.length > 0) {
         container.appendChild(buildHarvestBanner(harvests));
@@ -527,19 +765,128 @@ async function loadExistingNotesForDate(key) {
 function openNoteModal(dateKey) {
     const target = dateKey || toDateKey(new Date().getFullYear(), new Date().getMonth() + 1, new Date().getDate());
     resetModalSelections();
+    setNoteModalView('calendar');
     renderModalCalendar(target);
     setSelectedNoteDate(target);
     noteModal.classList.add('show');
 }
 
+function setNoteModalView(view) {
+    const modalContent = document.querySelector('.note-modal-content');
+    const isCalendar = view === 'calendar';
+    modalContent.classList.toggle('show-calendar', isCalendar);
+    modalContent.classList.toggle('show-actions', !isCalendar);
+    document.querySelectorAll('[data-modal-view]').forEach(tab => {
+        const active = tab.dataset.modalView === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-selected', String(active));
+        tab.tabIndex = active ? 0 : -1;
+    });
+}
+
+async function scheduleCalendarTask() {
+    const input = document.getElementById('calendarTaskInput');
+    const error = document.getElementById('calendarTaskError');
+    const button = document.getElementById('scheduleCalendarTask');
+    const taskType = input.value.trim();
+    error.textContent = '';
+    if (!state.selectedNoteDate) {
+        error.textContent = 'Select a date first / Pumili muna ng petsa.';
+        return;
+    }
+    if (!taskType) {
+        error.textContent = 'Enter a task / Maglagay ng gawain.';
+        input.focus();
+        return;
+    }
+
+    button.disabled = true;
+    try {
+        await apiPost('calendar_add.php', {
+            taskType,
+            startDate: state.selectedNoteDate,
+            plantedCropId: state.selectedPlantedCropId,
+        });
+        input.value = '';
+        await loadMonthData(state.viewYear, state.viewMonth);
+        await loadExistingNotesForDate(state.selectedNoteDate);
+        showSaveToast('Task scheduled / Naka-iskedyul na ang gawain.');
+    } catch (err) {
+        error.textContent = err.message
+            ? `${err.message} / Hindi na-iskedyul ang gawain.`
+            : 'The task could not be scheduled / Hindi na-iskedyul ang gawain.';
+        console.error('Failed to schedule calendar task:', err);
+    } finally {
+        button.disabled = false;
+    }
+}
+
 function resetModalSelections() {
-    document.querySelectorAll('.tag-list button').forEach(btn => btn.classList.remove('selected'));
+    document.querySelectorAll('.tag-list button').forEach(btn => {
+        btn.classList.remove('selected');
+        if (btn.dataset.customValue) btn.remove();
+    });
+    document.querySelectorAll('.custom-tag-input').forEach(input => input.remove());
     document.getElementById('modalFreeText').value = '';
     document.getElementById('modalErrorText').textContent = '';
+    document.getElementById('calendarTaskError').textContent = '';
+    document.getElementById('calendarTaskInput').value = '';
     state.selectedPlantedCropId = null;
     const cropSelect = document.getElementById('modalCropSelect');
     cropSelect.value = '';
     cropSelect.size = 1;
+}
+
+function addCustomTag(button) {
+    const group = button.closest('.tag-list');
+    const existingInput = group.querySelector('.custom-tag-input');
+    if (existingInput) {
+        existingInput.focus();
+        return;
+    }
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'custom-tag-input';
+    input.placeholder = 'Custom choice';
+    input.maxLength = 80;
+    input.pattern = '[A-Za-z0-9 ]+';
+    group.insertBefore(input, button);
+    input.focus();
+
+    const commit = () => {
+        const value = input.value.trim();
+        if (!value) return;
+        if (!/^[a-z0-9]+(?:[a-z0-9 ]*)$/i.test(value)) {
+            input.setCustomValidity('Use letters, numbers, and spaces only.');
+            input.reportValidity();
+            input.focus();
+            return;
+        }
+        input.remove();
+
+        const duplicate = Array.from(group.querySelectorAll('button'))
+            .some(tag => tag.dataset.customValue === value || tag.textContent.trim() === value);
+        if (duplicate) return;
+
+        const customTag = document.createElement('button');
+        customTag.type = 'button';
+        customTag.className = 'custom-tag-value selected';
+        customTag.dataset.customValue = value;
+        customTag.textContent = value;
+        group.insertBefore(customTag, button);
+        customTag.addEventListener('click', () => customTag.classList.toggle('selected'));
+    };
+
+    input.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            commit();
+        } else if (event.key === 'Escape') {
+            input.remove();
+        }
+    });
+    input.addEventListener('blur', commit);
 }
 
 function getSelectedTags(group) {
@@ -632,13 +979,16 @@ async function saveNote() {
 document.addEventListener('DOMContentLoaded', () => {
     loadGreeting();
     loadStats();
-    loadScheduledTasks();
+    document.getElementById('loadWeatherButton').addEventListener('click', () => loadWeather(true));
+    loadWeather();
+    const scheduledTasksLoad = loadScheduledTasks();
     loadPlantedCrops();
-    loadMonthData(state.viewYear, state.viewMonth);
+    const calendarLoad = loadMonthData(state.viewYear, state.viewMonth);
 
     document.querySelectorAll('[data-task-filter]').forEach(button => {
         button.addEventListener('click', () => {
             state.taskFilter = button.dataset.taskFilter;
+            state.focusedTaskId = null;
             document.querySelectorAll('[data-task-filter]').forEach(filter => {
                 const active = filter === button;
                 filter.classList.toggle('is-active', active);
@@ -650,14 +1000,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const scheduledTasksModal = document.getElementById('scheduledTasksModal');
     const openScheduledTasksButton = document.getElementById('openScheduledTasks');
+    let scheduledTasksOpener = openScheduledTasksButton;
     const closeScheduledTasks = () => {
         scheduledTasksModal.hidden = true;
-        openScheduledTasksButton.focus();
+        scheduledTasksOpener.focus();
     };
-    openScheduledTasksButton.addEventListener('click', () => {
+    const showScheduledTasks = event => {
+        scheduledTasksOpener = event.currentTarget;
         scheduledTasksModal.hidden = false;
         document.getElementById('closeScheduledTasks').focus();
-    });
+    };
+    openScheduledTasksButton.addEventListener('click', showScheduledTasks);
     document.getElementById('closeScheduledTasks').addEventListener('click', closeScheduledTasks);
     scheduledTasksModal.addEventListener('click', event => {
         if (event.target === scheduledTasksModal) closeScheduledTasks();
@@ -679,10 +1032,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    const dashboardParams = new URLSearchParams(window.location.search);
+    const requestedTaskId = Number(dashboardParams.get('taskId'));
+    const requestedCalendarTaskId = Number(dashboardParams.get('calendarTaskId'));
+    if (dashboardParams.get('openTasks') === '1') {
+        scheduledTasksLoad.then(() => {
+            const task = requestedCalendarTaskId
+                ? scheduledTaskItems().find(item => item.isCalendarTask && Number(item.CalendarID) === requestedCalendarTaskId)
+                : state.scheduledTasks.find(item => Number(item.id) === requestedTaskId);
+            if (task) {
+                state.focusedTaskId = task.key;
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const dueDate = taskDateValue(task.due_date);
+                if (task.status === 'Overdue' || dueDate < today) state.taskFilter = 'overdue';
+                else if (dueDate.getTime() === today.getTime()) state.taskFilter = 'today';
+                else state.taskFilter = 'week';
+
+                document.querySelectorAll('[data-task-filter]').forEach(button => {
+                    const active = button.dataset.taskFilter === state.taskFilter;
+                    button.classList.toggle('is-active', active);
+                    button.setAttribute('aria-pressed', String(active));
+                });
+                renderScheduledTasks();
+            }
+
+            if (dashboardParams.get('openCalendar') === '1') {
+                const date = dashboardParams.get('date');
+                Promise.all([calendarLoad, scheduledTasksLoad]).then(async () => {
+                    if (/^\d{4}-\d{2}-\d{2}$/.test(date || '')) {
+                        const [year, month] = date.split('-').map(Number);
+                        if (year !== state.viewYear || month !== state.viewMonth) {
+                            state.viewYear = year;
+                            state.viewMonth = month;
+                            await loadMonthData(year, month);
+                        }
+                        openNoteModal(date);
+                    } else {
+                        openNoteModal(null);
+                    }
+                    window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`);
+                });
+            }
+
+            openScheduledTasksButton.click();
+            if (task) {
+                window.history.replaceState(null, '', `${window.location.pathname}${window.location.hash}`);
+                window.requestAnimationFrame(() => {
+                    const taskElement = document.querySelector(`[data-task-id="${task.key}"]`);
+                    taskElement?.scrollIntoView({ block: 'nearest' });
+                    (taskElement?.querySelector('.task-done-button') || taskElement)?.focus();
+                });
+            }
+        });
+    }
+
     document.getElementById('prevMonthBtn').addEventListener('click', () => goToMonth(-1));
     document.getElementById('nextMonthBtn').addEventListener('click', () => goToMonth(1));
 
     document.getElementById('openNoteModal').addEventListener('click', () => openNoteModal(null));
+    document.getElementById('closeNoteModal').addEventListener('click', () => noteModal.classList.remove('show'));
+    document.querySelectorAll('[data-modal-view]').forEach((tab, index, tabs) => {
+        tab.addEventListener('click', () => setNoteModalView(tab.dataset.modalView));
+        tab.addEventListener('keydown', event => {
+            if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+            event.preventDefault();
+            const direction = event.key === 'ArrowRight' ? 1 : -1;
+            const nextTab = tabs[(index + direction + tabs.length) % tabs.length];
+            setNoteModalView(nextTab.dataset.modalView);
+            nextTab.focus();
+        });
+    });
 
     const cropSelect = document.getElementById('modalCropSelect');
 
@@ -710,9 +1130,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.tag-list button').forEach(button => {
         button.addEventListener('click', function () {
+            if (this.hasAttribute('data-custom-tag')) {
+                addCustomTag(this);
+                return;
+            }
             this.classList.toggle('selected');
         });
     });
 
     document.getElementById('saveNoteBtn').addEventListener('click', saveNote);
+    document.getElementById('scheduleCalendarTask').addEventListener('click', scheduleCalendarTask);
+    document.getElementById('calendarTaskInput').addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            scheduleCalendarTask();
+        }
+    });
 });
