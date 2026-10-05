@@ -1,23 +1,26 @@
 .tutorial-help-button {
-    display: grid;
-    place-items: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: 44px;
     height: 44px;
     flex: 0 0 44px;
-    border: 1px solid var(--line, #dce5db);
+    padding: 0;
+    border: 1px solid rgba(21, 41, 31, 0.12);
     border-radius: 12px;
-    background: var(--surface, #ffffff);
+    background: #f3f5f1;
     color: var(--ink, #173b29);
     font: inherit;
-    font-size: 17px;
+    font-size: 18px;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .tutorial-help-button:hover {
     transform: translateY(-1px);
     background: var(--lime-soft, #eef7d6);
     border-color: #cfe39a;
+    box-shadow: 0 4px 10px rgba(30, 60, 41, 0.08);
 }
 
 .tutorial-help-button:focus-visible,

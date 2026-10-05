@@ -90,7 +90,33 @@ body {
 .dashboard-icons {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+}
+
+.disclaimer-toggle-btn,
+.tutorial-help-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid rgba(17, 24, 19, 0.12);
+    border-radius: 12px;
+    background: #f2f4f1;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.disclaimer-toggle-btn:hover,
+.tutorial-help-button:hover {
+    background: #edf3df;
+    border-color: rgba(73, 102, 54, 0.28);
+    transform: translateY(-1px);
 }
 
 .icon-btn {
@@ -126,6 +152,78 @@ body {
 
 .recommendation-line {
     display: none;
+}
+
+.page-disclaimer-popover {
+    position: fixed;
+    right: 24px;
+    top: 72px;
+    z-index: 999;
+}
+
+.page-disclaimer-popover[hidden] {
+    display: none;
+}
+
+.page-disclaimer-panel {
+    width: min(360px, calc(100vw - 32px));
+    padding: 16px 16px 14px;
+    border: 1px solid rgba(66, 96, 63, 0.12);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.98);
+    color: var(--ink);
+    box-shadow: 0 12px 28px rgba(23, 59, 41, 0.12);
+}
+
+.page-disclaimer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.page-disclaimer-header h3 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--forest-deep);
+}
+
+.page-disclaimer-close {
+    border: none;
+    background: transparent;
+    color: rgba(23, 59, 41, 0.7);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+}
+
+.page-disclaimer-language {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    height: 32px;
+    margin: 0 0 12px;
+    border: 1px solid rgba(41, 95, 58, 0.18);
+    border-radius: 999px;
+    background: #f4f9ee;
+    color: var(--forest-deep);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+}
+
+.page-disclaimer-copy {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: rgba(23, 59, 41, 0.78);
 }
 
 /* ---------- Current season banner ---------- */

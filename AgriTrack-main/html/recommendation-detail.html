@@ -228,7 +228,7 @@
             const source = /^https?:\/\//i.test(value)
                 ? `<a href="${safeValue}" target="_blank" rel="noopener noreferrer">${safeValue}</a>`
                 : safeValue;
-            return `<p class="detail-reference">Retrieved from: ${source}</p>`;
+            return `<p class="detail-reference">Source: ${source}</p>`;
         }
 
         function escapeHtml(str) {

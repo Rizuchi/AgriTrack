@@ -15,7 +15,6 @@
 
 <div class="container">
 
-    
     <div class="left-panel">
         <div class="overlay"></div>
 
@@ -33,7 +32,6 @@
         </div>
     </div>
 
-    
     <div class="right-panel">
 
         <h2>Gumawa ng Account</h2>
@@ -101,6 +99,17 @@
                 </div>
             </div>
 
+            <!-- Terms and Conditions checkbox -->
+            <div class="field terms-field">
+                <label class="terms-label" for="terms">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <span>
+                        Sumasang-ayon ako sa
+                        <a href="#" id="openTerms" class="terms-link">Terms and Conditions</a>
+                    </span>
+                </label>
+            </div>
+
             <div id="message" class="form-message" role="status" aria-live="polite"></div>
 
             <button type="submit" class="register-btn">
@@ -117,6 +126,173 @@
     </div>
 
 </div>
+
+<!-- Terms and Conditions modal -->
+<div id="termsModal" class="modal-overlay" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="termsTitle">
+
+        <div class="modal-header">
+            <h3 id="termsTitle">DATA PRIVACY AND INFORMED CONSENT NOTICE</h3>
+            <div class="modal-actions">
+                <button type="button" class="lang-toggle" id="langToggle" aria-label="Switch language">
+                    <i class="fa-solid fa-language"></i>
+                    <span id="langToggleText">English</span>
+                </button>
+                <button type="button" class="modal-close" id="closeTerms" aria-label="Close">&times;</button>
+            </div>
+        </div>
+
+        <div class="modal-body" id="termsBody">
+
+            <!-- TAGALOG -->
+            <div class="terms-content" data-lang="tl">
+                <p>Sa pag-log in sa AgriTrack, kusang-loob kang pumapayag na ibigay ang hinihinging impormasyon, at ang mga datos na makokolekta ay gagamitin lamang para sa pagpapatakbo ng sistema. Ang layunin ng AgriTrack ay tulungan ang mga magsasaka na subaybayan ang kanilang mga pananim, itala ang kanilang mga gawaing pansakahan, at magplano ng pagtatanim batay sa panahon.</p>
+
+                <p>Nangangako kaming protektahan ang iyong privacy at pangasiwaan nang responsable ang iyong impormasyon alinsunod sa Data Privacy Act of 2012 (Republic Act No. 10173).</p>
+
+                <h4>Privacy at Pagiging Kumpidensyal:</h4>
+                <p>Ang lahat ng impormasyong ibibigay mo, tulad ng mga detalye ng iyong account, talaan ng pananim, at mga gawaing pansakahan, ay ituturing na kumpidensyal, at ito ay maaari lamang ma-access ng mga awtorisadong Admin ng sistema, kaya hindi ito ibabahagi sa mga hindi awtorisadong indibidwal o organisasyon.</p>
+
+                <h4>Proteksyon ng Datos:</h4>
+                <p>Ang nakolektang impormasyon ay ligtas na iimbakin at gagamitin lamang para sa lehitimong layunin ng sistema, at gagawa ng angkop na hakbang upang maiwasan ang hindi awtorisadong pag-access, paglalantad, pagbabago, o maling paggamit ng iyong personal na impormasyon.</p>
+
+                <h4>Layunin ng Paggamit ng Datos:</h4>
+                <p>Ang mga datos na nakalap ay gagamitin lamang para sa mga tungkulin ng AgriTrack, tulad ng pagpapakita ng iyong mga talaan ng pananim, talaan ng mga gawain, at mga ulat, at pagbibigay ng mga rekomendasyon sa pananim batay sa panahon. Ang iyong impormasyon ay hindi ibebenta o ibabahagi sa mga third party.</p>
+
+                <h4>Kusang-loob na Paggamit:</h4>
+                <p>Ang paggamit mo ng sistema ay ganap na kusang-loob, at maaari mong piliing hindi ibigay ang anumang impormasyong hindi ka komportableng ibahagi, o huminto sa paggamit ng sistema anumang oras, nang walang parusa o negatibong kahihinatnan.</p>
+
+                <h4>Pahintulot sa Paggamit:</h4>
+                <p>Sa pagpapatuloy sa pag-log in, kinukumpirma mong nabasa at naunawaan mo ang impormasyon sa itaas, at kusang-loob kang sumasang-ayon sa pagkolekta at paggamit ng iyong impormasyon sa ilalim ng mga kondisyong nakasaad.</p>
+            </div>
+
+            <!-- ENGLISH -->
+            <div class="terms-content" data-lang="en" hidden>
+                <p>By logging in to AgriTrack, you voluntarily agree to provide the information requested, and the data collected will be used solely for the operation of the system. The purpose of AgriTrack is to help farmers monitor their crops, record their farming activities, and plan their planting based on the season.</p>
+
+                <p>We are committed to protecting your privacy and handling your information responsibly in accordance with the Data Privacy Act of 2012 (Republic Act No. 10173).</p>
+
+                <h4>Privacy and Confidentiality:</h4>
+                <p>All information you provide, such as your account details, crop records, and farming activities, will be treated as confidential, and it will only be accessed by authorized system Admins, so it will not be disclosed to unauthorized individuals or organizations.</p>
+
+                <h4>Data Protection:</h4>
+                <p>The information collected will be securely stored and handled only for legitimate system purposes, and appropriate measures will be taken to prevent unauthorized access, disclosure, alteration, or misuse of your personal information.</p>
+
+                <h4>Purpose of Data Use:</h4>
+                <p>The data gathered will be used exclusively for the functions of AgriTrack, such as displaying your crop records, activity logs, and reports, and giving crop recommendations based on the season. Your information will not be sold or shared with third parties.</p>
+
+                <h4>Voluntary Participation:</h4>
+                <p>Your use of the system is entirely voluntary, and you may choose not to provide any information you are uncomfortable sharing, or stop using the system at any time, without penalty or negative consequences.</p>
+
+                <h4>Consent to Use:</h4>
+                <p>By proceeding to log in, you confirm that you have read and understood the information above and voluntarily agree to the collection and use of your information under the conditions stated.</p>
+            </div>
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="register-btn modal-accept" id="acceptTerms">TINATANGGAP KO</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form        = document.getElementById('registerForm');
+    const checkbox    = document.getElementById('terms');
+    const field       = checkbox.closest('.terms-field');
+    const modal       = document.getElementById('termsModal');
+    const modalBody   = document.getElementById('termsBody');
+    const openLink    = document.getElementById('openTerms');
+    const closeBtn    = document.getElementById('closeTerms');
+    const acceptBtn   = document.getElementById('acceptTerms');
+    const langToggle  = document.getElementById('langToggle');
+    const langText    = document.getElementById('langToggleText');
+    const titleEl     = document.getElementById('termsTitle');
+    const messageBox  = document.getElementById('message');
+
+    const LANG = {
+        tl: {
+            title:  'DATA PRIVACY AND INFORMED CONSENT NOTICE',
+            accept: 'TINATANGGAP KO',
+            toggle: 'English',          
+            error:  'Kailangan mong sumang-ayon sa Terms and Conditions.'
+        },
+        en: {
+            title:  'DATA PRIVACY AND INFORMED CONSENT NOTICE',
+            accept: 'I ACCEPT',
+            toggle: 'Tagalog',
+            error:  'You must agree to the Terms and Conditions.'
+        }
+    };
+
+    let currentLang = 'en'; 
+
+    function setLanguage(lang) {
+        currentLang = lang;
+
+        modalBody.querySelectorAll('.terms-content').forEach(function (block) {
+            block.hidden = block.dataset.lang !== lang;
+        });
+
+        titleEl.textContent     = LANG[lang].title;
+        acceptBtn.textContent   = LANG[lang].accept;
+        langText.textContent    = LANG[lang].toggle;
+        modalBody.scrollTop     = 0;
+    }
+
+    function openModal(e) {
+        e.preventDefault();
+        e.stopPropagation(); 
+        modal.hidden = false;
+        modalBody.scrollTop = 0;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.hidden = true;
+        document.body.style.overflow = '';
+    }
+
+    openLink.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    langToggle.addEventListener('click', function () {
+        setLanguage(currentLang === 'tl' ? 'en' : 'tl');
+    });
+
+    acceptBtn.addEventListener('click', function () {
+        checkbox.checked = true;
+        field.classList.remove('invalid');
+        closeModal();
+    });
+
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !modal.hidden) closeModal();
+    });
+
+    checkbox.addEventListener('change', function () {
+        if (checkbox.checked) field.classList.remove('invalid');
+    });
+
+    form.addEventListener('submit', function (e) {
+        if (!checkbox.checked) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            field.classList.add('invalid');
+            messageBox.textContent = LANG[currentLang].error;
+            messageBox.style.color = '#b42318';
+            checkbox.focus();
+        }
+    }, true);
+
+    setLanguage('en');
+});
+</script>
 
 <script src="../js/registration.js?v=3"></script>
 </body>

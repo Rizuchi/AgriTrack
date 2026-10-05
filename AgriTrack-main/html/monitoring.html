@@ -118,6 +118,7 @@
                 <i class="fa-solid fa-bell" aria-hidden="true"></i>
                 <span class="notification-count" id="notificationCount" hidden></span>
             </button>
+            <button type="button" class="disclaimer-toggle-btn" aria-label="Open disclaimer" title="Disclaimer"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></button>
         </div>
     </div>
 
@@ -231,6 +232,17 @@
     </section>
 </div>
 
+<div class="page-disclaimer-popover" id="monitoringDisclaimerPopover" hidden>
+    <div class="page-disclaimer-panel" role="dialog" aria-modal="false" aria-labelledby="monitoringDisclaimerTitle">
+        <div class="page-disclaimer-header">
+            <h3 id="monitoringDisclaimerTitle">Disclaimer</h3>
+            <button type="button" class="page-disclaimer-close" aria-label="Close disclaimer">×</button>
+        </div>
+        <button type="button" class="page-disclaimer-language" data-lang="tl">English</button>
+        <p class="page-disclaimer-copy" data-en="AgriTrack can make mistakes when calculating crop growth. Please double-check important results." data-tl="Maaaring magkamali ang AgriTrack sa pagkalkula ng paglago ng pananim. Pakisuri ang mahahalagang resulta.">Maaaring magkamali ang AgriTrack sa pagkalkula ng paglago ng pananim. Pakisuri ang mahahalagang resulta.</p>
+    </div>
+</div>
+
 <script src="../js/toast.js"></script>
 
 <script>
@@ -243,8 +255,46 @@ const harvestedGrid = document.getElementById("harvestedGrid");
 const archiveConfirmModal = document.getElementById('archiveConfirmModal');
 const cancelArchiveButton = document.getElementById('cancelArchiveButton');
 const confirmArchiveButton = document.getElementById('confirmArchiveButton');
+const disclaimerButton = document.querySelector('.disclaimer-toggle-btn');
+const disclaimerPopover = document.getElementById('monitoringDisclaimerPopover');
+const disclaimerText = disclaimerPopover?.querySelector('.page-disclaimer-copy');
+const disclaimerLang = disclaimerPopover?.querySelector('.page-disclaimer-language');
 let monitoringCrops = [];
 let pendingArchive = null;
+
+function applyMonitoringDisclaimerLanguage(lang) {
+    const selected = lang === 'en' ? 'en' : 'tl';
+    if (disclaimerText) {
+        disclaimerText.textContent = selected === 'en' ? disclaimerText.dataset.en : disclaimerText.dataset.tl;
+    }
+    if (disclaimerLang) {
+        disclaimerLang.textContent = selected === 'tl' ? 'English' : 'Tagalog';
+        disclaimerLang.setAttribute('aria-label', selected === 'tl' ? 'Switch to English' : 'Switch to Tagalog');
+        disclaimerLang.dataset.lang = selected;
+    }
+}
+
+if (disclaimerButton && disclaimerPopover) {
+    disclaimerButton.addEventListener('click', () => {
+        const isHidden = disclaimerPopover.hidden;
+        disclaimerPopover.hidden = !isHidden;
+        if (!disclaimerPopover.hidden) {
+            applyMonitoringDisclaimerLanguage(disclaimerLang?.dataset.lang || 'tl');
+        }
+    });
+
+    const closeButton = disclaimerPopover.querySelector('.page-disclaimer-close');
+    closeButton?.addEventListener('click', () => {
+        disclaimerPopover.hidden = true;
+    });
+
+    disclaimerLang?.addEventListener('click', () => {
+        const nextLanguage = disclaimerLang.dataset.lang === 'tl' ? 'en' : 'tl';
+        applyMonitoringDisclaimerLanguage(nextLanguage);
+    });
+
+    applyMonitoringDisclaimerLanguage('tl');
+}
 
 function escapeHtml(str) {
     const div = document.createElement('div');

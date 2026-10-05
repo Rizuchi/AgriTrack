@@ -123,12 +123,12 @@
                 <i class="fa-solid fa-bell" aria-hidden="true"></i>
                 <span class="notification-count" id="notificationCount" hidden></span>
             </button>
+            <button type="button" class="disclaimer-toggle-btn" aria-label="Open disclaimer" title="Disclaimer"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i></button>
         </div>
 
     </div>
 
     <div class="recommendation-line"></div>
-
 
     <div class="current-weather">
         <h2>
@@ -160,6 +160,17 @@
 
 </div>
 
+<div class="page-disclaimer-popover" id="recommendationDisclaimerPopover" hidden>
+    <div class="page-disclaimer-panel" role="dialog" aria-modal="false" aria-labelledby="recommendationDisclaimerTitle">
+        <div class="page-disclaimer-header">
+            <h3 id="recommendationDisclaimerTitle">Disclaimer</h3>
+            <button type="button" class="page-disclaimer-close" aria-label="Close disclaimer">×</button>
+        </div>
+        <button type="button" class="page-disclaimer-language" data-lang="tl">English</button>
+        <p class="page-disclaimer-copy" data-en="Crop recommendations are based on the current season and may not suit every farm. Please check with your local agricultural technician." data-tl="Ang mga rekomendasyon ng pananim ay batay sa kasalukuyang panahon at maaaring hindi angkop sa bawat sakahan. Kumonsulta sa inyong lokal na agricultural technician.">Ang mga rekomendasyon ng pananim ay batay sa kasalukuyang panahon at maaaring hindi angkop sa bawat sakahan. Kumonsulta sa inyong lokal na agricultural technician.</p>
+    </div>
+</div>
+
 <div class="notification-overlay" id="notificationOverlay" role="dialog" aria-modal="true" aria-labelledby="notificationTitle" hidden>
     <section class="notification-panel">
         <header class="notification-panel-header">
@@ -178,6 +189,45 @@
 document.addEventListener('DOMContentLoaded', () => {
     setupViewToggle();
     loadRecommendedCrops();
+
+    const disclaimerButton = document.querySelector('.disclaimer-toggle-btn');
+    const disclaimerPopover = document.getElementById('recommendationDisclaimerPopover');
+    const disclaimerText = disclaimerPopover?.querySelector('.page-disclaimer-copy');
+    const disclaimerLang = disclaimerPopover?.querySelector('.page-disclaimer-language');
+
+    function applyDisclaimerLanguage(lang) {
+        const selected = lang === 'en' ? 'en' : 'tl';
+        if (disclaimerText) {
+            disclaimerText.textContent = selected === 'en' ? disclaimerText.dataset.en : disclaimerText.dataset.tl;
+        }
+        if (disclaimerLang) {
+            disclaimerLang.textContent = selected === 'tl' ? 'English' : 'Tagalog';
+            disclaimerLang.setAttribute('aria-label', selected === 'tl' ? 'Switch to English' : 'Switch to Tagalog');
+            disclaimerLang.dataset.lang = selected;
+        }
+    }
+
+    if (disclaimerButton && disclaimerPopover) {
+        disclaimerButton.addEventListener('click', () => {
+            const isHidden = disclaimerPopover.hidden;
+            disclaimerPopover.hidden = !isHidden;
+            if (!disclaimerPopover.hidden) {
+                applyDisclaimerLanguage(disclaimerLang?.dataset.lang || 'tl');
+            }
+        });
+
+        const closeButton = disclaimerPopover.querySelector('.page-disclaimer-close');
+        closeButton?.addEventListener('click', () => {
+            disclaimerPopover.hidden = true;
+        });
+
+        disclaimerLang?.addEventListener('click', () => {
+            const nextLanguage = disclaimerLang.dataset.lang === 'tl' ? 'en' : 'tl';
+            applyDisclaimerLanguage(nextLanguage);
+        });
+
+        applyDisclaimerLanguage('tl');
+    }
 });
 
 function setupViewToggle() {
