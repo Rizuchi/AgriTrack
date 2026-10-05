@@ -13,6 +13,7 @@ const TAG_ROW_LABELS = {
 
 const NOTE_SAVE_LABEL = 'I-save / Save';
 let noteCooldownTimer = null;
+let calendarTaskSubmissionInProgress = false;
 
 const state = {
     viewYear: new Date().getFullYear(),
@@ -120,17 +121,18 @@ function showWeather(data) {
         return;
     }
 
-    gate.hidden = true;
     content.setAttribute('aria-hidden', 'false');
     update.setAttribute('aria-hidden', 'false');
 
     if (!data.weather) {
+        gate.hidden = false;
         document.getElementById('weatherDescription').textContent = 'Weather update unavailable';
         update.textContent = data.error || 'Today’s shared weather request did not return conditions. The daily call has already been used.';
         update.classList.add('is-error');
         return;
     }
 
+    gate.hidden = true;
     const weather = data.weather;
     document.getElementById('weatherDescription').textContent = weather.description || 'Conditions unavailable';
     document.getElementById('weatherLocation').textContent = weather.location || 'Orani, Bataan';
@@ -169,25 +171,22 @@ function showWeather(data) {
     update.classList.remove('is-error');
 }
 
-async function loadWeather(requestUpdate = false) {
+async function loadWeather() {
     const content = document.getElementById('weatherContent');
     const update = document.getElementById('weatherUpdate');
     const button = document.getElementById('loadWeatherButton');
-    const buttonLabel = button.querySelector('.weather-button-label');
     const gate = document.getElementById('weatherGate');
 
-    if (requestUpdate && button.disabled) return;
-    gate.hidden = true;
+    if (button.disabled) return;
     update.setAttribute('aria-hidden', 'false');
     update.classList.remove('is-error');
-    update.textContent = "Checking today's weather update…";
+    update.textContent = "Loading today's weather update…";
     content.setAttribute('aria-busy', 'true');
     button.disabled = true;
-    buttonLabel.textContent = 'Loading…';
 
     try {
         let data = await apiGet('get_weather.php');
-        if (data.needsFetch || requestUpdate) {
+        if (data.needsFetch) {
             data = await apiPost('get_weather.php', {});
         }
         showWeather(data);
@@ -199,7 +198,6 @@ async function loadWeather(requestUpdate = false) {
     } finally {
         content.setAttribute('aria-busy', 'false');
         button.disabled = false;
-        buttonLabel.textContent = 'Get Weather';
     }
 }
 
@@ -257,19 +255,20 @@ function taskTipsData(task) {
 }
 
 function visibleTasks() {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const weekEnd = new Date(today);
+    const today = todayDateKey();
+    const weekEnd = new Date();
+    weekEnd.setHours(0, 0, 0, 0);
     weekEnd.setDate(weekEnd.getDate() + 6);
+    const weekEndKey = toDateKey(weekEnd.getFullYear(), weekEnd.getMonth() + 1, weekEnd.getDate());
 
     return scheduledTaskItems().filter(task => {
         if (task.status === 'Done') return false;
-        const due = taskDateValue(task.due_date);
+        const due = normalizeDateKey(task.due_date);
         const overdue = task.status === 'Overdue' || due < today;
         if (state.taskFilter === 'all') return true;
         if (state.taskFilter === 'overdue') return overdue && task.status !== 'Done';
-        if (state.taskFilter === 'today') return due.getTime() === today.getTime();
-        return due >= today && due <= weekEnd;
+        if (state.taskFilter === 'today') return due === today;
+        return due >= today && due <= weekEndKey;
     }).sort((a, b) => Number(b.is_urgent) - Number(a.is_urgent) || a.due_date.localeCompare(b.due_date));
 }
 
@@ -788,6 +787,7 @@ async function scheduleCalendarTask() {
     const input = document.getElementById('calendarTaskInput');
     const error = document.getElementById('calendarTaskError');
     const button = document.getElementById('scheduleCalendarTask');
+    if (calendarTaskSubmissionInProgress) return;
     const taskType = input.value.trim();
     error.textContent = '';
     if (!state.selectedNoteDate) {
@@ -800,6 +800,7 @@ async function scheduleCalendarTask() {
         return;
     }
 
+    calendarTaskSubmissionInProgress = true;
     button.disabled = true;
     try {
         await apiPost('calendar_add.php', {
@@ -808,7 +809,10 @@ async function scheduleCalendarTask() {
             plantedCropId: state.selectedPlantedCropId,
         });
         input.value = '';
-        await loadMonthData(state.viewYear, state.viewMonth);
+        await Promise.all([
+            loadMonthData(state.viewYear, state.viewMonth),
+            loadScheduledTasks(),
+        ]);
         await loadExistingNotesForDate(state.selectedNoteDate);
         showSaveToast('Task scheduled / Naka-iskedyul na ang gawain.');
     } catch (err) {
@@ -817,6 +821,7 @@ async function scheduleCalendarTask() {
             : 'The task could not be scheduled / Hindi na-iskedyul ang gawain.';
         console.error('Failed to schedule calendar task:', err);
     } finally {
+        calendarTaskSubmissionInProgress = false;
         button.disabled = false;
     }
 }
@@ -979,8 +984,7 @@ async function saveNote() {
 document.addEventListener('DOMContentLoaded', () => {
     loadGreeting();
     loadStats();
-    document.getElementById('loadWeatherButton').addEventListener('click', () => loadWeather(true));
-    loadWeather();
+    document.getElementById('loadWeatherButton').addEventListener('click', loadWeather);
     const scheduledTasksLoad = loadScheduledTasks();
     loadPlantedCrops();
     const calendarLoad = loadMonthData(state.viewYear, state.viewMonth);
@@ -1042,11 +1046,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 : state.scheduledTasks.find(item => Number(item.id) === requestedTaskId);
             if (task) {
                 state.focusedTaskId = task.key;
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                const dueDate = taskDateValue(task.due_date);
+                const dueDate = normalizeDateKey(task.due_date);
+                const today = todayDateKey();
                 if (task.status === 'Overdue' || dueDate < today) state.taskFilter = 'overdue';
-                else if (dueDate.getTime() === today.getTime()) state.taskFilter = 'today';
+                else if (dueDate === today) state.taskFilter = 'today';
                 else state.taskFilter = 'week';
 
                 document.querySelectorAll('[data-task-filter]').forEach(button => {

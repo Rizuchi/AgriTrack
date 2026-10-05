@@ -317,6 +317,7 @@
             overlay.classList.add('show');
             trigger.setAttribute('aria-expanded', 'true');
             closeButton.focus();
+            loadNotifications();
         });
         closeButton.addEventListener('click', () => closeDrawer(overlay, trigger));
         overlay.addEventListener('click', event => {
